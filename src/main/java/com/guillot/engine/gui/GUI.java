@@ -93,8 +93,6 @@ public class GUI {
     }
 
     public void paint(Graphics g) {
-        g.scale(2f, 2f);
-
         try {
             if (currentView != null) {
                 currentView.paintComponents(g);
@@ -113,8 +111,8 @@ public class GUI {
             input = this.container.getInput();
         }
 
-        mouseX = input.getMouseX() / 2;
-        mouseY = input.getMouseY() / 2;
+        mouseX = input.getMouseX();
+        mouseY = input.getMouseY();
 
         for (int i = 0; i < keysPressed.length; i++) {
             keysPressed[i] = input.isKeyPressed(i);

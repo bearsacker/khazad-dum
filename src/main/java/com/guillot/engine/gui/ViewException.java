@@ -5,7 +5,6 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 
 import org.newdawn.slick.Color;
 
-
 public class ViewException extends View {
 
     private Exception exception;
@@ -16,6 +15,8 @@ public class ViewException extends View {
 
     @Override
     public void start() throws Exception {
+        exception.printStackTrace();
+
         String text = "";
         StackTraceElement[] trace = exception.getStackTrace();
         for (StackTraceElement e : trace) {

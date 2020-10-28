@@ -19,7 +19,6 @@ import static com.guillot.moria.Config.QUART_HEIGHT;
 import static com.guillot.moria.Config.QUART_WIDTH;
 import static com.guillot.moria.Config.SCREEN_HEIGHT;
 import static com.guillot.moria.Config.SCREEN_WIDTH;
-import static com.guillot.moria.dungeon.Tile.BOUNDARY_WALL;
 import static com.guillot.moria.dungeon.Tile.CLOSED_DOOR;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DARK_FLOOR;
@@ -145,6 +144,8 @@ public class Dungeon {
 
         placeStairs(2, RNG.get().randomNumber(2) + 2, 3);
         placeStairs(1, RNG.get().randomNumber(2), 3);
+
+        cleaningGraniteWalls();
     }
 
     // Fills in empty spots with desired rock
@@ -1011,15 +1012,63 @@ public class Dungeon {
 
         // put permanent wall on leftmost row and rightmost row
         for (int i = 0; i < this.height; i++) {
-            this.floor[i][0] = BOUNDARY_WALL;
-            this.floor[i][this.width - 1] = BOUNDARY_WALL;
+            this.floor[i][0] = GRANITE_WALL;
+            this.floor[i][this.width - 1] = GRANITE_WALL;
         }
 
         // put permanent wall on top row and bottom row
         for (int i = 0; i < this.width; i++) {
-            this.floor[0][i] = BOUNDARY_WALL;
-            this.floor[this.height - 1][i] = BOUNDARY_WALL;
+            this.floor[0][i] = GRANITE_WALL;
+            this.floor[this.height - 1][i] = GRANITE_WALL;
         }
+    }
+
+    private void cleaningGraniteWalls() {
+        System.out.println("cleaning granite walls...");
+
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                if (this.floor[i][j] == GRANITE_WALL && !isVisibleFromFloor(i, j)) {
+                    this.floor[i][j] = NULL;
+                }
+            }
+        }
+    }
+
+    private boolean isVisibleFromFloor(int x, int y) {
+        if (x - 1 >= 0 && (this.floor[x - 1][y].isFloor || this.floor[x - 1][y].isDoor)) {
+            return true;
+        }
+
+        if (x + 1 < height && (this.floor[x + 1][y].isFloor || this.floor[x + 1][y].isDoor)) {
+            return true;
+        }
+
+        if (y - 1 >= 0 && (this.floor[x][y - 1].isFloor || this.floor[x][y - 1].isDoor)) {
+            return true;
+        }
+
+        if (y + 1 < width && (this.floor[x][y + 1].isFloor || this.floor[x][y + 1].isDoor)) {
+            return true;
+        }
+
+        if (x - 1 >= 0 && y - 1 >= 0 && (this.floor[x - 1][y - 1].isFloor || this.floor[x - 1][y - 1].isDoor)) {
+            return true;
+        }
+
+        if (x + 1 < height && y + 1 < width && (this.floor[x + 1][y + 1].isFloor || this.floor[x + 1][y + 1].isDoor)) {
+            return true;
+        }
+
+        if (x + 1 < height && y - 1 >= 0 && (this.floor[x + 1][y - 1].isFloor || this.floor[x + 1][y - 1].isDoor)) {
+            return true;
+        }
+
+        if (x - 1 >= 0 && y + 1 < width && (this.floor[x - 1][y + 1].isFloor || this.floor[x - 1][y + 1].isDoor)) {
+            return true;
+        }
+
+        return false;
     }
 
     public int getLevel() {

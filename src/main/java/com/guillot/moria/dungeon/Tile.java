@@ -1,34 +1,45 @@
 package com.guillot.moria.dungeon;
 
+import org.newdawn.slick.Image;
+
+import com.guillot.moria.Images;
 
 public enum Tile {
     NULL, //
     TMP1_WALL, //
     TMP2_WALL, //
-    DARK_FLOOR, //
-    LIGHT_FLOOR, //
-    CORRIDOR_FLOOR, //
-    PILLAR(true, false), //
-    GRANITE_WALL(true, false), //
-    MAGMA_WALL(true, false), //
-    QUARTZ_WALL(true, false), //
-    BOUNDARY_WALL(true, false), //
-    SECRET_DOOR(false, true), //
-    OPEN_DOOR(false, true), //
-    CLOSED_DOOR(false, true), //
-    UP_STAIR, //
-    DOWN_STAIR;
+    DARK_FLOOR(Images.LIGHT_FLOOR.getImage(), true, false, false), //
+    LIGHT_FLOOR(Images.LIGHT_FLOOR.getImage(), true, false, false), //
+    CORRIDOR_FLOOR(Images.LIGHT_FLOOR.getImage(), true, false, false), //
+    PILLAR(Images.PILLAR.getImage(), false, true, false), //
+    GRANITE_WALL(Images.GRANITE_WALL.getImage(), false, true, false), //
+    MAGMA_WALL(Images.MAGMA_WALL.getImage(), false, true, false), //
+    QUARTZ_WALL(Images.QUARTZ_WALL.getImage(), false, true, false), //
+    SECRET_DOOR(Images.GRANITE_WALL.getImage(), false, false, true), //
+    OPEN_DOOR(Images.DOOR.getImage(), false, false, true), //
+    CLOSED_DOOR(Images.DOOR.getImage(), false, false, true), //
+    UP_STAIR(Images.UP_STAIRS.getImage(), false, false, true), //
+    DOWN_STAIR(Images.DOWN_STAIRS.getImage(), false, false, true);
+
+    public boolean isFloor;
 
     public boolean isWall;
 
     public boolean isDoor;
 
+    public Image image;
+
     private Tile() {
-        this.isWall = false;
-        this.isDoor = false;
+        this(null, false, false, false);
     }
 
-    private Tile(boolean isWall, boolean isDoor) {
+    private Tile(boolean isFloor, boolean isWall, boolean isDoor) {
+        this(null, isFloor, isWall, isDoor);
+    }
+
+    private Tile(Image image, boolean isFloor, boolean isWall, boolean isDoor) {
+        this.image = image;
+        this.isFloor = isFloor;
         this.isWall = isWall;
         this.isDoor = isDoor;
     }

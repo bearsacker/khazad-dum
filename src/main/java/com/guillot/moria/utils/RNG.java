@@ -17,6 +17,7 @@ public class RNG {
     }
 
     public void setSeed(long seed) {
+        this.seed = seed;
         random.setSeed(seed);
     }
 

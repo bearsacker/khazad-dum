@@ -21,7 +21,7 @@ public class Main {
                     System.out.print("?");
                     break;
                 case CORRIDOR_FLOOR:
-                    System.out.print(".");
+                    System.out.print(" ");
                     break;
                 case DARK_FLOOR:
                     System.out.print(".");
@@ -29,7 +29,6 @@ public class Main {
                 case LIGHT_FLOOR:
                     System.out.print(" ");
                     break;
-                case BOUNDARY_WALL:
                 case GRANITE_WALL:
                     System.out.print("#");
                     break;
