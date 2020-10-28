@@ -26,10 +26,10 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        // 1603901822915 door bug
-        RNG.get().setSeed(1603901822915L);
 
-        dungeon = new Dungeon(100);
+        RNG.get().setSeed(1603923549811L);
+
+        dungeon = new Dungeon(300);
         dungeon.generate();
 
         int size = (int) Math.sqrt(dungeon.getWidth() * dungeon.getWidth() + dungeon.getHeight() * dungeon.getHeight()) * SIZE / 2;
