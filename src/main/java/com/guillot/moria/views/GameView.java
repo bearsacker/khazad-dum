@@ -10,6 +10,8 @@ import com.guillot.engine.Game;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
+import com.guillot.moria.utils.DepthBufferedImage;
+import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
 public class GameView extends View {

@@ -1,24 +1,24 @@
 package com.guillot.moria.dungeon;
 
-import static com.guillot.moria.Config.DUN_DIR_CHANGE;
-import static com.guillot.moria.Config.DUN_MAGMA_STREAMER;
-import static com.guillot.moria.Config.DUN_MAGMA_TREASURE;
-import static com.guillot.moria.Config.DUN_MAX_HEIGHT;
-import static com.guillot.moria.Config.DUN_MAX_WIDTH;
-import static com.guillot.moria.Config.DUN_QUARTZ_STREAMER;
-import static com.guillot.moria.Config.DUN_QUARTZ_TREASURE;
-import static com.guillot.moria.Config.DUN_RANDOM_DIR;
-import static com.guillot.moria.Config.DUN_ROOMS_MEAN;
-import static com.guillot.moria.Config.DUN_ROOM_DOORS;
-import static com.guillot.moria.Config.DUN_STREAMER_DENSITY;
-import static com.guillot.moria.Config.DUN_STREAMER_WIDTH;
-import static com.guillot.moria.Config.DUN_TUNNELING;
-import static com.guillot.moria.Config.DUN_TUNNEL_DOORS;
-import static com.guillot.moria.Config.DUN_UNUSUAL_ROOMS;
-import static com.guillot.moria.Config.QUART_HEIGHT;
-import static com.guillot.moria.Config.QUART_WIDTH;
-import static com.guillot.moria.Config.SCREEN_HEIGHT;
-import static com.guillot.moria.Config.SCREEN_WIDTH;
+import static com.guillot.moria.configs.DungeonConfig.DUN_DIR_CHANGE;
+import static com.guillot.moria.configs.DungeonConfig.DUN_MAGMA_STREAMER;
+import static com.guillot.moria.configs.DungeonConfig.DUN_MAGMA_TREASURE;
+import static com.guillot.moria.configs.DungeonConfig.DUN_MAX_HEIGHT;
+import static com.guillot.moria.configs.DungeonConfig.DUN_MAX_WIDTH;
+import static com.guillot.moria.configs.DungeonConfig.DUN_QUARTZ_STREAMER;
+import static com.guillot.moria.configs.DungeonConfig.DUN_QUARTZ_TREASURE;
+import static com.guillot.moria.configs.DungeonConfig.DUN_RANDOM_DIR;
+import static com.guillot.moria.configs.DungeonConfig.DUN_ROOMS_MEAN;
+import static com.guillot.moria.configs.DungeonConfig.DUN_ROOM_DOORS;
+import static com.guillot.moria.configs.DungeonConfig.DUN_STREAMER_DENSITY;
+import static com.guillot.moria.configs.DungeonConfig.DUN_STREAMER_WIDTH;
+import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNELING;
+import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNEL_DOORS;
+import static com.guillot.moria.configs.DungeonConfig.DUN_UNUSUAL_ROOMS;
+import static com.guillot.moria.configs.ScreenConfig.QUART_HEIGHT;
+import static com.guillot.moria.configs.ScreenConfig.QUART_WIDTH;
+import static com.guillot.moria.configs.ScreenConfig.SCREEN_HEIGHT;
+import static com.guillot.moria.configs.ScreenConfig.SCREEN_WIDTH;
 import static com.guillot.moria.dungeon.Tile.CLOSED_DOOR;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DARK_FLOOR;
@@ -38,8 +38,8 @@ import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.guillot.moria.utils.Coord;
 import com.guillot.moria.utils.Direction;
+import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
 public class Dungeon {
@@ -52,7 +52,7 @@ public class Dungeon {
 
     private Tile[][] floor;
 
-    private ArrayList<Coord> doors;
+    private ArrayList<Point> doors;
 
     public Dungeon(int level) {
         this.level = level;
@@ -84,12 +84,12 @@ public class Dungeon {
         }
 
         // Build rooms
-        ArrayList<Coord> locations = new ArrayList<>();
+        ArrayList<Point> locations = new ArrayList<>();
 
         for (int row = 0; row < row_rooms; row++) {
             for (int col = 0; col < col_rooms; col++) {
                 if (room_map[row][col]) {
-                    Coord location = new Coord();
+                    Point location = new Point();
                     location.y = (row * (SCREEN_HEIGHT >> 1) + QUART_HEIGHT);
                     location.x = (col * (SCREEN_WIDTH >> 1) + QUART_WIDTH);
 
@@ -135,11 +135,11 @@ public class Dungeon {
         placeBoundaryWalls();
 
         // Place intersection doors
-        for (Coord door : doors) {
-            placeDoorIfNextToTwoWalls(new Coord(door.x - 1, door.y));
-            placeDoorIfNextToTwoWalls(new Coord(door.x + 1, door.y));
-            placeDoorIfNextToTwoWalls(new Coord(door.x, door.y - 1));
-            placeDoorIfNextToTwoWalls(new Coord(door.x, door.y + 1));
+        for (Point door : doors) {
+            placeDoorIfNextToTwoWalls(new Point(door.x - 1, door.y));
+            placeDoorIfNextToTwoWalls(new Point(door.x + 1, door.y));
+            placeDoorIfNextToTwoWalls(new Point(door.x, door.y - 1));
+            placeDoorIfNextToTwoWalls(new Point(door.x, door.y + 1));
         }
 
         placeStairs(2, RNG.get().randomNumber(2) + 2, 3);
@@ -161,7 +161,7 @@ public class Dungeon {
 
     // Builds a room at a row, column coordinate -RAK-
     // Type 1 unusual rooms are several overlapping rectangular ones
-    private void buildRoomOverlappingRectangles(Coord coord) {
+    private void buildRoomOverlappingRectangles(Point coord) {
         System.out.println("building room overlapping rectangles at " + coord + "...");
         Tile floor = floorTileForLevel();
 
@@ -204,7 +204,7 @@ public class Dungeon {
     }
 
     // Builds a type 2 unusual room at a row, column coordinate
-    private void buildRoomWithInnerRooms(Coord coord) {
+    private void buildRoomWithInnerRooms(Point coord) {
         Tile floor = floorTileForLevel();
 
         int height = coord.y - 4;
@@ -261,7 +261,7 @@ public class Dungeon {
             // dungeonPlaceVaultMonster(coord, 2 + NumberGenerator.get().randomNumber(3));
 
             // If the monsters don't get 'em.
-            // dungeonPlaceVaultTrap(coord, new Coord(4, 10), 2 + NumberGenerator.get().randomNumber(3));
+            // dungeonPlaceVaultTrap(coord, new Point(4, 10), 2 + NumberGenerator.get().randomNumber(3));
             break;
         case PILLARS:
             System.out.println("building room with inner rooms (pillars) at " + coord + "...");
@@ -281,19 +281,19 @@ public class Dungeon {
             this.floor[coord.y][coord.x - 5] = TMP1_WALL;
             this.floor[coord.y][coord.x + 5] = TMP1_WALL;
 
-            placeSecretDoor(new Coord(coord.x - 3, coord.y - 3 + (RNG.get().randomNumber(2) << 1)));
-            placeSecretDoor(new Coord(coord.x + 3, coord.y - 3 + (RNG.get().randomNumber(2) << 1)));
+            placeSecretDoor(new Point(coord.x - 3, coord.y - 3 + (RNG.get().randomNumber(2) << 1)));
+            placeSecretDoor(new Point(coord.x + 3, coord.y - 3 + (RNG.get().randomNumber(2) << 1)));
 
             if (RNG.get().randomNumber(3) == 1) {
-                // dungeonPlaceRandomObjectAt(new Coord(coord.y, coord.x - 2), false);
+                // dungeonPlaceRandomObjectAt(new Point(coord.y, coord.x - 2), false);
             }
 
             if (RNG.get().randomNumber(3) == 1) {
-                // dungeonPlaceRandomObjectAt(new Coord(coord.y, coord.x + 2), false);
+                // dungeonPlaceRandomObjectAt(new Point(coord.y, coord.x + 2), false);
             }
 
-            // dungeonPlaceVaultMonster(new Coord(coord.y, coord.x - 2), NumberGenerator.get().randomNumber(2));
-            // dungeonPlaceVaultMonster(new Coord(coord.y, coord.x + 2), NumberGenerator.get().randomNumber(2));
+            // dungeonPlaceVaultMonster(new Point(coord.y, coord.x - 2), NumberGenerator.get().randomNumber(2));
+            // dungeonPlaceVaultMonster(new Point(coord.y, coord.x + 2), NumberGenerator.get().randomNumber(2));
             break;
         case MAZE:
             System.out.println("building room with inner rooms (maze) at " + coord + "...");
@@ -302,12 +302,12 @@ public class Dungeon {
             placeMazeInsideRoom(depth, height, left, right);
 
             // Monsters just love mazes.
-            // dungeonPlaceVaultMonster(new Coord(coord.y, coord.x - 5), NumberGenerator.get().randomNumber(3));
-            // dungeonPlaceVaultMonster(new Coord(coord.y, coord.x + 5), NumberGenerator.get().randomNumber(3));
+            // dungeonPlaceVaultMonster(new Point(coord.y, coord.x - 5), NumberGenerator.get().randomNumber(3));
+            // dungeonPlaceVaultMonster(new Point(coord.y, coord.x + 5), NumberGenerator.get().randomNumber(3));
 
             // Traps make them entertaining.
-            // dungeonPlaceVaultTrap(new Coord(coord.y, coord.x - 3), new Coord(2, 8), NumberGenerator.get().randomNumber(3));
-            // dungeonPlaceVaultTrap(new Coord(coord.y, coord.x + 3), new Coord(2, 8), NumberGenerator.get().randomNumber(3));
+            // dungeonPlaceVaultTrap(new Point(coord.y, coord.x - 3), new Point(2, 8), NumberGenerator.get().randomNumber(3));
+            // dungeonPlaceVaultTrap(new Point(coord.y, coord.x + 3), new Point(2, 8), NumberGenerator.get().randomNumber(3));
 
             // Mazes should have some treasure too..
             for (int i = 0; i < 3; i++) {
@@ -322,17 +322,17 @@ public class Dungeon {
             // dungeonPlaceRandomObjectNear(coord, 2 + NumberGenerator.get().randomNumber(2));
 
             // Gotta have some monsters.
-            // dungeonPlaceVaultMonster(new Coord(coord.y + 2, coord.x - 4), NumberGenerator.get().randomNumber(2));
-            // dungeonPlaceVaultMonster(new Coord(coord.y + 2, coord.x + 4), NumberGenerator.get().randomNumber(2));
-            // dungeonPlaceVaultMonster(new Coord(coord.y - 2, coord.x - 4), NumberGenerator.get().randomNumber(2));
-            // dungeonPlaceVaultMonster(new Coord(coord.y - 2, coord.x + 4), NumberGenerator.get().randomNumber(2));
+            // dungeonPlaceVaultMonster(new Point(coord.y + 2, coord.x - 4), NumberGenerator.get().randomNumber(2));
+            // dungeonPlaceVaultMonster(new Point(coord.y + 2, coord.x + 4), NumberGenerator.get().randomNumber(2));
+            // dungeonPlaceVaultMonster(new Point(coord.y - 2, coord.x - 4), NumberGenerator.get().randomNumber(2));
+            // dungeonPlaceVaultMonster(new Point(coord.y - 2, coord.x + 4), NumberGenerator.get().randomNumber(2));
             break;
         }
     }
 
     // Builds a room at a row, column coordinate
     // Type 3 unusual rooms are cross shaped
-    private void buildRoomCrossShaped(Coord coord) {
+    private void buildRoomCrossShaped(Point coord) {
         Tile floor = floorTileForLevel();
 
         int random_offset = 2 + RNG.get().randomNumber(2);
@@ -404,9 +404,9 @@ public class Dungeon {
             // Place a secret door
             random_offset = RNG.get().randomNumber(4);
             if (random_offset < 3) {
-                placeSecretDoor(new Coord(coord.x, coord.y - 3 + (random_offset << 1)));
+                placeSecretDoor(new Point(coord.x, coord.y - 3 + (random_offset << 1)));
             } else {
-                placeSecretDoor(new Coord(coord.x - 7 + (random_offset << 1), coord.y));
+                placeSecretDoor(new Point(coord.x - 7 + (random_offset << 1), coord.y));
             }
 
             // Place a treasure in the vault
@@ -416,7 +416,7 @@ public class Dungeon {
             // dungeonPlaceVaultMonster(coord, 2 + NumberGenerator.get().randomNumber(2));
 
             // Traps naturally
-            // dungeonPlaceVaultTrap(coord, new Coord(4, 4), 1 + NumberGenerator.get().randomNumber(3));
+            // dungeonPlaceVaultTrap(coord, new Point(4, 4), 1 + NumberGenerator.get().randomNumber(3));
             break;
         case 3:
             System.out.println("building room cross shaped at " + coord + "...");
@@ -430,10 +430,10 @@ public class Dungeon {
                 this.floor[coord.y + 2][coord.x - 1] = TMP1_WALL;
                 this.floor[coord.y + 2][coord.x + 1] = TMP1_WALL;
                 if (RNG.get().randomNumber(3) == 1) {
-                    placeSecretDoor(new Coord(coord.x - 2, coord.y));
-                    placeSecretDoor(new Coord(coord.x + 2, coord.y));
-                    placeSecretDoor(new Coord(coord.x, coord.y - 2));
-                    placeSecretDoor(new Coord(coord.x, coord.y + 2));
+                    placeSecretDoor(new Point(coord.x - 2, coord.y));
+                    placeSecretDoor(new Point(coord.x + 2, coord.y));
+                    placeSecretDoor(new Point(coord.x, coord.y - 2));
+                    placeSecretDoor(new Point(coord.x, coord.y + 2));
                 }
             } else if (RNG.get().randomNumber(3) == 1) {
                 this.floor[coord.y][coord.x] = TMP1_WALL;
@@ -449,7 +449,7 @@ public class Dungeon {
     }
 
     // Builds a room at a row, column coordinate
-    private void buildRoom(Coord coord) {
+    private void buildRoom(Point coord) {
         System.out.println("building room at " + coord + "...");
         Tile floor = floorTileForLevel();
 
@@ -478,11 +478,11 @@ public class Dungeon {
     }
 
     // Constructs a tunnel between two points
-    private void buildTunnel(Coord start, Coord end) {
+    private void buildTunnel(Point start, Point end) {
         System.out.println("building tunnel between " + start + " and " + end + "...");
 
-        ArrayList<Coord> tunnels = new ArrayList<>();
-        ArrayList<Coord> walls = new ArrayList<>();
+        ArrayList<Point> tunnels = new ArrayList<>();
+        ArrayList<Point> walls = new ArrayList<>();
 
         // Main procedure for Tunnel
         boolean door_flag = false;
@@ -491,7 +491,7 @@ public class Dungeon {
         int start_row = start.y;
         int start_col = start.x;
 
-        Coord direction = new Coord();
+        Point direction = new Point();
         pickCorrectDirection(direction, start, end);
 
         do {
@@ -512,7 +512,7 @@ public class Dungeon {
             int tmp_row = start.y + direction.y;
             int tmp_col = start.x + direction.x;
 
-            while (!coordInBounds(new Coord(tmp_col, tmp_row))) {
+            while (!coordInBounds(new Point(tmp_col, tmp_row))) {
                 if (RNG.get().randomNumber(DUN_RANDOM_DIR) == 1) {
                     chanceOfRandomDirection(direction);
                 } else {
@@ -527,7 +527,7 @@ public class Dungeon {
                 start.y = tmp_row;
                 start.x = tmp_col;
                 if (tunnels.size() < 1000) {
-                    tunnels.add(new Coord(start.x, start.y));
+                    tunnels.add(new Point(start.x, start.y));
                 }
                 door_flag = false;
                 break;
@@ -539,12 +539,12 @@ public class Dungeon {
                 start.x = tmp_col;
 
                 if (walls.size() < 1000) {
-                    walls.add(new Coord(start.x, start.y));
+                    walls.add(new Point(start.x, start.y));
                 }
 
                 for (int y = start.y - 1; y <= start.y + 1; y++) {
                     for (int x = start.x - 1; x <= start.x + 1; x++) {
-                        if (coordInBounds(new Coord(x, y))) {
+                        if (coordInBounds(new Point(x, y))) {
                             // values 11 and 12 are impossible here, placeStreamerRock is never run before buildTunnel
                             if (this.floor[y][x] == GRANITE_WALL) {
                                 this.floor[y][x] = TMP2_WALL;
@@ -559,7 +559,7 @@ public class Dungeon {
 
                 if (!door_flag) {
                     if (doors.size() < 100) {
-                        doors.add(new Coord(start.x, start.y));
+                        doors.add(new Point(start.x, start.y));
                     }
                     door_flag = true;
                 }
@@ -588,11 +588,11 @@ public class Dungeon {
             }
         } while ((start.y != end.y || start.x != end.x) && !stop_flag);
 
-        for (Coord tunnel : tunnels) {
+        for (Point tunnel : tunnels) {
             this.floor[tunnel.y][tunnel.x] = CORRIDOR_FLOOR;
         }
 
-        for (Coord wall : walls) {
+        for (Point wall : walls) {
             if (this.floor[wall.y][wall.x] == TMP2_WALL) {
                 if (RNG.get().randomNumber(100) < DUN_ROOM_DOORS) {
                     placeDoor(wall);
@@ -604,7 +604,7 @@ public class Dungeon {
         }
     }
 
-    void placeInnerPillars(Coord coord) {
+    void placeInnerPillars(Point coord) {
         System.out.println("\t-> placing inner pillars at " + coord + "...");
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 1; x <= coord.x + 1; x++) {
@@ -631,7 +631,7 @@ public class Dungeon {
         }
     }
 
-    private void placeLargeMiddlePillar(Coord coord) {
+    private void placeLargeMiddlePillar(Point coord) {
         System.out.println("\t-> placing large middle pillar at " + coord + "...");
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 1; x <= coord.x + 1; x++) {
@@ -640,7 +640,7 @@ public class Dungeon {
         }
     }
 
-    private void placeDoor(Coord coord) {
+    private void placeDoor(Point coord) {
         int door_type = RNG.get().randomNumber(3);
 
         if (door_type == 1) {
@@ -664,52 +664,52 @@ public class Dungeon {
         }
     }
 
-    private void placeOpenDoor(Coord coord) {
+    private void placeOpenDoor(Point coord) {
         System.out.println("\t-> placing open door at " + coord + "...");
         this.floor[coord.y][coord.x] = OPEN_DOOR;
     }
 
-    private void placeBrokenDoor(Coord coord) {
+    private void placeBrokenDoor(Point coord) {
         System.out.println("\t-> placing broken door at " + coord + "...");
         this.floor[coord.y][coord.x] = OPEN_DOOR;
         // game.treasure.list[cur_pos].misc_use = 1;
     }
 
-    private void placeClosedDoor(Coord coord) {
+    private void placeClosedDoor(Point coord) {
         System.out.println("\t-> placing closed door at " + coord + "...");
         this.floor[coord.y][coord.x] = CLOSED_DOOR;
     }
 
-    private void placeLockedDoor(Coord coord) {
+    private void placeLockedDoor(Point coord) {
         System.out.println("\t-> placing locked door at " + coord + "...");
         this.floor[coord.y][coord.x] = CLOSED_DOOR;
         // game.treasure.list[cur_pos].misc_use = (int16_t)(randomNumber(10) + 10);
     }
 
-    private void placeStuckDoor(Coord coord) {
+    private void placeStuckDoor(Point coord) {
         System.out.println("\t-> placing stuck door at " + coord + "...");
         this.floor[coord.y][coord.x] = CLOSED_DOOR;
         // game.treasure.list[cur_pos].misc_use = (int16_t)(-randomNumber(10) - 10);
     }
 
-    private void placeSecretDoor(Coord coord) {
+    private void placeSecretDoor(Point coord) {
         System.out.println("\t-> placing secret door at " + coord + "...");
         this.floor[coord.y][coord.x] = SECRET_DOOR;
     }
 
-    private void placeRandomSecretDoor(Coord coord, int depth, int height, int left, int right) {
+    private void placeRandomSecretDoor(Point coord, int depth, int height, int left, int right) {
         switch (RNG.get().randomNumber(4)) {
         case 1:
-            placeSecretDoor(new Coord(coord.x, height - 1));
+            placeSecretDoor(new Point(coord.x, height - 1));
             break;
         case 2:
-            placeSecretDoor(new Coord(coord.x, depth + 1));
+            placeSecretDoor(new Point(coord.x, depth + 1));
             break;
         case 3:
-            placeSecretDoor(new Coord(left - 1, coord.y));
+            placeSecretDoor(new Point(left - 1, coord.y));
             break;
         default:
-            placeSecretDoor(new Coord(right + 1, coord.y));
+            placeSecretDoor(new Point(right + 1, coord.y));
             break;
         }
     }
@@ -724,7 +724,7 @@ public class Dungeon {
         }
     }
 
-    private void placeFourSmallRooms(Coord coord, int depth, int height, int left, int right) {
+    private void placeFourSmallRooms(Point coord, int depth, int height, int left, int right) {
         for (int y = height; y <= depth; y++) {
             this.floor[y][coord.x] = TMP1_WALL;
         }
@@ -736,23 +736,23 @@ public class Dungeon {
         // place random secret door
         if (RNG.get().randomNumber(2) == 1) {
             int offset = RNG.get().randomNumber(10);
-            placeSecretDoor(new Coord(coord.x - offset, height - 1));
-            placeSecretDoor(new Coord(coord.x + offset, height - 1));
-            placeSecretDoor(new Coord(coord.x - offset, depth + 1));
-            placeSecretDoor(new Coord(coord.x + offset, depth + 1));
+            placeSecretDoor(new Point(coord.x - offset, height - 1));
+            placeSecretDoor(new Point(coord.x + offset, height - 1));
+            placeSecretDoor(new Point(coord.x - offset, depth + 1));
+            placeSecretDoor(new Point(coord.x + offset, depth + 1));
         } else {
             int offset = RNG.get().randomNumber(3);
-            placeSecretDoor(new Coord(left - 1, coord.y + offset));
-            placeSecretDoor(new Coord(left - 1, coord.y - offset));
-            placeSecretDoor(new Coord(right + 1, coord.y + offset));
-            placeSecretDoor(new Coord(right + 1, coord.y - offset));
+            placeSecretDoor(new Point(left - 1, coord.y + offset));
+            placeSecretDoor(new Point(left - 1, coord.y - offset));
+            placeSecretDoor(new Point(right + 1, coord.y + offset));
+            placeSecretDoor(new Point(right + 1, coord.y - offset));
         }
     }
 
     // Places "streamers" of rock through dungeon
     private void placeStreamerRock(Tile rock_type, int chance_of_treasure) {
         // Choose starting point and direction
-        Coord coord = new Coord(
+        Point coord = new Point(
                 (this.width / 2) + 16 - RNG.get().randomNumber(33),
                 (this.height) + 11 - RNG.get().randomNumber(23));
 
@@ -765,7 +765,7 @@ public class Dungeon {
 
         do {
             for (int i = 0; i < DUN_STREAMER_DENSITY; i++) {
-                Coord spot = new Coord(
+                Point spot = new Point(
                         coord.x + RNG.get().randomNumber(t1) - t2,
                         coord.y + RNG.get().randomNumber(t1) - t2);
 
@@ -784,8 +784,8 @@ public class Dungeon {
 
     // Places a staircase 1=up, 2=down
     private void placeStairs(int stair_type, int number, int walls) {
-        Coord coord1 = new Coord();
-        Coord coord2 = new Coord();
+        Point coord1 = new Point();
+        Point coord2 = new Point();
 
         for (int i = 0; i < number; i++) {
             boolean placed = false;
@@ -829,19 +829,19 @@ public class Dungeon {
     }
 
     // Place an up staircase at given y, x
-    private void placeUpStairs(Coord coord) {
+    private void placeUpStairs(Point coord) {
         System.out.println("\t-> placing up stairs at " + coord + "...");
         this.floor[coord.y][coord.x] = UP_STAIR;
     }
 
     // Place a down staircase at given y, x
-    private void placeDownStairs(Coord coord) {
+    private void placeDownStairs(Point coord) {
         System.out.println("\t-> placing down stairs at " + coord + "...");
         this.floor[coord.y][coord.x] = DOWN_STAIR;
     }
 
     // Places door at y, x position if at least 2 walls found
-    private void placeDoorIfNextToTwoWalls(Coord coord) {
+    private void placeDoorIfNextToTwoWalls(Point coord) {
         if (this.floor[coord.y][coord.x] == CORRIDOR_FLOOR && RNG.get().randomNumber(100) > DUN_TUNNEL_DOORS
                 && isNextTo(coord)) {
             placeDoor(coord);
@@ -851,7 +851,7 @@ public class Dungeon {
     // Checks points north, south, east, and west for a wall -RAK-
     // note that y,x is always coordInBounds(), i.e. 0 < y < dg.height-1,
     // and 0 < x < dg.width-1
-    private int coordWallsNextTo(Coord coord) {
+    private int coordWallsNextTo(Point coord) {
         int walls = 0;
 
         if (this.floor[coord.y - 1][coord.x].isWall) {
@@ -873,14 +873,14 @@ public class Dungeon {
         return walls;
     }
 
-    private boolean coordInBounds(Coord coord) {
+    private boolean coordInBounds(Point coord) {
         boolean y = coord.y > 0 && coord.y < this.height - 1;
         boolean x = coord.x > 0 && coord.x < this.width - 1;
 
         return y && x;
     }
 
-    private boolean isNextTo(Coord coord) {
+    private boolean isNextTo(Point coord) {
         if (coordCorridorWallsNextTo(coord) > 2) {
             boolean vertical = this.floor[coord.y - 1][coord.x].isWall && this.floor[coord.y + 1][coord.x].isWall;
             boolean horizontal = this.floor[coord.y][coord.x - 1].isWall && this.floor[coord.y][coord.x + 1].isWall;
@@ -891,8 +891,8 @@ public class Dungeon {
         return false;
     }
 
-    private boolean playerMovePosition(Direction direction, Coord coord) {
-        Coord new_coord = new Coord();
+    private boolean playerMovePosition(Direction direction, Point coord) {
+        Point new_coord = new Point();
 
         switch (direction) {
         case SOUTHWEST:
@@ -941,7 +941,7 @@ public class Dungeon {
     }
 
     // Always picks a correct direction
-    private void pickCorrectDirection(Coord direction, Coord start, Coord end) {
+    private void pickCorrectDirection(Point direction, Point start, Point end) {
         if (start.y < end.y) {
             direction.y = 1;
         } else if (start.y == end.y) {
@@ -968,22 +968,22 @@ public class Dungeon {
     }
 
     // Chance of wandering direction
-    private void chanceOfRandomDirection(Coord directionCoord) {
+    private void chanceOfRandomDirection(Point directionPoint) {
         int direction = RNG.get().randomNumber(4);
 
         if (direction < 3) {
-            directionCoord.x = 0;
-            directionCoord.y = -3 + (direction << 1); // direction=1 -> y=-1; direction=2 -> y=1
+            directionPoint.x = 0;
+            directionPoint.y = -3 + (direction << 1); // direction=1 -> y=-1; direction=2 -> y=1
         } else {
-            directionCoord.y = 0;
-            directionCoord.x = -7 + (direction << 1); // direction=3 -> x=-1; direction=4 -> x=1
+            directionPoint.y = 0;
+            directionPoint.x = -7 + (direction << 1); // direction=3 -> x=-1; direction=4 -> x=1
         }
     }
 
     // Checks all adjacent spots for corridors
     // note that y, x is always coordInBounds(), hence no need to check that
     // j, k are coordInBounds(), even if they are 0 or cur_x-1 is still works
-    private int coordCorridorWallsNextTo(Coord coord) {
+    private int coordCorridorWallsNextTo(Point coord) {
         int walls = 0;
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {

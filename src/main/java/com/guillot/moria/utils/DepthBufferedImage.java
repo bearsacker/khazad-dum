@@ -1,4 +1,4 @@
-package com.guillot.moria.views;
+package com.guillot.moria.utils;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
