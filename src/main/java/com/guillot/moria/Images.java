@@ -12,7 +12,8 @@ public enum Images {
     PILLAR("sprites/pillar.png"), //
     UP_STAIRS("sprites/up_stairs.png"), //
     DOWN_STAIRS("sprites/down_stairs.png"), //
-    DOOR("sprites/door.png");
+    DOOR("sprites/door.png"), //
+    HUMAN_WARRIOR("sprites/human_warrior.png");
 
     private Image image;
 

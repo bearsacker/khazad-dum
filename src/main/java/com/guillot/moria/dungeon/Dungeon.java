@@ -54,6 +54,8 @@ public class Dungeon {
 
     private ArrayList<Point> doors;
 
+    private Point playerSpawn;
+
     public Dungeon(int level) {
         this.level = level;
         this.height = DUN_MAX_HEIGHT;
@@ -147,6 +149,22 @@ public class Dungeon {
         placeStairs(1, RNG.get().randomNumber(2), 3);
 
         cleaningGraniteWalls();
+
+        // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
+        playerSpawn = newSpot();
+
+        // monsterPlaceNewWithinDistance((randomNumber(8) + config::monsters::MON_MIN_PER_LEVEL + alloc_level), 0, true);
+        // dungeonAllocateAndPlaceObject(setCorridors, 3, randomNumber(alloc_level));
+        // dungeonAllocateAndPlaceObject(setRooms, 5, randomNumberNormalDistribution(config::dungeon::objects::LEVEL_OBJECTS_PER_ROOM, 3));
+        // dungeonAllocateAndPlaceObject(setFloors, 5, randomNumberNormalDistribution(config::dungeon::objects::LEVEL_OBJECTS_PER_CORRIDOR,
+        // 3));
+        // dungeonAllocateAndPlaceObject(setFloors, 4, randomNumberNormalDistribution(config::dungeon::objects::LEVEL_TOTAL_GOLD_AND_GEMS,
+        // 3));
+        // dungeonAllocateAndPlaceObject(setFloors, 1, randomNumber(alloc_level));
+
+        // if (this.level >= config::monsters::MON_ENDGAME_LEVEL) {
+        // monsterPlaceWinning();
+        // }
     }
 
     // Fills in empty spots with desired rock
@@ -1106,6 +1124,20 @@ public class Dungeon {
         }
     }
 
+    // Returns random co-ordinates
+    private Point newSpot() {
+        Tile tile = null;
+        Point position = new Point();
+
+        do {
+            position.y = RNG.get().randomNumber(this.height - 2);
+            position.x = RNG.get().randomNumber(this.width - 2);
+            tile = this.floor[position.y][position.x];
+        } while (!tile.isFloor || getObjectAt(position) != null || getMonsterAt(position) != null);
+
+        return position;
+    }
+
     private boolean isVisibleFromFloor(int x, int y) {
         if (x - 1 >= 0 && (this.floor[x - 1][y].isFloor || this.floor[x - 1][y].isDoor)) {
             return true;
@@ -1174,7 +1206,16 @@ public class Dungeon {
         this.floor = floor;
     }
 
+    public Point getPlayerSpawn() {
+        return playerSpawn;
+    }
+
     public Object getObjectAt(Point coord) {
+        // TODO
+        return null;
+    }
+
+    public Object getMonsterAt(Point coord) {
         // TODO
         return null;
     }

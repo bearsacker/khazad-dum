@@ -23,6 +23,10 @@ public class DepthBufferedImage {
         depthBuffer = new Point[getWidth()][getHeight()];
     }
 
+    public void drawImage(Image image, float x, float y) {
+        graphics.drawImage(image, x, y);
+    }
+
     public void drawImage(Point point, Image image, float x, float y, boolean alternate) {
         int frame = alternate ? 1 : 0;
         graphics.drawImage(image, x, y, x + 64, y + 96, frame * 64, 0, (frame + 1) * 64, 96);
