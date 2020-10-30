@@ -43,4 +43,14 @@ public enum Tile {
         this.isWall = isWall;
         this.isDoor = isDoor;
     }
+
+    public static int indexOf(Tile tile) {
+        for (int i = 0; i < values().length; i++) {
+            if (values()[i] == tile) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
 }

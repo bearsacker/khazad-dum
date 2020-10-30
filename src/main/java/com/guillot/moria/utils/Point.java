@@ -75,6 +75,32 @@ public class Point {
         y -= value;
     }
 
+    public float length() {
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    public Point normalize() {
+        Point out = new Point();
+
+        double length = length();
+        if (length != 0) {
+            out.x = (int) (this.x / length);
+            out.y = (int) (this.y / length);
+        }
+
+        return out;
+    }
+
+    public Point add(Point in) {
+        Point out = new Point(this.x + in.x, this.y + in.y);
+        return out;
+    }
+
+    public Point scale(double scale) {
+        Point out = new Point((int) (this.x * scale), (int) (this.y * scale));
+        return out;
+    }
+
     @Override
     public String toString() {
         return "(" + x + ";" + y + ")";
@@ -84,8 +110,8 @@ public class Point {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + x;
-        result = prime * result + y;
+        result = (int) (prime * result + x);
+        result = (int) (prime * result + y);
         return result;
     }
 

@@ -21,7 +21,7 @@ import com.guillot.moria.utils.RNG;
 
 public class GameView extends View {
 
-    public final static int MAX_VIEW_DISTANCE = 15;
+    public final static int MAX_VIEW_DISTANCE = 10;
 
     public final static int SIZE = 64;
 
@@ -68,104 +68,27 @@ public class GameView extends View {
         }
     }
 
-    private void discoverUp(Tile[][] grid, int tx, int ty, boolean stop) {
-        int y = player.getPosition().y + ty - MAX_VIEW_DISTANCE;
-        int x = player.getPosition().x + tx - MAX_VIEW_DISTANCE;
-
-        if (tx < 0 || ty < 0 || tx >= MAX_VIEW_DISTANCE * 2 + 1 || ty >= MAX_VIEW_DISTANCE * 2 + 1) {
+    private void compute(Tile[][] grid, Point position, int length) {
+        if (length >= MAX_VIEW_DISTANCE) {
             return;
         }
 
-        if (x >= 0 && y >= 0 && y < dungeon.getHeight() && x < dungeon.getWidth()) {
-            grid[ty][tx] = dungeon.getFloor()[y][x];
+        if (position.x >= 0 && position.y >= 0 && position.x < dungeon.getWidth() && position.y < dungeon.getHeight()) {
+            Tile dungeonTile = dungeon.getFloor()[position.y][position.x];
 
-            if (stop) {
+            int gridY = position.y - player.getPosition().y + MAX_VIEW_DISTANCE;
+            int gridX = position.x - player.getPosition().x + MAX_VIEW_DISTANCE;
+            if (gridX < 0 || gridY < 0 || gridX >= MAX_VIEW_DISTANCE * 2 + 1 || gridY >= MAX_VIEW_DISTANCE * 2 + 1) {
                 return;
             }
 
-            if (dungeon.getFloor()[y][x].isFloor || dungeon.getFloor()[y][x] == PILLAR) {
-                boolean willStop =
-                        y + 1 < dungeon.getHeight() && (dungeon.getFloor()[y + 1][x].isFloor || dungeon.getFloor()[y + 1][x] == PILLAR);
-                discoverUp(grid, tx - 1, ty + 1, !willStop);
-                discoverUp(grid, tx + 1, ty + 1, !willStop);
+            grid[gridY][gridX] = dungeonTile;
 
-                discoverUp(grid, tx, ty + 1, false);
-            }
-        }
-    }
-
-    private void discoverDown(Tile[][] grid, int tx, int ty, boolean stop) {
-        int y = player.getPosition().y + ty - MAX_VIEW_DISTANCE;
-        int x = player.getPosition().x + tx - MAX_VIEW_DISTANCE;
-
-        if (tx < 0 || ty < 0 || tx >= MAX_VIEW_DISTANCE * 2 + 1 || ty >= MAX_VIEW_DISTANCE * 2 + 1) {
-            return;
-        }
-
-        if (x >= 0 && y >= 0 && y < dungeon.getHeight() && x < dungeon.getWidth()) {
-            grid[ty][tx] = dungeon.getFloor()[y][x];
-
-            if (stop) {
-                return;
-            }
-
-            if (dungeon.getFloor()[y][x].isFloor || dungeon.getFloor()[y][x] == PILLAR) {
-                boolean willStop = y - 1 >= 0 && (dungeon.getFloor()[y - 1][x].isFloor || dungeon.getFloor()[y - 1][x] == PILLAR);
-                discoverDown(grid, tx - 1, ty - 1, !willStop);
-                discoverDown(grid, tx + 1, ty - 1, !willStop);
-
-                discoverDown(grid, tx, ty - 1, false);
-            }
-        }
-    }
-
-    private void discoverLeft(Tile[][] grid, int tx, int ty, boolean stop) {
-        int y = player.getPosition().y + ty - MAX_VIEW_DISTANCE;
-        int x = player.getPosition().x + tx - MAX_VIEW_DISTANCE;
-
-        if (tx < 0 || ty < 0 || tx >= MAX_VIEW_DISTANCE * 2 + 1 || ty >= MAX_VIEW_DISTANCE * 2 + 1) {
-            return;
-        }
-
-        if (x >= 0 && y >= 0 && y < dungeon.getHeight() && x < dungeon.getWidth()) {
-            grid[ty][tx] = dungeon.getFloor()[y][x];
-
-            if (stop) {
-                return;
-            }
-
-            if (dungeon.getFloor()[y][x].isFloor || dungeon.getFloor()[y][x] == PILLAR) {
-                boolean willStop = x - 1 >= 0 && (dungeon.getFloor()[y][x - 1].isFloor || dungeon.getFloor()[y][x - 1] == PILLAR);
-                discoverLeft(grid, tx - 1, ty - 1, !willStop);
-                discoverLeft(grid, tx - 1, ty + 1, !willStop);
-
-                discoverLeft(grid, tx - 1, ty, false);
-            }
-        }
-    }
-
-    private void discoverRight(Tile[][] grid, int tx, int ty, boolean stop) {
-        int y = player.getPosition().y + ty - MAX_VIEW_DISTANCE;
-        int x = player.getPosition().x + tx - MAX_VIEW_DISTANCE;
-
-        if (tx < 0 || ty < 0 || tx >= MAX_VIEW_DISTANCE * 2 + 1 || ty >= MAX_VIEW_DISTANCE * 2 + 1) {
-            return;
-        }
-
-        if (x >= 0 && y >= 0 && y < dungeon.getHeight() && x < dungeon.getWidth()) {
-            grid[ty][tx] = dungeon.getFloor()[y][x];
-
-            if (stop) {
-                return;
-            }
-
-            if (dungeon.getFloor()[y][x].isFloor || dungeon.getFloor()[y][x] == PILLAR) {
-                boolean willStop =
-                        x + 1 < dungeon.getWidth() && (dungeon.getFloor()[y][x + 1].isFloor || dungeon.getFloor()[y][x + 1] == PILLAR);
-                discoverRight(grid, tx + 1, ty - 1, !willStop);
-                discoverRight(grid, tx + 1, ty + 1, !willStop);
-
-                discoverRight(grid, tx + 1, ty, false);
+            if (dungeonTile.isFloor || dungeonTile == PILLAR) {
+                compute(grid, new Point(position.x - 1, position.y), length + 1);
+                compute(grid, new Point(position.x + 1, position.y), length + 1);
+                compute(grid, new Point(position.x, position.y - 1), length + 1);
+                compute(grid, new Point(position.x, position.y + 1), length + 1);
             }
         }
     }
@@ -175,10 +98,9 @@ public class GameView extends View {
         image.clear();
 
         Tile[][] grid = new Tile[MAX_VIEW_DISTANCE * 2 + 1][MAX_VIEW_DISTANCE * 2 + 1];
-        discoverUp(grid, MAX_VIEW_DISTANCE, MAX_VIEW_DISTANCE, false);
-        discoverDown(grid, MAX_VIEW_DISTANCE, MAX_VIEW_DISTANCE, false);
-        discoverLeft(grid, MAX_VIEW_DISTANCE, MAX_VIEW_DISTANCE, false);
-        discoverRight(grid, MAX_VIEW_DISTANCE, MAX_VIEW_DISTANCE, false);
+
+
+        compute(grid, player.getPosition(), 0);
 
         for (int y = MAX_VIEW_DISTANCE * 2; y >= 0; y--) {
             for (int x = 0; x < MAX_VIEW_DISTANCE * 2 + 1; x++) {
@@ -186,6 +108,8 @@ public class GameView extends View {
                 int j = player.getPosition().x + x - MAX_VIEW_DISTANCE;
 
                 if (grid[y][x] != null) {
+                    Tile tile = grid[y][x];
+
                     boolean alternate = false;
 
                     if (grid[y][x].isWall) {
@@ -198,11 +122,11 @@ public class GameView extends View {
                                 && grid[y + 1][x - 1] != null && (grid[y + 1][x - 1].isFloor || grid[y + 1][x - 1].isDoor)) {
                             alternate = true;
                         }
-                    } else if (grid[y][x] == OPEN_DOOR) {
+                    } else if (tile == OPEN_DOOR) {
                         alternate = true;
                     }
 
-                    drawTile(grid[y][x], i, j, alternate);
+                    drawTile(tile, i, j, alternate);
                 }
 
                 if (x == MAX_VIEW_DISTANCE && y == MAX_VIEW_DISTANCE) {
