@@ -27,9 +27,8 @@ public class DepthBufferedImage {
         graphics.drawImage(image, x, y);
     }
 
-    public void drawImage(Point point, Image image, float x, float y, boolean alternate) {
-        int frame = alternate ? 1 : 0;
-        graphics.drawImage(image, x, y, x + 64, y + 96, frame * 64, 0, (frame + 1) * 64, 96);
+    public void drawImage(Point point, Image image, float x, float y) {
+        graphics.drawImage(image, x, y);
 
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
@@ -51,7 +50,7 @@ public class DepthBufferedImage {
 
         for (int i = 0; srcx + i < srcx2; i++) {
             for (int j = 0; srcy + j < srcy2; j++) {
-                if (image.getColor((int) (srcx + i), (int) (srcy + j)).a > 0f) {
+                if (image.getColor((int) (srcx + i), (int) (srcy + j)).a == 1f) {
                     int bufferX = (int) (x + i);
                     int bufferY = (int) (y + j);
 
@@ -61,6 +60,11 @@ public class DepthBufferedImage {
                 }
             }
         }
+    }
+
+    public void drawImage(Image image, float x, float y, float x2, float y2, float srcx, float srcy, float srcx2,
+            float srcy2) {
+        graphics.drawImage(image, x, y, x2, y2, srcx, srcy, srcx2, srcy2);
     }
 
     public Image getImage() {

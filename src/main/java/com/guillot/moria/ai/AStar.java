@@ -43,10 +43,10 @@ public class AStar {
         this.map = map;
         this.maxSearchDistance = maxSearchDistance;
 
-        this.nodes = new Node[map.getWidth()][map.getHeight()];
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                this.nodes[x][y] = new Node(x, y);
+        this.nodes = new Node[map.getHeight()][map.getWidth()];
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                this.nodes[y][x] = new Node(y, x);
             }
         }
     }
@@ -61,25 +61,20 @@ public class AStar {
      * @return the path or null
      */
     public Path findPath(Point start, Point end, boolean allowDiag) {
-        int sx = start.x;
-        int sy = start.y;
-        int tx = end.x;
-        int ty = end.y;
-
-        // easy first check, if the destination is blocked, we can't get there
+        // eastart.y first check, if the destination is blocked, we can't get there
         if (map.getFloor()[end.x][end.y] == null || !map.getFloor()[end.x][end.y].isFloor) {
             return null;
         }
 
-        // initial state for A*. The closed group is empty. Only the starting
+        // initial state for A*. The closed group is empend.y. Only the starting
         // tile is in the open list and it'e're already there
-        nodes[sx][sy].setCost(0);
-        nodes[sx][sy].setDepth(0);
+        nodes[start.x][start.y].setCost(0);
+        nodes[start.x][start.y].setDepth(0);
         closed.clear();
         open.clear();
-        open.add(nodes[sx][sy]);
+        open.add(nodes[start.x][start.y]);
 
-        nodes[tx][ty].setParent(null);
+        nodes[end.x][end.y].setParent(null);
 
         // while we haven'n't exceeded our max search depth
         int maxDepth = 0;
@@ -87,7 +82,7 @@ public class AStar {
             // pull out the first node in our open list, this is determined to
             // be the most likely to be the next step based on our heuristic
             Node current = getFirstInOpen();
-            if (current == nodes[tx][ty]) {
+            if (current == nodes[end.x][end.y]) {
                 break;
             }
 
@@ -115,7 +110,7 @@ public class AStar {
                     int xp = x + current.getX();
                     int yp = y + current.getY();
 
-                    if (isValidLocation(sx, sy, current.getX(), current.getY(), xp, yp)) {
+                    if (isValidLocation(start.x, start.y, current.getX(), current.getY(), xp, yp)) {
                         // the cost to get to this node is cost the current plus
                         // the movement
                         // cost to reach this node. Note that the heursitic
@@ -146,7 +141,7 @@ public class AStar {
                         // step (i.e. to the open list)
                         if (!inOpenList(neighbour) && !(inClosedList(neighbour))) {
                             neighbour.setCost(nextStepCost);
-                            neighbour.setHeuristic((int) new Point(xp, yp).distanceFrom(new Point(tx, ty)));
+                            neighbour.setHeuristic((int) new Point(xp, yp).distanceFrom(new Point(end.x, end.y)));
                             maxDepth = Math.max(maxDepth, neighbour.setParent(current));
                             addToOpen(neighbour);
                         }
@@ -157,7 +152,7 @@ public class AStar {
 
         // since we'e've run out of search
         // there was no path. Just return null
-        if (nodes[tx][ty].getParent() == null) {
+        if (nodes[end.x][end.y].getParent() == null) {
             return null;
         }
 
@@ -165,12 +160,12 @@ public class AStar {
         // references of the nodes to find out way from the target location back
         // to the start recording the nodes on the way.
         Path path = new Path();
-        Node target = nodes[tx][ty];
-        while (target != nodes[sx][sy]) {
+        Node target = nodes[end.x][end.y];
+        while (target != nodes[start.x][start.y]) {
             path.prependStep(target.getX(), target.getY());
             target = target.getParent();
         }
-        path.prependStep(sx, sy);
+        path.prependStep(start.x, start.y);
 
         return path;
     }
@@ -254,7 +249,7 @@ public class AStar {
      * @return True if the location is valid for the given mover
      */
     protected boolean isValidLocation(int sx, int sy, int cx, int cy, int x, int y) {
-        boolean invalid = (x < 0) || (y < 0) || (x >= map.getWidth()) || (y >= map.getHeight());
+        boolean invalid = (x < 0) || (y < 0) || (x >= map.getHeight()) || (y >= map.getWidth());
 
         if ((!invalid) && ((sx != x) || (sy != y))) {
             invalid = map.getFloor()[x][y] == NULL || !map.getFloor()[x][y].isFloor;

@@ -75,6 +75,10 @@ public class Point {
         y -= value;
     }
 
+    public Point inverseXY() {
+        return new Point(y, x);
+    }
+
     public float length() {
         return (float) Math.sqrt(x * x + y * y);
     }

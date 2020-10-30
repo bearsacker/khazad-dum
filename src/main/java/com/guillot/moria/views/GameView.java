@@ -1,18 +1,23 @@
 package com.guillot.moria.views;
 
 import static com.guillot.moria.Images.HUMAN_WARRIOR;
+import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.OPEN_DOOR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
+import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import com.guillot.engine.Game;
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.View;
+import com.guillot.moria.Images;
 import com.guillot.moria.Player;
+import com.guillot.moria.ai.AStar;
+import com.guillot.moria.ai.Path;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.utils.DepthBufferedImage;
@@ -31,13 +36,24 @@ public class GameView extends View {
 
     private DepthBufferedImage image;
 
+    private Point cursor;
+
+    private AStar astar;
+
+    private Path path;
+
+    private int currentStep;
+
+    private long lastStep;
+
     @Override
     public void start() throws Exception {
-
         RNG.get().setSeed(1603923549811L);
 
         dungeon = new Dungeon(300);
         dungeon.generate();
+
+        astar = new AStar(dungeon, 100);
 
         player = new Player();
         player.setPosition(dungeon.getPlayerSpawn());
@@ -49,21 +65,28 @@ public class GameView extends View {
     public void update() throws Exception {
         super.update();
 
+        long time = System.currentTimeMillis();
+        if (time - lastStep > 100) {
+            if (path != null) {
+                player.setPosition(path.getStep(currentStep).inverseXY());
+                currentStep++;
+
+                if (currentStep >= path.getLength()) {
+                    path = null;
+                }
+            }
+
+            lastStep = time;
+        }
+
         if (isFocused()) {
-            if (GUI.get().isKeyPressed(Input.KEY_LEFT)) {
-                player.getPosition().decrementX();
-            }
+            cursor = image.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
 
-            if (GUI.get().isKeyPressed(Input.KEY_RIGHT)) {
-                player.getPosition().incrementX();
-            }
-
-            if (GUI.get().isKeyPressed(Input.KEY_UP)) {
-                player.getPosition().incrementY();
-            }
-
-            if (GUI.get().isKeyPressed(Input.KEY_DOWN)) {
-                player.getPosition().decrementY();
+            if (cursor != null) {
+                if (GUI.get().isMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+                    path = astar.findPath(player.getPosition().inverseXY(), cursor, false);
+                    currentStep = 0;
+                }
             }
         }
     }
@@ -84,7 +107,7 @@ public class GameView extends View {
 
             grid[gridY][gridX] = dungeonTile;
 
-            if (dungeonTile.isFloor || dungeonTile == PILLAR) {
+            if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile == DOWN_STAIR || dungeonTile == UP_STAIR) {
                 compute(grid, new Point(position.x - 1, position.y), length + 1);
                 compute(grid, new Point(position.x + 1, position.y), length + 1);
                 compute(grid, new Point(position.x, position.y - 1), length + 1);
@@ -98,8 +121,6 @@ public class GameView extends View {
         image.clear();
 
         Tile[][] grid = new Tile[MAX_VIEW_DISTANCE * 2 + 1][MAX_VIEW_DISTANCE * 2 + 1];
-
-
         compute(grid, player.getPosition(), 0);
 
         for (int y = MAX_VIEW_DISTANCE * 2; y >= 0; y--) {
@@ -129,6 +150,13 @@ public class GameView extends View {
                     drawTile(tile, i, j, alternate);
                 }
 
+                if (cursor != null) {
+                    if (cursor.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
+                            && cursor.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
+                        drawCursor(cursor.x, cursor.y);
+                    }
+                }
+
                 if (x == MAX_VIEW_DISTANCE && y == MAX_VIEW_DISTANCE) {
                     image.drawImage(HUMAN_WARRIOR.getImage(), image.getCenterOfRotationX() - 32, image.getCenterOfRotationY() - 48);
                 }
@@ -145,8 +173,19 @@ public class GameView extends View {
         int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
 
         if (tile.image != null) {
-            image.drawImage(new Point(px, py), tile.image, x, y, alternate);
+            if (alternate) {
+                image.drawImage(new Point(px, py), tile.image.getSubImage(64, 0, 64, 96), x, y);
+            } else {
+                image.drawImage(new Point(px, py), tile.image.getSubImage(0, 0, 64, 96), x, y);
+            }
         }
+    }
+
+    private void drawCursor(int px, int py) {
+        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
+        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
+
+        image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 64, 0, 128, 96);
     }
 
     public static void main(String[] args) throws SlickException {
