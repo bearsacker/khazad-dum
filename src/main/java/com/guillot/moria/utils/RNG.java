@@ -21,9 +21,17 @@ public class RNG {
         random.setSeed(seed);
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
     // Generates a random integer x where 1<=X<=MAXVA
     public int randomNumber(int max) {
         return random.nextInt(max) + 1;
+    }
+
+    public int randomNumberBetween(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
     }
 
     // Generates a random integer number of NORMAL distribution

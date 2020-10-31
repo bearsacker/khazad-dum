@@ -11,11 +11,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import com.guillot.engine.Game;
+import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.engine.character.Warrior;
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.Images;
-import com.guillot.moria.Player;
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.dungeon.Dungeon;
@@ -32,7 +33,7 @@ public class GameView extends View {
 
     private Dungeon dungeon;
 
-    private Player player;
+    private AbstractCharacter player;
 
     private DepthBufferedImage image;
 
@@ -55,7 +56,7 @@ public class GameView extends View {
 
         astar = new AStar(dungeon, 100);
 
-        player = new Player();
+        player = new Warrior("Jean");
         player.setPosition(dungeon.getPlayerSpawn());
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
@@ -83,7 +84,7 @@ public class GameView extends View {
             cursor = image.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
 
             if (cursor != null) {
-                if (GUI.get().isMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+                if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
                     path = astar.findPath(player.getPosition().inverseXY(), cursor, false);
                     currentStep = 0;
                 }
@@ -150,10 +151,21 @@ public class GameView extends View {
                     drawTile(tile, i, j, alternate);
                 }
 
+                if (path != null) {
+                    for (int k = currentStep; k < path.getLength(); k++) {
+                        Point step = path.getStep(k);
+
+                        if (step.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
+                                && step.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
+                            drawPathTile(step.x, step.y);
+                        }
+                    }
+                }
+
                 if (cursor != null) {
                     if (cursor.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
                             && cursor.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
-                        drawCursor(cursor.x, cursor.y);
+                        drawCursor(cursor.x, cursor.y, grid[y][x]);
                     }
                 }
 
@@ -181,11 +193,20 @@ public class GameView extends View {
         }
     }
 
-    private void drawCursor(int px, int py) {
+    private void drawCursor(int px, int py, Tile tile) {
         int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
         int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
 
-        image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 64, 0, 128, 96);
+        if (tile != null && tile.isFloor) {
+            image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 64, 0, 128, 96);
+        }
+    }
+
+    private void drawPathTile(int px, int py) {
+        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
+        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
+
+        image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 0, 0, 64, 96);
     }
 
     public static void main(String[] args) throws SlickException {
