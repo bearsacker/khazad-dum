@@ -2,7 +2,7 @@ package com.guillot.moria.item.affixe;
 
 import static com.guillot.moria.item.affixe.AffixeRarity.LEGENDARY;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class AffixeAllAttributes extends AbstractAffixe {
 
@@ -18,15 +18,15 @@ public class AffixeAllAttributes extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setVitality(character.getVitality() + value);
+        character.setSpirit(character.getSpirit() + value);
         character.setStrength(character.getStrength() + value);
-        character.setDexterity(character.getDexterity() + value);
+        character.setAgility(character.getAgility() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setVitality(character.getVitality() - value);
+        character.setSpirit(character.getSpirit() - value);
         character.setStrength(character.getStrength() - value);
-        character.setDexterity(character.getDexterity() - value);
+        character.setAgility(character.getAgility() - value);
     }
 }

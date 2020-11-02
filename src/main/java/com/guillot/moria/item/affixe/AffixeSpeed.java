@@ -8,7 +8,7 @@ import static com.guillot.moria.item.ItemType.TWO_HANDED_WEAPON;
 import static com.guillot.moria.item.affixe.AffixeRarity.RARE;
 import static java.util.Arrays.asList;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.ItemType;
 
 
@@ -27,11 +27,11 @@ public class AffixeSpeed extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setSpeed(character.getSpeed() + this.value);
+        character.setMovement(character.getMovement() + this.value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setSpeed(character.getSpeed() - this.value);
+        character.setMovement(character.getMovement() - this.value);
     }
 }

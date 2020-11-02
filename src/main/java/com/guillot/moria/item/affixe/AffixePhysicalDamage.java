@@ -7,7 +7,7 @@ import static com.guillot.moria.item.ItemType.SHIELD;
 import static com.guillot.moria.item.affixe.AffixeRarity.LEGENDARY;
 import static java.util.Arrays.asList;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.ItemType;
 
 

@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.utils.RNG;
 

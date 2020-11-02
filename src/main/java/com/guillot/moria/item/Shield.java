@@ -2,7 +2,7 @@ package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemType.SHIELD;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class Shield extends AbstractItem {
 

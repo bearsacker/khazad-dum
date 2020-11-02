@@ -1,4 +1,4 @@
-package com.guillot.engine.character;
+package com.guillot.moria.character;
 
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.utils.Point;
@@ -13,19 +13,41 @@ public abstract class AbstractCharacter {
 
     protected int currentLife;
 
+    // Attributes
+
     protected int strength;
 
-    protected int dexterity;
+    protected int agility;
 
-    protected int vitality;
+    protected int spirit;
+
+    protected int destiny;
+
+    // Computed from strength
+
+    protected int physicalDamage;
+
+    // Computed from agility
+
+    protected int chanceHit;
+
+    protected int chanceDodge;
+
+    protected int movement;
+
+    // Computed from spirit
 
     protected int life;
 
     protected int lightRadius;
 
-    protected int speed;
+    // Computed from destiny
 
-    protected int physicalDamage;
+    protected int chanceMagicFind;
+
+    protected int chanceLockPicking;
+
+    // Computed from equipment
 
     protected int fireDamage;
 
@@ -33,13 +55,9 @@ public abstract class AbstractCharacter {
 
     protected int lightningDamage;
 
-    protected int chanceHit;
-
-    protected int chanceDodge;
-
-    protected int luck;
-
     protected int armor;
+
+    // Equipment
 
     protected AbstractItem head;
 
@@ -72,10 +90,9 @@ public abstract class AbstractCharacter {
         this.neck = null;
 
         this.strength = this.getStrengthMin();
-        this.dexterity = this.getDexterityMin();
-        this.vitality = this.getVitalityMin();
-        this.lightRadius = this.getLightRadiusMin();
-        this.luck = this.getLuckMin();
+        this.agility = this.getAgilityMin();
+        this.spirit = this.getSpiritMin();
+        this.destiny = this.getDestinyMin();
 
         computeStatistics();
         this.currentLife = this.life;
@@ -86,12 +103,17 @@ public abstract class AbstractCharacter {
     }
 
     public void computeStatistics() {
-        this.life = 0 + (this.level - 1) * 0
-                + this.vitality * 0;
-        this.chanceHit = 0 + this.dexterity / 2;
-        this.chanceDodge = this.dexterity / 2;
-        this.speed = this.dexterity / 3;
-        this.physicalDamage = this.strength / 3;
+        physicalDamage = strength / 3;
+
+        chanceHit = getChanceHitMin() + agility / 2;
+        chanceDodge = agility / 2;
+        movement = agility / 3;
+
+        life = getLifeMin() + (level - 1) * getLifePerLevel() + spirit * getLifePerSpirit();
+        lightRadius = getLightRadiusMin() + spirit / 4;
+
+        chanceMagicFind = getChanceMagicFindMin() + destiny;
+        chanceLockPicking = getChanceLockPickingMin() + destiny;
     }
 
     public void equipItem(AbstractItem item) {
@@ -190,20 +212,20 @@ public abstract class AbstractCharacter {
         this.currentLife = currentLife;
     }
 
-    public int getDexterity() {
-        return dexterity;
+    public int getAgility() {
+        return agility;
     }
 
-    public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
+    public void setAgility(int agility) {
+        this.agility = agility;
     }
 
-    public int getVitality() {
-        return vitality;
+    public int getSpirit() {
+        return spirit;
     }
 
-    public void setVitality(int vitality) {
-        this.vitality = vitality;
+    public void setSpirit(int spirit) {
+        this.spirit = spirit;
     }
 
     public int getLife() {
@@ -222,12 +244,12 @@ public abstract class AbstractCharacter {
         this.lightRadius = lightRadius;
     }
 
-    public int getSpeed() {
-        return speed;
+    public int getMovement() {
+        return movement;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setMovement(int movement) {
+        this.movement = movement;
     }
 
     public int getPhysicalDamage() {
@@ -278,12 +300,12 @@ public abstract class AbstractCharacter {
         this.chanceDodge = chanceDodge;
     }
 
-    public int getMagicFind() {
-        return luck;
+    public int getChanceMagicFind() {
+        return chanceMagicFind;
     }
 
-    public void setMagicFind(int magicFind) {
-        this.luck = magicFind;
+    public void setChanceMagicFind(int chanceMagicFind) {
+        this.chanceMagicFind = chanceMagicFind;
     }
 
     public int getArmor() {
@@ -343,21 +365,26 @@ public abstract class AbstractCharacter {
         String text = this.getName() + " [lvl " + level + "]\n";
         text += "===================================\n";
         text += "Strength: " + strength + "\n";
-        text += "Dexterity: " + dexterity + "\n";
-        text += "Vitality: " + vitality + "\n";
+        text += "\tPhysical damage: + 0-" + physicalDamage + "%\n";
 
-        text += "Life: " + currentLife + "/" + life + "\n";
+        text += "Agility: " + agility + "\n";
+        text += "\tChance to Hit: " + chanceHit + "%\n";
+        text += "\tChance to Block/Dodge: " + chanceDodge + "%\n";
+        text += "\tMovement: " + movement + "m\n";
 
+        text += "Spirit: " + spirit + "\n";
+        text += "\tLife: " + currentLife + "/" + life + "\n";
+        text += "\tLight radius: " + lightRadius + "m\n";
+
+        text += "Destiny: " + destiny + "\n";
+        text += "\tChance to find a magic object: + " + chanceMagicFind + "%\n";
+        text += "\tChance to pick a lock: " + chanceLockPicking + "%\n";
+
+        text += "\n";
         text += "Armor: " + armor + "\n";
-        text += "Speed: + " + speed + "%\n";
-        text += "Physical damage: + " + physicalDamage + "%\n";
         text += "Fire damage: + " + fireDamage + "%\n";
         text += "Frost damage: + " + frostDamage + "%\n";
         text += "Lightning damage: + " + lightningDamage + "%\n";
-        text += "Light radius: " + lightRadius + "m\n";
-        text += "Chance to Hit: " + chanceHit + "%\n";
-        text += "Chance to Block/Dodge: " + chanceDodge + "%\n";
-        text += "Luck: + " + luck + "%\n";
 
         return text;
     }
@@ -366,11 +393,23 @@ public abstract class AbstractCharacter {
 
     public abstract int getStrengthMin();
 
-    public abstract int getDexterityMin();
+    public abstract int getAgilityMin();
 
-    public abstract int getVitalityMin();
+    public abstract int getSpiritMin();
+
+    public abstract int getDestinyMin();
+
+    public abstract int getChanceHitMin();
+
+    public abstract int getLifeMin();
+
+    public abstract int getLifePerLevel();
+
+    public abstract int getLifePerSpirit();
 
     public abstract int getLightRadiusMin();
 
-    public abstract int getLuckMin();
+    public abstract int getChanceMagicFindMin();
+
+    public abstract int getChanceLockPickingMin();
 }

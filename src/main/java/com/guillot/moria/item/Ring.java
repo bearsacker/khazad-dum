@@ -3,7 +3,7 @@ package com.guillot.moria.item;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.item.ItemType.RING;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class Ring extends AbstractItem {
 

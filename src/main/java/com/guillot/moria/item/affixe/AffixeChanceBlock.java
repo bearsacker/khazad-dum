@@ -12,7 +12,7 @@ import static com.guillot.moria.item.ItemType.TWO_HANDED_WEAPON;
 import static com.guillot.moria.item.affixe.AffixeRarity.NORMAL;
 import static java.util.Arrays.asList;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.ItemType;
 
 

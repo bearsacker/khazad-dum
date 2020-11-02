@@ -2,7 +2,7 @@ package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemType.BOW;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class Bow extends AbstractItem {
 
@@ -37,6 +37,6 @@ public class Bow extends AbstractItem {
 
     @Override
     public boolean isEquipable(AbstractCharacter character) {
-        return character.getDexterity() >= this.requirement;
+        return character.getAgility() >= this.requirement;
     }
 }

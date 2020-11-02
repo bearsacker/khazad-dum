@@ -2,7 +2,7 @@ package com.guillot.moria.item.affixe;
 
 import static com.guillot.moria.item.affixe.AffixeRarity.NORMAL;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class AffixeLife extends AbstractAffixe {
 

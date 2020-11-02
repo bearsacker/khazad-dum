@@ -2,7 +2,7 @@ package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemType.STAFF;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class Staff extends AbstractItem {
 

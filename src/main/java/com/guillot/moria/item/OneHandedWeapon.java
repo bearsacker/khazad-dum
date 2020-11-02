@@ -2,7 +2,7 @@ package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemType.ONE_HANDED_WEAPON;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 public class OneHandedWeapon extends AbstractItem {
 

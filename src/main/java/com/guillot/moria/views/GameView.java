@@ -11,14 +11,14 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import com.guillot.engine.Game;
-import com.guillot.engine.character.AbstractCharacter;
-import com.guillot.engine.character.Warrior;
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.Images;
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
+import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.character.Warrior;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.utils.DepthBufferedImage;
@@ -58,6 +58,7 @@ public class GameView extends View {
 
         player = new Warrior("Jean");
         player.setPosition(dungeon.getPlayerSpawn());
+        System.out.println(player);
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
     }

@@ -4,7 +4,7 @@ import static com.guillot.moria.item.ItemType.HEALING_POTION;
 
 import java.util.ArrayList;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 
 
 public class HealingPotion extends AbstractItem {

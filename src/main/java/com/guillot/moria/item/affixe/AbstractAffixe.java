@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 
 import java.util.List;
 
-import com.guillot.engine.character.AbstractCharacter;
+import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.ItemType;
 import com.guillot.moria.utils.RNG;
 
@@ -28,7 +28,7 @@ public abstract class AbstractAffixe {
             new AffixeFireDamage(), //
             new AffixeFrostDamage(), //
             new AffixeLightningDamage(), //
-            new AffixeLuck());
+            new AffixeChanceMagicFind());
 
     protected String name;
 
