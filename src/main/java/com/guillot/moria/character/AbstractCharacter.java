@@ -59,6 +59,8 @@ public abstract class AbstractCharacter {
 
     // Equipment
 
+    protected int gold;
+
     protected AbstractItem head;
 
     protected AbstractItem body;
@@ -358,6 +360,14 @@ public abstract class AbstractCharacter {
 
     public void setPosition(Point position) {
         this.position = new Point(position);
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 
     @Override

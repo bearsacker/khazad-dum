@@ -21,7 +21,6 @@ public abstract class AbstractAffixe {
             new AffixeChanceDodge(), //
             new AffixeChanceHit(), //
             new AffixeLife(), //
-            new AffixeSpeed(), //
             new AffixeLightRadius(), //
             new AffixePhysicalDamage(), //
             new AffixeChanceBlock(), //

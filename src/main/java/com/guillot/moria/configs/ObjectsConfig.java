@@ -6,7 +6,7 @@ import com.guillot.engine.configs.Config;
 
 public class ObjectsConfig extends Config {
 
-    private static final ObjectsConfig INSTANCE = new ObjectsConfig("dungeon.properties");
+    private static final ObjectsConfig INSTANCE = new ObjectsConfig("objects.properties");
 
     private ObjectsConfig(String file) {
         super(file);
@@ -25,4 +25,6 @@ public class ObjectsConfig extends Config {
     public static final int LEVEL_OBJECTS_PER_CORRIDOR = get().getInt("level.corridor.objects");
 
     public static final int LEVEL_TOTAL_GOLD_AND_GEMS = get().getInt("level.total.gold");
+
+    public static final int TREASURE_CHANCE_OF_GREAT_ITEM = get().getInt("treasure.chance-great-item");
 }

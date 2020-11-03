@@ -51,14 +51,13 @@ public class GameView extends View {
     public void start() throws Exception {
         RNG.get().setSeed(1603923549811L);
 
-        dungeon = new Dungeon(300);
+        player = new Warrior("Jean");
+        System.out.println(player);
+
+        dungeon = new Dungeon(player, 300);
         dungeon.generate();
 
         astar = new AStar(dungeon, 100);
-
-        player = new Warrior("Jean");
-        player.setPosition(dungeon.getPlayerSpawn());
-        System.out.println(player);
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
     }

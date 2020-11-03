@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
+import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
 public abstract class AbstractItem {
@@ -23,6 +24,8 @@ public abstract class AbstractItem {
     protected int value;
 
     protected int requirement;
+
+    protected Point position;
 
     public void generateBase() {
         List<int[]> values = asList(this.getValuesPerLevel()).stream().filter(x -> x[0] <= this.qualityLevel).collect(toList());
@@ -52,8 +55,8 @@ public abstract class AbstractItem {
         this.type = type;
     }
 
-    public void setQualityLevel(int characterLevel) {
-        this.qualityLevel = characterLevel + this.rarity.getBonusQualityLevel();
+    public void setQualityLevel(int qualityLevel) {
+        this.qualityLevel = qualityLevel + this.rarity.getBonusQualityLevel();
     }
 
     public int getQualityLevel() {
@@ -98,6 +101,14 @@ public abstract class AbstractItem {
 
     public boolean isEligible() {
         return true;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = new Point(position);
     }
 
     public abstract void setPassiveEffect(AbstractCharacter character);

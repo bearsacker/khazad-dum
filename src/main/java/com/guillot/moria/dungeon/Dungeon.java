@@ -15,10 +15,18 @@ import static com.guillot.moria.configs.DungeonConfig.DUN_STREAMER_WIDTH;
 import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNELING;
 import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNEL_DOORS;
 import static com.guillot.moria.configs.DungeonConfig.DUN_UNUSUAL_ROOMS;
+import static com.guillot.moria.configs.ObjectsConfig.LEVEL_OBJECTS_PER_CORRIDOR;
+import static com.guillot.moria.configs.ObjectsConfig.LEVEL_OBJECTS_PER_ROOM;
+import static com.guillot.moria.configs.ObjectsConfig.LEVEL_TOTAL_GOLD_AND_GEMS;
+import static com.guillot.moria.configs.ObjectsConfig.TREASURE_CHANCE_OF_GREAT_ITEM;
 import static com.guillot.moria.configs.ScreenConfig.QUART_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.QUART_WIDTH;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_WIDTH;
+import static com.guillot.moria.dungeon.ObjectType.GOLD;
+import static com.guillot.moria.dungeon.ObjectType.RANDOM;
+import static com.guillot.moria.dungeon.ObjectType.RUBBLE;
+import static com.guillot.moria.dungeon.ObjectType.TRAP;
 import static com.guillot.moria.dungeon.Tile.CLOSED_DOOR;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DARK_FLOOR;
@@ -34,10 +42,20 @@ import static com.guillot.moria.dungeon.Tile.SECRET_DOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
 import static com.guillot.moria.dungeon.Tile.TMP2_WALL;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.item.ItemRarity.NORMAL;
+import static java.lang.Math.min;
+import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.configs.ObjectsConfig;
+import com.guillot.moria.item.AbstractItem;
+import com.guillot.moria.item.Gold;
+import com.guillot.moria.item.ItemGenerator;
 import com.guillot.moria.utils.Direction;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
@@ -54,9 +72,12 @@ public class Dungeon {
 
     private ArrayList<Point> doors;
 
-    private Point playerSpawn;
+    private AbstractCharacter player;
 
-    public Dungeon(int level) {
+    private ArrayList<AbstractItem> items;
+
+    public Dungeon(AbstractCharacter player, int level) {
+        this.player = player;
         this.level = level;
         this.height = DUN_MAX_HEIGHT;
         this.width = DUN_MAX_WIDTH;
@@ -68,6 +89,7 @@ public class Dungeon {
         }
 
         this.doors = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
     // Cave logic flow for generation of new dungeon
@@ -151,20 +173,25 @@ public class Dungeon {
         cleaningGraniteWalls();
 
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
-        playerSpawn = newSpot();
+        player.setPosition(newSpot());
 
-        // monsterPlaceNewWithinDistance((randomNumber(8) + config::monsters::MON_MIN_PER_LEVEL + alloc_level), 0, true);
-        // dungeonAllocateAndPlaceObject(setCorridors, 3, randomNumber(alloc_level));
-        // dungeonAllocateAndPlaceObject(setRooms, 5, randomNumberNormalDistribution(config::dungeon::objects::LEVEL_OBJECTS_PER_ROOM, 3));
-        // dungeonAllocateAndPlaceObject(setFloors, 5, randomNumberNormalDistribution(config::dungeon::objects::LEVEL_OBJECTS_PER_CORRIDOR,
-        // 3));
-        // dungeonAllocateAndPlaceObject(setFloors, 4, randomNumberNormalDistribution(config::dungeon::objects::LEVEL_TOTAL_GOLD_AND_GEMS,
-        // 3));
-        // dungeonAllocateAndPlaceObject(setFloors, 1, randomNumber(alloc_level));
+        int allocLevel = (this.level / 3);
+        if (allocLevel < 2) {
+            allocLevel = 2;
+        } else if (allocLevel > 10) {
+            allocLevel = 10;
+        }
 
-        // if (this.level >= config::monsters::MON_ENDGAME_LEVEL) {
-        // monsterPlaceWinning();
-        // }
+        // TODO
+        // monsterPlaceNewWithinDistance((RNG.get().randomNumber(8) + MonstersConfig.MON_MIN_PER_LEVEL + allocLevel), 0, true);
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR), RUBBLE, RNG.get().randomNumber(allocLevel));
+        allocateAndPlaceObject(asList(LIGHT_FLOOR, DARK_FLOOR), RANDOM,
+                RNG.get().randomNumberNormalDistribution(LEVEL_OBJECTS_PER_ROOM, 3));
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), RANDOM,
+                RNG.get().randomNumberNormalDistribution(LEVEL_OBJECTS_PER_CORRIDOR, 3));
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), GOLD,
+                RNG.get().randomNumberNormalDistribution(LEVEL_TOTAL_GOLD_AND_GEMS, 3));
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), TRAP, RNG.get().randomNumber(allocLevel));
     }
 
     // Fills in empty spots with desired rock
@@ -304,13 +331,11 @@ public class Dungeon {
             placeSecretDoor(new Point(coord.x + 3, coord.y - 3 + (RNG.get().randomNumber(2) << 1)));
 
             if (RNG.get().randomNumber(3) == 1) {
-                // TODO
-                // placeRandomObjectAt(new Point(coord.y, coord.x - 2), false);
+                placeRandomObjectAt(new Point(coord.x - 2, coord.y));
             }
 
             if (RNG.get().randomNumber(3) == 1) {
-                // TODO
-                // placeRandomObjectAt(new Point(coord.y, coord.x + 2), false);
+                placeRandomObjectAt(new Point(coord.x + 2, coord.y));
             }
 
             placeVaultMonster(new Point(coord.x - 2, coord.y), RNG.get().randomNumber(2));
@@ -332,8 +357,7 @@ public class Dungeon {
 
             // Mazes should have some treasure too..
             for (int i = 0; i < 3; i++) {
-                // TODO
-                // placeRandomObjectNear(coord, 1);
+                placeRandomObjectNear(coord, 1);
             }
             break;
         case FOUR_SMALL_ROOMS:
@@ -341,8 +365,7 @@ public class Dungeon {
             placeFourSmallRooms(coord, depth, height, left, right);
 
             // Treasure in each one.
-            // TODO
-            // placeRandomObjectNear(coord, 2 + NumberGenerator.get().randomNumber(2));
+            placeRandomObjectNear(coord, 2 + RNG.get().randomNumber(2));
 
             // Gotta have some monsters.
             placeVaultMonster(new Point(coord.x - 4, coord.y + 2), RNG.get().randomNumber(2));
@@ -433,8 +456,7 @@ public class Dungeon {
             }
 
             // Place a treasure in the vault
-            // TODO
-            // placeRandomObjectAt(coord, false);
+            placeRandomObjectAt(coord);
 
             // Let's guard the treasure well.
             placeVaultMonster(coord, 2 + RNG.get().randomNumber(2));
@@ -801,8 +823,7 @@ public class Dungeon {
                         this.floor[spot.y][spot.x] = rock_type;
 
                         if (RNG.get().randomNumber(chance_of_treasure) == 1) {
-                            // TODO
-                            // dungeonPlaceGold(spot);
+                            placeGold(spot);
                         }
                     }
                 }
@@ -1124,6 +1145,89 @@ public class Dungeon {
         }
     }
 
+    // Places an object at given row, column co-ordinate
+    private void placeRandomObjectAt(Point coord) {
+        System.out.println("\t-> Placing random object at " + coord + "...");
+        int qualityLevel = player.getLevel() + RNG.get().randomNumber(5);
+
+        AbstractItem item = ItemGenerator.generateItem(player.getChanceMagicFind(), qualityLevel);
+        item.setPosition(coord);
+
+        items.add(item);
+    }
+
+    // Creates objects nearby the coordinates given
+    private void placeRandomObjectNear(Point coord, int tries) {
+        do {
+            for (int i = 0; i <= 10; i++) {
+                Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
+
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && this.getObjectAt(at) == null) {
+                    if (RNG.get().randomNumber(100) < 75) {
+                        placeRandomObjectAt(at);
+                    } else {
+                        placeGold(at);
+                    }
+                    i = 9;
+                }
+            }
+
+            tries--;
+        } while (tries != 0);
+    }
+
+    // Places a treasure (Gold or Gems) at given row, column
+    private void placeGold(Point coord) {
+        System.out.println("\t-> Placing gold at " + coord + "...");
+        int qualityLevel = ((RNG.get().randomNumber(this.level + 2) + 2) / 2) - 1;
+
+        if (RNG.get().randomNumber(TREASURE_CHANCE_OF_GREAT_ITEM) == 1) {
+            qualityLevel += RNG.get().randomNumber(this.level + 1);
+        }
+        min(qualityLevel, ObjectsConfig.MAX_GOLD_TYPES - 1);
+
+        Gold item = new Gold();
+        item.setRarity(NORMAL);
+        item.setQualityLevel(qualityLevel);
+        item.setPosition(coord);
+        item.generateBase();
+
+        items.add(item);
+    }
+
+    // Allocates an object for tunnels and rooms
+    private void allocateAndPlaceObject(List<Tile> types, ObjectType type, int number) {
+        System.out.println("Allocation and placing " + number + " objects of type " + type + "...");
+        Point coord = new Point();
+
+        for (int i = 0; i < number; i++) {
+            // don't put an object beneath the player, this could cause
+            // problems if player is standing under rubble, or on a trap.
+            do {
+                coord.y = RNG.get().randomNumber(this.height) - 1;
+                coord.x = RNG.get().randomNumber(this.width) - 1;
+            } while (!types.contains(this.floor[coord.y][coord.x]) || this.player.getPosition().is(coord)
+                    || this.getObjectAt(coord) != null);
+
+            switch (type) {
+            case TRAP:
+                // TODO
+                // setTrap(coord, RNG.get().randomNumber(ObjectsConfig.MAX_TRAPS) - 1);
+                break;
+            case RUBBLE:
+                // TODO
+                // placeRubble(coord);
+                break;
+            case GOLD:
+                placeGold(coord);
+                break;
+            case RANDOM:
+                placeRandomObjectAt(coord);
+                break;
+            }
+        }
+    }
+
     // Returns random co-ordinates
     private Point newSpot() {
         Tile tile = null;
@@ -1206,12 +1310,12 @@ public class Dungeon {
         this.floor = floor;
     }
 
-    public Point getPlayerSpawn() {
-        return playerSpawn;
-    }
+    public AbstractItem getObjectAt(Point coord) {
+        Optional<AbstractItem> item = items.stream().filter(x -> x.getPosition().is(coord)).findFirst();
+        if (item.isPresent()) {
+            return item.get();
+        }
 
-    public Object getObjectAt(Point coord) {
-        // TODO
         return null;
     }
 

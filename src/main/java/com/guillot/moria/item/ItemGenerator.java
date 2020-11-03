@@ -44,8 +44,9 @@ public class ItemGenerator {
         ArrayList<AbstractAffixe> attributes = new ArrayList<>();
         int points = rarity.getPoints();
         boolean isLegendary = false;
+        int tries = 0;
 
-        while (points > 0) {
+        while (points > 0 && tries < 100) {
             if (rarity.equals(LEGENDARY) && !isLegendary) {
                 Object[] affixes =
                         AFFIXES.stream().filter(x -> x.getType().equals(AffixeRarity.LEGENDARY) && filterAffixes(x, type)).toArray();
@@ -67,6 +68,8 @@ public class ItemGenerator {
                     points -= affixe.getCost();
                 }
             }
+
+            tries++;
         }
 
         return attributes;
@@ -110,6 +113,8 @@ public class ItemGenerator {
         case HEALING_POTION:
             item = new HealingPotion();
             break;
+        case GOLD:
+            // Cannot be generated
         default:
             break;
         }
