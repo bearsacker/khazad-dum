@@ -21,6 +21,7 @@ import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Warrior;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
+import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
@@ -151,28 +152,33 @@ public class GameView extends View {
                     }
 
                     drawTile(tile, i, j, alternate);
-                }
 
-                if (path != null) {
-                    for (int k = currentStep; k < path.getLength(); k++) {
-                        Point step = path.getStep(k);
+                    if (path != null) {
+                        for (int k = currentStep; k < path.getLength(); k++) {
+                            Point step = path.getStep(k);
 
-                        if (step.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
-                                && step.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
-                            drawPathTile(step.x, step.y);
+                            if (step.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
+                                    && step.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
+                                drawPathTile(step.x, step.y);
+                            }
                         }
                     }
-                }
 
-                if (cursor != null) {
-                    if (cursor.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
-                            && cursor.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
-                        drawCursor(cursor.x, cursor.y, grid[y][x]);
+                    if (cursor != null) {
+                        if (cursor.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
+                                && cursor.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
+                            drawCursor(cursor.x, cursor.y, grid[y][x]);
+                        }
                     }
-                }
 
-                if (x == MAX_VIEW_DISTANCE && y == MAX_VIEW_DISTANCE) {
-                    image.drawImage(HUMAN_WARRIOR.getImage(), image.getCenterOfRotationX() - 32, image.getCenterOfRotationY() - 48);
+                    AbstractItem item = dungeon.getItemAt(new Point(j, i));
+                    if (item != null) {
+                        drawItem(item, i, j);
+                    }
+
+                    if (x == MAX_VIEW_DISTANCE && y == MAX_VIEW_DISTANCE) {
+                        image.drawImage(HUMAN_WARRIOR.getImage(), image.getCenterOfRotationX() - 32, image.getCenterOfRotationY() - 48);
+                    }
                 }
             }
         }
@@ -209,6 +215,13 @@ public class GameView extends View {
         int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
 
         image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 0, 0, 64, 96);
+    }
+
+    private void drawItem(AbstractItem item, int px, int py) {
+        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
+        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
+
+        image.drawImage(item.getImage(), x + 24, y + 36);
     }
 
     public static void main(String[] args) throws SlickException {

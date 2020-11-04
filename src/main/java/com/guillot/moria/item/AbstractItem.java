@@ -133,7 +133,8 @@ public abstract class AbstractItem {
 
     @Override
     public String toString() {
-        String text = this.name + " - " + this.type + " (" + this.rarity + ") - Quality lvl " + this.qualityLevel + "\n";
+        String text =
+                this.name + " - " + this.type + " - Level " + this.qualityLevel + " (" + this.rarity + ")\n";
         if (this.getValueName() != null) {
             text += "\t" + this.getValueName() + ": " + this.value + "\n";
         }

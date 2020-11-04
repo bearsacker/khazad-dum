@@ -949,7 +949,7 @@ public class Dungeon {
                 spot.y = coord.y - displacement.y - 1 + RNG.get().randomNumber(2 * displacement.y + 1);
                 spot.x = coord.x - displacement.x - 1 + RNG.get().randomNumber(2 * displacement.x + 1);
 
-                if (this.floor[spot.y][spot.x] != NULL && this.floor[spot.y][spot.x].isFloor && getObjectAt(spot) == null) {
+                if (this.floor[spot.y][spot.x] != NULL && this.floor[spot.y][spot.x].isFloor && getItemAt(spot) == null) {
                     // TODO
                     // setTrap(spot, RNG.get().randomNumber(MAX_TRAPS) - 1);
                     placed = true;
@@ -1162,7 +1162,7 @@ public class Dungeon {
             for (int i = 0; i <= 10; i++) {
                 Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
 
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && this.getObjectAt(at) == null) {
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && this.getItemAt(at) == null) {
                     if (RNG.get().randomNumber(100) < 75) {
                         placeRandomObjectAt(at);
                     } else {
@@ -1207,7 +1207,7 @@ public class Dungeon {
                 coord.y = RNG.get().randomNumber(this.height) - 1;
                 coord.x = RNG.get().randomNumber(this.width) - 1;
             } while (!types.contains(this.floor[coord.y][coord.x]) || this.player.getPosition().is(coord)
-                    || this.getObjectAt(coord) != null);
+                    || this.getItemAt(coord) != null);
 
             switch (type) {
             case TRAP:
@@ -1237,7 +1237,7 @@ public class Dungeon {
             position.y = RNG.get().randomNumber(this.height - 2);
             position.x = RNG.get().randomNumber(this.width - 2);
             tile = this.floor[position.y][position.x];
-        } while (!tile.isFloor || getObjectAt(position) != null || getMonsterAt(position) != null);
+        } while (!tile.isFloor || getItemAt(position) != null || getMonsterAt(position) != null);
 
         return position;
     }
@@ -1310,7 +1310,7 @@ public class Dungeon {
         this.floor = floor;
     }
 
-    public AbstractItem getObjectAt(Point coord) {
+    public AbstractItem getItemAt(Point coord) {
         Optional<AbstractItem> item = items.stream().filter(x -> x.getPosition().is(coord)).findFirst();
         if (item.isPresent()) {
             return item.get();
