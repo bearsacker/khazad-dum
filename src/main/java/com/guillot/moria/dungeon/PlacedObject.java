@@ -1,6 +1,6 @@
 package com.guillot.moria.dungeon;
 
 
-public enum ObjectType {
+public enum PlacedObject {
     RUBBLE, TRAP, GOLD, RANDOM
 }

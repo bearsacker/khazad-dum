@@ -1,10 +1,11 @@
 package com.guillot.moria.item;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.newdawn.slick.Image;
 
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
@@ -19,24 +20,33 @@ public abstract class AbstractItem {
 
     protected ArrayList<AbstractAffixe> affixes;
 
+    protected boolean generated;
+
     protected int qualityLevel;
 
     protected int value;
 
     protected int requirement;
 
+    protected String name;
+
+    protected Image image;
+
     protected Point position;
 
     public void generateBase() {
-        List<int[]> values = asList(this.getValuesPerLevel()).stream().filter(x -> x[0] <= this.qualityLevel).collect(toList());
-        int[] valueSelected = values.get(RNG.get().randomNumberBetween(0, values.size() - 1));
+        List<ItemRepresentation> representations =
+                this.getValuesPerLevel().stream().filter(x -> x.getLevel() <= this.qualityLevel).collect(toList());
 
-        this.value = RNG.get().randomNumberBetween(valueSelected[1], valueSelected[2]);
-        this.requirement = valueSelected[3];
-    }
+        if (!representations.isEmpty()) {
+            ItemRepresentation representation = representations.get(RNG.get().randomNumberBetween(1, representations.size()) - 1);
 
-    public int[][] getValuesPerLevel() {
-        return new int[][] {{1, 0, 0, 0}};
+            this.value = representation.getRandomValue();
+            this.requirement = representation.getRequirement();
+            this.name = representation.getName();
+            this.image = representation.getImage();
+            this.generated = true;
+        }
     }
 
     public ItemRarity getRarity() {
@@ -100,7 +110,7 @@ public abstract class AbstractItem {
     }
 
     public boolean isEligible() {
-        return true;
+        return generated;
     }
 
     public Point getPosition() {
@@ -111,15 +121,19 @@ public abstract class AbstractItem {
         this.position = new Point(position);
     }
 
-    public abstract void setPassiveEffect(AbstractCharacter character);
+    public Image getImage() {
+        return image;
+    }
 
-    public abstract void unsetPassiveEffect(AbstractCharacter character);
+    public void setImage(Image image) {
+        this.image = image;
+    }
 
-    public abstract void use(AbstractCharacter character);
+    public abstract List<ItemRepresentation> getValuesPerLevel();
 
     @Override
     public String toString() {
-        String text = this.type + " (" + this.rarity + ") - Quality lvl " + this.qualityLevel + "\n";
+        String text = this.name + " - " + this.type + " (" + this.rarity + ") - Quality lvl " + this.qualityLevel + "\n";
         if (this.getValueName() != null) {
             text += "\t" + this.getValueName() + ": " + this.value + "\n";
         }

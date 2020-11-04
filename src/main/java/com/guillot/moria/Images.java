@@ -14,11 +14,23 @@ public enum Images {
     DOWN_STAIRS("sprites/down_stairs.png"), //
     DOOR("sprites/door.png"), //
     HUMAN_WARRIOR("sprites/human_warrior.png"), //
-    CURSOR("sprites/cursor.png");
+    CURSOR("sprites/cursor.png"), //
+    ITEMS("sprites/items.png", 16, 16);
 
     private Image image;
 
+    private int frameWidth;
+
+    private int frameHeight;
+
     private Images(String path) {
+        this(path, 0, 0);
+    }
+
+    private Images(String path, int frameWidth, int frameHeight) {
+        this.frameWidth = frameWidth;
+        this.frameHeight = frameHeight;
+
         try {
             image = new Image(path);
             image.setFilter(Image.FILTER_NEAREST);
@@ -28,5 +40,9 @@ public enum Images {
 
     public Image getImage() {
         return image;
+    }
+
+    public Image getSubImage(int x, int y) {
+        return image.getSubImage(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
     }
 }

@@ -1,9 +1,11 @@
 package com.guillot.moria.item;
 
+import static com.guillot.moria.Images.ITEMS;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.item.ItemType.RING;
 
-import com.guillot.moria.character.AbstractCharacter;
+import java.util.Arrays;
+import java.util.List;
 
 public class Ring extends AbstractItem {
 
@@ -12,22 +14,12 @@ public class Ring extends AbstractItem {
     }
 
     @Override
-    public void setPassiveEffect(AbstractCharacter character) {
-
-    }
-
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-
-    }
-
-    @Override
-    public void use(AbstractCharacter character) {
-
+    public List<ItemRepresentation> getValuesPerLevel() {
+        return Arrays.asList(new ItemRepresentation("Ring", 1, 0, 0, 0, ITEMS.getSubImage(2, 2)));
     }
 
     @Override
     public boolean isEligible() {
-        return !this.rarity.equals(NORMAL);
+        return super.isEligible() && !this.rarity.equals(NORMAL);
     }
 }

@@ -1,6 +1,7 @@
 package com.guillot.moria.character;
 
 import com.guillot.moria.item.AbstractItem;
+import com.guillot.moria.item.Passive;
 import com.guillot.moria.utils.Point;
 
 public abstract class AbstractCharacter {
@@ -176,13 +177,17 @@ public abstract class AbstractCharacter {
                 break;
             }
 
-            item.setPassiveEffect(this);
+            if (item instanceof Passive) {
+                ((Passive) item).setPassiveEffect(this);
+            }
             this.computeStatistics();
         }
     }
 
     public void unequipItem(AbstractItem item) {
-        item.unsetPassiveEffect(this);
+        if (item instanceof Passive) {
+            ((Passive) item).unsetPassiveEffect(this);
+        }
         item = null;
     }
 

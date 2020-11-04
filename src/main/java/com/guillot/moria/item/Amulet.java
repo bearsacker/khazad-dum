@@ -1,9 +1,11 @@
 package com.guillot.moria.item;
 
+import static com.guillot.moria.Images.ITEMS;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.item.ItemType.AMULET;
 
-import com.guillot.moria.character.AbstractCharacter;
+import java.util.Arrays;
+import java.util.List;
 
 public class Amulet extends AbstractItem {
 
@@ -12,23 +14,13 @@ public class Amulet extends AbstractItem {
     }
 
     @Override
-    public void setPassiveEffect(AbstractCharacter character) {
-
-    }
-
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-
-    }
-
-    @Override
-    public void use(AbstractCharacter character) {
-
+    public List<ItemRepresentation> getValuesPerLevel() {
+        return Arrays.asList(new ItemRepresentation("Amulet", 1, 0, 0, 0, ITEMS.getSubImage(7, 1)));
     }
 
     @Override
     public boolean isEligible() {
-        return !this.rarity.equals(NORMAL);
+        return super.isEligible() && !this.rarity.equals(NORMAL);
     }
 
 }

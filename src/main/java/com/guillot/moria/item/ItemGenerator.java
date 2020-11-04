@@ -110,8 +110,8 @@ public class ItemGenerator {
         case TWO_HANDED_WEAPON:
             item = new TwoHandedWeapon();
             break;
-        case HEALING_POTION:
-            item = new HealingPotion();
+        case HEALTH_POTION:
+            item = new HealthPotion();
             break;
         case GOLD:
             // Cannot be generated

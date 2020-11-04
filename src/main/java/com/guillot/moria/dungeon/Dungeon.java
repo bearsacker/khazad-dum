@@ -18,15 +18,16 @@ import static com.guillot.moria.configs.DungeonConfig.DUN_UNUSUAL_ROOMS;
 import static com.guillot.moria.configs.ObjectsConfig.LEVEL_OBJECTS_PER_CORRIDOR;
 import static com.guillot.moria.configs.ObjectsConfig.LEVEL_OBJECTS_PER_ROOM;
 import static com.guillot.moria.configs.ObjectsConfig.LEVEL_TOTAL_GOLD_AND_GEMS;
+import static com.guillot.moria.configs.ObjectsConfig.MAX_GOLD_TYPES;
 import static com.guillot.moria.configs.ObjectsConfig.TREASURE_CHANCE_OF_GREAT_ITEM;
 import static com.guillot.moria.configs.ScreenConfig.QUART_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.QUART_WIDTH;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_WIDTH;
-import static com.guillot.moria.dungeon.ObjectType.GOLD;
-import static com.guillot.moria.dungeon.ObjectType.RANDOM;
-import static com.guillot.moria.dungeon.ObjectType.RUBBLE;
-import static com.guillot.moria.dungeon.ObjectType.TRAP;
+import static com.guillot.moria.dungeon.PlacedObject.GOLD;
+import static com.guillot.moria.dungeon.PlacedObject.RANDOM;
+import static com.guillot.moria.dungeon.PlacedObject.RUBBLE;
+import static com.guillot.moria.dungeon.PlacedObject.TRAP;
 import static com.guillot.moria.dungeon.Tile.CLOSED_DOOR;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DARK_FLOOR;
@@ -52,7 +53,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.configs.ObjectsConfig;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
 import com.guillot.moria.item.ItemGenerator;
@@ -1184,7 +1184,7 @@ public class Dungeon {
         if (RNG.get().randomNumber(TREASURE_CHANCE_OF_GREAT_ITEM) == 1) {
             qualityLevel += RNG.get().randomNumber(this.level + 1);
         }
-        min(qualityLevel, ObjectsConfig.MAX_GOLD_TYPES - 1);
+        qualityLevel = min(qualityLevel, MAX_GOLD_TYPES - 1);
 
         Gold item = new Gold();
         item.setRarity(NORMAL);
@@ -1196,7 +1196,7 @@ public class Dungeon {
     }
 
     // Allocates an object for tunnels and rooms
-    private void allocateAndPlaceObject(List<Tile> types, ObjectType type, int number) {
+    private void allocateAndPlaceObject(List<Tile> types, PlacedObject type, int number) {
         System.out.println("Allocation and placing " + number + " objects of type " + type + "...");
         Point coord = new Point();
 
@@ -1322,6 +1322,10 @@ public class Dungeon {
     public Object getMonsterAt(Point coord) {
         // TODO
         return null;
+    }
+
+    public ArrayList<AbstractItem> getItems() {
+        return items;
     }
 
 }

@@ -25,13 +25,18 @@ public class RNG {
         return random;
     }
 
-    // Generates a random integer x where 1<=X<=MAXVA
+    // Generates a random integer x where 1 <= X <= max
     public int randomNumber(int max) {
         return random.nextInt(max) + 1;
     }
 
+    // Generates a random integer x where min <= X <=max
     public int randomNumberBetween(int min, int max) {
-        return random.nextInt(max - min + 1) + min;
+        if (max == 0) {
+            return 0;
+        }
+
+        return random.nextInt(max + 1 - min) + min;
     }
 
     // Generates a random integer number of NORMAL distribution

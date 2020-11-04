@@ -57,6 +57,8 @@ public class GameView extends View {
         dungeon = new Dungeon(player, 300);
         dungeon.generate();
 
+        dungeon.getItems().forEach(x -> System.out.println(x));
+
         astar = new AStar(dungeon, 100);
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
@@ -67,7 +69,7 @@ public class GameView extends View {
         super.update();
 
         long time = System.currentTimeMillis();
-        if (time - lastStep > 100) {
+        if (time - lastStep > 50) {
             if (path != null) {
                 player.setPosition(path.getStep(currentStep).inverseXY());
                 currentStep++;
