@@ -56,7 +56,6 @@ import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
 import com.guillot.moria.item.ItemGenerator;
-import com.guillot.moria.utils.Direction;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
@@ -828,7 +827,7 @@ public class Dungeon {
                     }
                 }
             }
-        } while (playerMovePosition(direction, coord));
+        } while (moveIntoDirection(direction, coord));
     }
 
     // Places a staircase 1=up, 2=down
@@ -1001,7 +1000,7 @@ public class Dungeon {
         return false;
     }
 
-    private boolean playerMovePosition(Direction direction, Point coord) {
+    private boolean moveIntoDirection(Direction direction, Point coord) {
         Point new_coord = new Point();
 
         switch (direction) {

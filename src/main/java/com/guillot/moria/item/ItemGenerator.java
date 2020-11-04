@@ -8,10 +8,10 @@ import static com.guillot.moria.item.affixe.AbstractAffixe.AFFIXES;
 
 import java.util.ArrayList;
 
+import com.guillot.engine.utils.RandomCollection;
 import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.item.affixe.AffixeRarity;
 import com.guillot.moria.utils.RNG;
-import com.guillot.moria.utils.RandomCollection;
 
 
 public class ItemGenerator {

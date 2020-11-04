@@ -1,12 +1,10 @@
 package com.guillot.moria.item;
 
-import com.guillot.moria.utils.Drawable;
-
 /**
  * Enumération représentant la rareté d'un objet. Elle peut être soit: Normale, magique, légendaire. Un objet a 1% de chances d'être
  * légendaire et 20% de chances (plus le bonus magique) d'être magique.
  */
-public enum ItemRarity implements Drawable {
+public enum ItemRarity {
     NORMAL("Normal", 79, 0, 0), //
     MAGIC("Magic", 20, 3, 1), //
     LEGENDARY("Legendary", 1, 9, 3);
@@ -46,13 +44,13 @@ public enum ItemRarity implements Drawable {
         return this.bonusQualityLevel;
     }
 
+    public int getProbability() {
+        return this.probability;
+    }
+
     @Override
     public String toString() {
         return this.name;
     }
 
-    @Override
-    public int getProbability() {
-        return this.probability;
-    }
 }

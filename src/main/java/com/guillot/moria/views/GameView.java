@@ -18,7 +18,7 @@ import com.guillot.moria.Images;
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.character.Warrior;
+import com.guillot.moria.character.Human;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
@@ -52,7 +52,7 @@ public class GameView extends View {
     public void start() throws Exception {
         RNG.get().setSeed(1603923549811L);
 
-        player = new Warrior("Jean");
+        player = new Human("Jean");
         System.out.println(player);
 
         dungeon = new Dungeon(player, 300);

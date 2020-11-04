@@ -1,4 +1,6 @@
-package com.guillot.moria.utils;
+package com.guillot.moria.dungeon;
+
+import com.guillot.moria.utils.RNG;
 
 public enum Direction {
     NORTHWEST, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST;

@@ -1,7 +1,9 @@
-package com.guillot.moria.utils;
+package com.guillot.engine.utils;
 
 import java.util.NavigableMap;
 import java.util.TreeMap;
+
+import com.guillot.moria.utils.RNG;
 
 public class RandomCollection<T> {
 
