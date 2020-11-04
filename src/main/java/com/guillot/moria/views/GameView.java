@@ -1,6 +1,6 @@
 package com.guillot.moria.views;
 
-import static com.guillot.moria.Images.HUMAN_WARRIOR;
+import static com.guillot.moria.Images.CURSOR;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.OPEN_DOOR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
@@ -13,8 +13,8 @@ import org.newdawn.slick.SlickException;
 import com.guillot.engine.Game;
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
+import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
-import com.guillot.moria.Images;
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
@@ -48,6 +48,8 @@ public class GameView extends View {
 
     private long lastStep;
 
+    private TextBox cursorTextBox;
+
     @Override
     public void start() throws Exception {
         RNG.get().setSeed(1603923549811L);
@@ -63,11 +65,16 @@ public class GameView extends View {
         astar = new AStar(dungeon, 100);
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
+
+        cursorTextBox = new TextBox();
+        add(cursorTextBox);
     }
 
     @Override
     public void update() throws Exception {
         super.update();
+
+        cursorTextBox.setVisible(false);
 
         long time = System.currentTimeMillis();
         if (time - lastStep > 50) {
@@ -90,6 +97,21 @@ public class GameView extends View {
                 if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
                     path = astar.findPath(player.getPosition().inverseXY(), cursor, false);
                     currentStep = 0;
+                }
+
+                if (player.getPosition().is(cursor.inverseXY())) {
+                    cursorTextBox.setText(player.getName() + " - Level " + player.getLevel());
+                    cursorTextBox.setX(GUI.get().getMouseX());
+                    cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
+                    cursorTextBox.setVisible(true);
+                } else {
+                    AbstractItem item = dungeon.getItemAt(cursor.inverseXY());
+                    if (item != null) {
+                        cursorTextBox.setText(item.getName());
+                        cursorTextBox.setX(GUI.get().getMouseX());
+                        cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
+                        cursorTextBox.setVisible(true);
+                    }
                 }
             }
         }
@@ -173,11 +195,11 @@ public class GameView extends View {
 
                     AbstractItem item = dungeon.getItemAt(new Point(j, i));
                     if (item != null) {
-                        drawItem(item, i, j);
+                        item.draw(image, player.getPosition());
                     }
 
                     if (x == MAX_VIEW_DISTANCE && y == MAX_VIEW_DISTANCE) {
-                        image.drawImage(HUMAN_WARRIOR.getImage(), image.getCenterOfRotationX() - 32, image.getCenterOfRotationY() - 48);
+                        player.draw(image);
                     }
                 }
             }
@@ -189,8 +211,8 @@ public class GameView extends View {
     }
 
     private void drawTile(Tile tile, int px, int py, boolean alternate) {
-        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
-        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
+        int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
+        int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
         if (tile.image != null) {
             if (alternate) {
@@ -202,26 +224,19 @@ public class GameView extends View {
     }
 
     private void drawCursor(int px, int py, Tile tile) {
-        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
-        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
+        int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
+        int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
         if (tile != null && tile.isFloor) {
-            image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 64, 0, 128, 96);
+            image.drawImage(CURSOR.getSubImage(1, 0), x, y);
         }
     }
 
     private void drawPathTile(int px, int py) {
-        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
-        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
+        int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
+        int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
-        image.drawImage(Images.CURSOR.getImage(), x, y, x + 64, y + 96, 0, 0, 64, 96);
-    }
-
-    private void drawItem(AbstractItem item, int px, int py) {
-        int x = (int) ((px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + image.getCenterOfRotationX() - 32);
-        int y = (int) ((py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + image.getCenterOfRotationY() - 48);
-
-        image.drawImage(item.getImage(), x + 24, y + 36);
+        image.drawImage(CURSOR.getSubImage(0, 0), x, y);
     }
 
     public static void main(String[] args) throws SlickException {

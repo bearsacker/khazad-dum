@@ -15,7 +15,7 @@ import static com.guillot.moria.configs.DwarfConfig.STRENGTH;
 public class Dwarf extends AbstractCharacter {
 
     public Dwarf(String name) {
-        super(name);
+        super(name, null);
     }
 
     @Override

@@ -13,8 +13,8 @@ public enum Images {
     UP_STAIRS("sprites/up_stairs.png"), //
     DOWN_STAIRS("sprites/down_stairs.png"), //
     DOOR("sprites/door.png"), //
-    HUMAN_WARRIOR("sprites/human_warrior.png"), //
-    CURSOR("sprites/cursor.png"), //
+    HUMAN("sprites/human.png"), //
+    CURSOR("sprites/cursor.png", 64, 96), //
     ITEMS("sprites/items.png", 16, 16);
 
     private Image image;

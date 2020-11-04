@@ -1,7 +1,12 @@
 package com.guillot.moria.character;
 
+import java.util.ArrayList;
+
+import org.newdawn.slick.Image;
+
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Passive;
+import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
 public abstract class AbstractCharacter {
@@ -13,6 +18,10 @@ public abstract class AbstractCharacter {
     protected int xp;
 
     protected int currentLife;
+
+    protected Point position;
+
+    protected Image image;
 
     // Attributes
 
@@ -62,6 +71,8 @@ public abstract class AbstractCharacter {
 
     protected int gold;
 
+    protected ArrayList<AbstractItem> inventory;
+
     protected AbstractItem head;
 
     protected AbstractItem body;
@@ -76,14 +87,14 @@ public abstract class AbstractCharacter {
 
     protected AbstractItem neck;
 
-    protected Point position;
-
-    protected AbstractCharacter(String name) {
+    protected AbstractCharacter(String name, Image image) {
         this.name = name;
+        this.image = image;
 
         this.level = 1;
         this.xp = 0;
 
+        this.inventory = new ArrayList<>();
         this.head = null;
         this.body = null;
         this.leftHand = null;
@@ -189,6 +200,10 @@ public abstract class AbstractCharacter {
             ((Passive) item).unsetPassiveEffect(this);
         }
         item = null;
+    }
+
+    public void draw(DepthBufferedImage image) {
+        image.drawImage(this.image, image.getCenterOfRotationX() - 32, image.getCenterOfRotationY() - 48);
     }
 
     public int getLevel() {
@@ -329,6 +344,10 @@ public abstract class AbstractCharacter {
 
     public void setStrength(int strength) {
         this.strength = strength;
+    }
+
+    public ArrayList<AbstractItem> getInventory() {
+        return inventory;
     }
 
     public AbstractItem getHead() {

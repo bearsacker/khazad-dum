@@ -15,7 +15,7 @@ import static com.guillot.moria.configs.ElfConfig.STRENGTH;
 public class Elf extends AbstractCharacter {
 
     public Elf(String name) {
-        super(name);
+        super(name, null);
     }
 
     @Override

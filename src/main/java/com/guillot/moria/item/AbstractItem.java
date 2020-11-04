@@ -9,6 +9,7 @@ import org.newdawn.slick.Image;
 
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
+import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
@@ -47,6 +48,13 @@ public abstract class AbstractItem {
             this.image = representation.getImage();
             this.generated = true;
         }
+    }
+
+    public void draw(DepthBufferedImage image, Point playerPosition) {
+        int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + (int) image.getCenterOfRotationX() - 32;
+        int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + (int) image.getCenterOfRotationY() - 48;
+
+        image.drawImage(this.image, x + 24, y + 36);
     }
 
     public ItemRarity getRarity() {
@@ -127,6 +135,14 @@ public abstract class AbstractItem {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public abstract List<ItemRepresentation> getValuesPerLevel();

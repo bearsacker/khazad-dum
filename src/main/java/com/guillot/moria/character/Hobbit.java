@@ -15,7 +15,7 @@ import static com.guillot.moria.configs.HobbitConfig.STRENGTH;
 public class Hobbit extends AbstractCharacter {
 
     public Hobbit(String name) {
-        super(name);
+        super(name, null);
     }
 
     @Override

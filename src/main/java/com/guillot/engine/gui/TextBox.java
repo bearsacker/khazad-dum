@@ -23,6 +23,21 @@ public class TextBox extends Component {
 
     private boolean drawBox;
 
+    private boolean autoWidth;
+
+    public TextBox() throws Exception {
+        super();
+
+        this.image = new Image(DEFAULT_TEXTBOX_SPRITE);
+        this.textColor = new Color(DEFAULT_TEXT_COLOR);
+        this.drawBox = true;
+        this.text = "";
+        this.autoWidth = true;
+
+        this.resizeWidth();
+        this.resizeHeight();
+    }
+
     public TextBox(int x, int y, int width, String text) throws Exception {
         super();
 
@@ -58,6 +73,10 @@ public class TextBox extends Component {
         }
     }
 
+    private void resizeWidth() {
+        width = GUI.get().getFont().getWidth(text) + 20;
+    }
+
     private void resizeHeight() {
         lines = new ArrayList<>();
         String line = "";
@@ -84,6 +103,10 @@ public class TextBox extends Component {
 
     public void setText(String text) {
         this.text = text;
+
+        if (autoWidth) {
+            this.resizeWidth();
+        }
         this.resizeHeight();
     }
 
@@ -112,4 +135,13 @@ public class TextBox extends Component {
     public void setDrawBox(boolean drawBox) {
         this.drawBox = drawBox;
     }
+
+    public boolean isAutoWidth() {
+        return autoWidth;
+    }
+
+    public void setAutoWidth(boolean autoWidth) {
+        this.autoWidth = autoWidth;
+    }
+
 }
