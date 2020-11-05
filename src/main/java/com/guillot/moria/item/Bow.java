@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
 
-public class Bow extends AbstractItem {
+public class Bow extends AbstractItem implements Equipable {
 
     public Bow() {
         this.type = BOW;
@@ -41,4 +41,10 @@ public class Bow extends AbstractItem {
     public boolean isEquipable(AbstractCharacter character) {
         return character.getAgility() >= this.requirement;
     }
+
+    @Override
+    public void setPassiveEffect(AbstractCharacter character) {}
+
+    @Override
+    public void unsetPassiveEffect(AbstractCharacter character) {}
 }

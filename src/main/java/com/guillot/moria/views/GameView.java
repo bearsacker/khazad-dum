@@ -5,6 +5,7 @@ import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.OPEN_DOOR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Graphics;
@@ -20,6 +21,7 @@ import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
 import com.guillot.moria.component.Console;
+import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
@@ -49,6 +51,10 @@ public class GameView extends View {
 
     private long lastStep;
 
+    // Components
+
+    private InventoryDialog inventoryDialog;
+
     private TextBox cursorTextBox;
 
     private Console console;
@@ -57,23 +63,30 @@ public class GameView extends View {
     public void start() throws Exception {
         RNG.get().setSeed(1603923549811L);
 
-        player = new Human("Jean");
+        player = new Human("Jean Castex");
         System.out.println(player);
 
         dungeon = new Dungeon(player, 300);
         dungeon.generate();
 
-        dungeon.getItems().forEach(x -> System.out.println(x));
+        dungeon.getItems().forEach(x -> {
+            System.out.println(x);
+            player.getInventory().add(x);
+        });
 
         astar = new AStar(dungeon, 100);
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
+        inventoryDialog = new InventoryDialog(this, player);
+
         console = new Console(EngineConfig.WIDTH, 5);
         console.setY(EngineConfig.HEIGHT - console.getHeight());
-        cursorTextBox = new TextBox();
 
-        add(console, cursorTextBox);
+        cursorTextBox = new TextBox();
+        cursorTextBox.setVisible(false);
+
+        add(console, cursorTextBox, inventoryDialog);
     }
 
     @Override
@@ -125,6 +138,10 @@ public class GameView extends View {
                         cursorTextBox.setVisible(true);
                     }
                 }
+            }
+
+            if (GUI.get().isKeyPressed(KEY_I)) {
+                inventoryDialog.setVisible(true);
             }
         }
     }
@@ -249,6 +266,10 @@ public class GameView extends View {
         int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
         image.drawImage(CURSOR.getSubImage(0, 0), x, y);
+    }
+
+    public Console getConsole() {
+        return console;
     }
 
     public static void main(String[] args) throws SlickException {

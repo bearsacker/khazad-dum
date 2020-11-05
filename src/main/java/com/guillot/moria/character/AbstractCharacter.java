@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Image;
 
 import com.guillot.moria.item.AbstractItem;
-import com.guillot.moria.item.Passive;
+import com.guillot.moria.item.Equipable;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
@@ -131,79 +131,82 @@ public abstract class AbstractCharacter {
     }
 
     public boolean pickUpItem(AbstractItem item) {
-        inventory.add(item);
+        if (!inventory.contains(item)) {
+            inventory.add(item);
+        }
 
         return true;
     }
 
     public void equipItem(AbstractItem item) {
-        if (item != null && item.isEquipable(this)) {
+        if (item instanceof Equipable && ((Equipable) item).isEquipable(this)) {
+            // TODO Map to represents equipment
             switch (item.getBlock()) {
             case HEAD:
-                if (this.head != null) {
-                    this.unequipItem(this.head);
+                if (head != null) {
+                    unequipItem(head);
                 }
-                this.head = item;
+                head = item;
                 break;
             case BODY:
-                if (this.body != null) {
-                    this.unequipItem(this.body);
+                if (body != null) {
+                    unequipItem(body);
                 }
-                this.body = item;
+                body = item;
                 break;
             case LEFT_HAND:
-                if (this.twoHands != null) {
-                    this.unequipItem(this.twoHands);
+                if (twoHands != null) {
+                    unequipItem(twoHands);
                 }
-                if (this.leftHand != null) {
-                    this.unequipItem(this.leftHand);
+                if (leftHand != null) {
+                    unequipItem(leftHand);
                 }
-                this.leftHand = item;
+                leftHand = item;
                 break;
             case RIGHT_HAND:
-                if (this.twoHands != null) {
-                    this.unequipItem(this.twoHands);
+                if (twoHands != null) {
+                    unequipItem(twoHands);
                 }
-                if (this.rightHand != null) {
-                    this.unequipItem(this.rightHand);
+                if (rightHand != null) {
+                    unequipItem(rightHand);
                 }
-                this.rightHand = item;
+                rightHand = item;
                 break;
             case TWO_HANDS:
-                if (this.leftHand != null) {
-                    this.unequipItem(this.leftHand);
+                if (leftHand != null) {
+                    unequipItem(leftHand);
                 }
-                if (this.rightHand != null) {
-                    this.unequipItem(this.rightHand);
+                if (rightHand != null) {
+                    unequipItem(rightHand);
                 }
-                this.twoHands = item;
+                twoHands = item;
                 break;
             case FINGER:
-                if (this.finger != null) {
-                    this.unequipItem(this.finger);
+                if (finger != null) {
+                    unequipItem(finger);
                 }
-                this.finger = item;
+                finger = item;
                 break;
             case NECK:
-                if (this.neck != null) {
-                    this.unequipItem(this.neck);
+                if (neck != null) {
+                    unequipItem(neck);
                 }
-                this.neck = item;
+                neck = item;
                 break;
             default:
                 break;
             }
 
-            if (item instanceof Passive) {
-                ((Passive) item).setPassiveEffect(this);
+            if (item instanceof Equipable) {
+                ((Equipable) item).setPassiveEffect(this);
             }
-            this.computeStatistics();
+            computeStatistics();
         }
     }
 
     public void unequipItem(AbstractItem item) {
-        if (item instanceof Passive) {
-            ((Passive) item).unsetPassiveEffect(this);
+        if (item instanceof Equipable) {
+            ((Equipable) item).unsetPassiveEffect(this);
         }
         item = null;
     }

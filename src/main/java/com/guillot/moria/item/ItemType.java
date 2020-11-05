@@ -37,6 +37,6 @@ public enum ItemType {
 
     @Override
     public String toString() {
-        return this.name + " [" + this.block + "]";
+        return this.name;
     }
 }

@@ -174,6 +174,10 @@ public class GUI {
         return keysPressed[code];
     }
 
+    public void clearKeysPressed() {
+        keysPressed = new boolean[256];
+    }
+
     public boolean isMouseButtonReleased(int button) {
         return mouseButtonsReleased[button];
     }

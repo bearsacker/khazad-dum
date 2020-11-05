@@ -4,5 +4,5 @@ import com.guillot.moria.character.AbstractCharacter;
 
 public interface Usable {
 
-    void use(AbstractCharacter character);
+    boolean use(AbstractCharacter character);
 }

@@ -41,16 +41,6 @@ public class Dialog extends SubView {
         this(parent, width, text, DEFAULT_DIALOG_BUTTON_TEXT);
     }
 
-    @Override
-    public void start() throws Exception {
-
-    }
-
-    @Override
-    public void stop() throws Exception {
-
-    }
-
     public String getText() {
         return textBox.getText();
     }
@@ -62,4 +52,10 @@ public class Dialog extends SubView {
         textBox.setY(HEIGHT / 2 - textBox.getHeight() / 2);
         buttonClose.setY(textBox.getY() + textBox.getHeight() - 50);
     }
+
+    @Override
+    public void onShow() throws Exception {}
+
+    @Override
+    public void onHide() throws Exception {}
 }

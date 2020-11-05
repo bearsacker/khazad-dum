@@ -27,8 +27,10 @@ public class HealthPotion extends AbstractItem implements Usable {
     }
 
     @Override
-    public void use(AbstractCharacter character) {
+    public boolean use(AbstractCharacter character) {
         character.setCurrentLife(character.getCurrentLife() + this.value);
+
+        return true;
     }
 
     @Override

@@ -16,9 +16,9 @@ public abstract class SubView extends Component {
         this.visible = false;
     }
 
-    public abstract void start() throws Exception;
+    public abstract void onShow() throws Exception;
 
-    public abstract void stop() throws Exception;
+    public abstract void onHide() throws Exception;
 
     public void add(Component... components) {
         for (Component component : components) {
@@ -30,12 +30,12 @@ public abstract class SubView extends Component {
     public void setVisible(boolean visible) {
         try {
             if (!this.visible && visible) {
-                start();
+                onShow();
                 if (parent != null) {
                     parent.setFocused(false);
                 }
             } else if (this.visible && !visible) {
-                stop();
+                onHide();
                 if (parent != null) {
                     parent.setFocused(true);
                 }

@@ -7,13 +7,12 @@ import java.util.List;
 
 import org.newdawn.slick.Image;
 
-import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
-public abstract class AbstractItem {
+public abstract class AbstractItem implements Comparable<AbstractItem> {
 
     protected ItemRarity rarity;
 
@@ -109,14 +108,6 @@ public abstract class AbstractItem {
         return this.requirement;
     }
 
-    public boolean isUsable(AbstractCharacter character) {
-        return true;
-    }
-
-    public boolean isEquipable(AbstractCharacter character) {
-        return true;
-    }
-
     public boolean isEligible() {
         return generated;
     }
@@ -148,9 +139,18 @@ public abstract class AbstractItem {
     public abstract List<ItemRepresentation> getValuesPerLevel();
 
     @Override
+    public int compareTo(AbstractItem otherItem) {
+        if (type != otherItem.type) {
+            return type.compareTo(otherItem.type);
+        }
+
+        return -rarity.compareTo(otherItem.rarity);
+    }
+
+    @Override
     public String toString() {
-        String text =
-                this.name + " - " + this.type + " - Level " + this.qualityLevel + " (" + this.rarity + ")\n";
+        String text = this.name + " - " + this.type + "\n";
+        text += "Quality level " + this.qualityLevel + " (" + this.rarity + ")\n\n";
         if (this.getValueName() != null) {
             text += "\t" + this.getValueName() + ": " + this.value + "\n";
         }
@@ -159,7 +159,7 @@ public abstract class AbstractItem {
         }
         if (this.affixes != null) {
             for (AbstractAffixe attribute : this.affixes) {
-                text += "\t" + attribute + "\n";
+                text += "\n\t" + attribute;
             }
         }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
 
-public class Shield extends AbstractItem implements Passive {
+public class Shield extends AbstractItem implements Equipable {
 
     public Shield() {
         this.type = SHIELD;

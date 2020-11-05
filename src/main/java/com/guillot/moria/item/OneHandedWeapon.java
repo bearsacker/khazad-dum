@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
 
-public class OneHandedWeapon extends AbstractItem {
+public class OneHandedWeapon extends AbstractItem implements Equipable {
 
     public OneHandedWeapon() {
         this.type = ONE_HANDED_WEAPON;
@@ -49,4 +49,10 @@ public class OneHandedWeapon extends AbstractItem {
     public boolean isEquipable(AbstractCharacter character) {
         return character.getStrength() >= this.requirement;
     }
+
+    @Override
+    public void setPassiveEffect(AbstractCharacter character) {}
+
+    @Override
+    public void unsetPassiveEffect(AbstractCharacter character) {}
 }
