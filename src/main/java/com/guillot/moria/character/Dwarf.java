@@ -6,7 +6,6 @@ import static com.guillot.moria.configs.DwarfConfig.CHANCE_MAGIC_FIND;
 import static com.guillot.moria.configs.DwarfConfig.CHANCE_TO_HIT;
 import static com.guillot.moria.configs.DwarfConfig.DESITINY;
 import static com.guillot.moria.configs.DwarfConfig.LIFE;
-import static com.guillot.moria.configs.DwarfConfig.LIFE_PER_LEVEL;
 import static com.guillot.moria.configs.DwarfConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.DwarfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.DwarfConfig.SPIRIT;
@@ -51,11 +50,6 @@ public class Dwarf extends AbstractCharacter {
     @Override
     public int getLifeMin() {
         return LIFE;
-    }
-
-    @Override
-    public int getLifePerLevel() {
-        return LIFE_PER_LEVEL;
     }
 
     @Override

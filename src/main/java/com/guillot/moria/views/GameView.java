@@ -19,6 +19,7 @@ import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
+import com.guillot.moria.component.Console;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
@@ -50,6 +51,8 @@ public class GameView extends View {
 
     private TextBox cursorTextBox;
 
+    private Console console;
+
     @Override
     public void start() throws Exception {
         RNG.get().setSeed(1603923549811L);
@@ -66,8 +69,11 @@ public class GameView extends View {
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
+        console = new Console(EngineConfig.WIDTH, 5);
+        console.setY(EngineConfig.HEIGHT - console.getHeight());
         cursorTextBox = new TextBox();
-        add(cursorTextBox);
+
+        add(console, cursorTextBox);
     }
 
     @Override
@@ -84,6 +90,12 @@ public class GameView extends View {
 
                 if (currentStep >= path.getLength()) {
                     path = null;
+                }
+            } else {
+                AbstractItem item = dungeon.getItemAt(player.getPosition());
+                if (item != null && player.pickUpItem(item)) {
+                    dungeon.removeItem(item);
+                    console.addMessage(player.getName() + " picked up " + item.getName());
                 }
             }
 

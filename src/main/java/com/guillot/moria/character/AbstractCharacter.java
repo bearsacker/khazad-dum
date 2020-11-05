@@ -123,11 +123,17 @@ public abstract class AbstractCharacter {
         chanceDodge = agility / 2;
         movement = agility / 3;
 
-        life = getLifeMin() + (level - 1) * getLifePerLevel() + spirit * getLifePerSpirit();
+        life = getLifeMin() + spirit * getLifePerSpirit();
         lightRadius = getLightRadiusMin() + spirit / 4;
 
         chanceMagicFind = getChanceMagicFindMin() + destiny;
         chanceLockPicking = getChanceLockPickingMin() + destiny;
+    }
+
+    public boolean pickUpItem(AbstractItem item) {
+        inventory.add(item);
+
+        return true;
     }
 
     public void equipItem(AbstractItem item) {
@@ -436,8 +442,6 @@ public abstract class AbstractCharacter {
     public abstract int getChanceHitMin();
 
     public abstract int getLifeMin();
-
-    public abstract int getLifePerLevel();
 
     public abstract int getLifePerSpirit();
 

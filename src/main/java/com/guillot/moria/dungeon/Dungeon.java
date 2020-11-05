@@ -1318,6 +1318,10 @@ public class Dungeon {
         return null;
     }
 
+    public void removeItem(AbstractItem item) {
+        items.remove(item);
+    }
+
     public Object getMonsterAt(Point coord) {
         // TODO
         return null;

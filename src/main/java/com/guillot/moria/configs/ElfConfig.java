@@ -28,8 +28,6 @@ public class ElfConfig extends Config {
 
     public static final int LIFE = get().getInt("life");
 
-    public static final int LIFE_PER_LEVEL = get().getInt("life-per-level");
-
     public static final int LIFE_PER_SPIRIT = get().getInt("life-per-spririt");
 
     public static final int CHANCE_TO_HIT = get().getInt("chance-hit");

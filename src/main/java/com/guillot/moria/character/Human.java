@@ -7,7 +7,6 @@ import static com.guillot.moria.configs.HumanConfig.CHANCE_MAGIC_FIND;
 import static com.guillot.moria.configs.HumanConfig.CHANCE_TO_HIT;
 import static com.guillot.moria.configs.HumanConfig.DESITINY;
 import static com.guillot.moria.configs.HumanConfig.LIFE;
-import static com.guillot.moria.configs.HumanConfig.LIFE_PER_LEVEL;
 import static com.guillot.moria.configs.HumanConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HumanConfig.SPIRIT;
@@ -52,11 +51,6 @@ public class Human extends AbstractCharacter {
     @Override
     public int getLifeMin() {
         return LIFE;
-    }
-
-    @Override
-    public int getLifePerLevel() {
-        return LIFE_PER_LEVEL;
     }
 
     @Override
