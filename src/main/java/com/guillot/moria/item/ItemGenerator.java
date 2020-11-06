@@ -125,8 +125,7 @@ public class ItemGenerator {
 
         item.setRarity(rarity);
         item.setAffixes(affixes);
-        item.setQualityLevel(qualityLevel);
-        item.generateBase();
+        item.generateBase(qualityLevel);
 
         return item.isEligible() ? item : generateItem(magicBonus, qualityLevel);
     }

@@ -43,7 +43,7 @@ import static com.guillot.moria.dungeon.Tile.SECRET_DOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
 import static com.guillot.moria.dungeon.Tile.TMP2_WALL;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
-import static com.guillot.moria.item.ItemRarity.NORMAL;
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
 
@@ -1183,13 +1183,12 @@ public class Dungeon {
         if (RNG.get().randomNumber(TREASURE_CHANCE_OF_GREAT_ITEM) == 1) {
             qualityLevel += RNG.get().randomNumber(this.level + 1);
         }
+        qualityLevel = max(qualityLevel, 1);
         qualityLevel = min(qualityLevel, MAX_GOLD_TYPES - 1);
 
         Gold item = new Gold();
-        item.setRarity(NORMAL);
-        item.setQualityLevel(qualityLevel);
         item.setPosition(coord);
-        item.generateBase();
+        item.generateBase(qualityLevel);
 
         items.add(item);
     }

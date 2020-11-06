@@ -34,8 +34,8 @@ public class HealthPotion extends AbstractItem implements Usable {
     }
 
     @Override
-    public void generateBase() {
-        super.generateBase();
+    public void generateBase(int qualityLevel) {
+        super.generateBase(qualityLevel);
         affixes = new ArrayList<>();
         rarity = ItemRarity.NORMAL;
     }

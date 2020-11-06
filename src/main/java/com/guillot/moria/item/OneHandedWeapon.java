@@ -18,9 +18,9 @@ public class OneHandedWeapon extends AbstractItem implements Equipable {
     public List<ItemRepresentation> getValuesPerLevel() {
         return Arrays.asList(
                 new ItemRepresentation("Dagger", 1, 1, 4, 0, ITEMS.getSubImage(0, 7)), //
-                new ItemRepresentation("Small Axe", 2, 2, 10, 0, ITEMS.getSubImage(9, 7)), //
-                new ItemRepresentation("Axe", 4, 4, 12, 22, ITEMS.getSubImage(9, 7)), //
-                new ItemRepresentation("Large Axe", 6, 6, 16, 30, ITEMS.getSubImage(9, 7)), //
+                new ItemRepresentation("Small Axe", 2, 2, 10, 0, ITEMS.getSubImage(9, 6)), //
+                new ItemRepresentation("Axe", 4, 4, 12, 22, ITEMS.getSubImage(9, 6)), //
+                new ItemRepresentation("Large Axe", 6, 6, 16, 30, ITEMS.getSubImage(8, 6)), //
                 new ItemRepresentation("Short Sword", 1, 2, 6, 18, ITEMS.getSubImage(0, 7)), //
                 new ItemRepresentation("Sabre", 1, 1, 8, 17, ITEMS.getSubImage(1, 7)), //
                 new ItemRepresentation("Scimitar", 4, 3, 7, 23, ITEMS.getSubImage(1, 7)), //

@@ -63,11 +63,11 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        RNG.get().setSeed(1603923549811L);
+        RNG.get().setSeed(1604673727658L);
 
         player = new Human("Jean Castex");
 
-        dungeon = new Dungeon(player, 300);
+        dungeon = new Dungeon(player, 25);
         dungeon.generate();
 
         // TODO remove this

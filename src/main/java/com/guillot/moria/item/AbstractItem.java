@@ -35,7 +35,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
 
     protected Point position;
 
-    public void generateBase() {
+    public void generateBase(int qualityLevel) {
         List<ItemRepresentation> representations = getValuesPerLevel().stream().filter(x -> x.getLevel() <= qualityLevel).collect(toList());
 
         if (!representations.isEmpty()) {
@@ -45,6 +45,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
             requirement = representation.getRequirement();
             name = representation.getName();
             image = representation.getImage();
+            this.qualityLevel = representation.getLevel();
             generated = true;
         }
     }
@@ -156,7 +157,11 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
             return type.compareTo(otherItem.type);
         }
 
-        return -rarity.compareTo(otherItem.rarity);
+        if (rarity != otherItem.rarity) {
+            return otherItem.rarity.compareTo(rarity);
+        }
+
+        return Integer.compare(otherItem.qualityLevel, qualityLevel);
     }
 
     @Override
