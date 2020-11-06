@@ -3,6 +3,7 @@ package com.guillot.moria.component;
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
+import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import java.util.Collections;
@@ -101,7 +102,7 @@ public class InventoryDialog extends SubView {
     public void update() throws Exception {
         super.update();
 
-        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
+        if (GUI.get().isKeyPressed(KEY_ESCAPE) || GUI.get().isKeyPressed(KEY_I)) {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }

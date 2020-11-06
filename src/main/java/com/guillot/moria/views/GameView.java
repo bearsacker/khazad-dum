@@ -5,6 +5,7 @@ import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.OPEN_DOOR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
@@ -20,6 +21,7 @@ import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
+import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.dungeon.Dungeon;
@@ -53,6 +55,8 @@ public class GameView extends View {
 
     private InventoryDialog inventoryDialog;
 
+    private CharacterDialog characterDialog;
+
     private TextBox cursorTextBox;
 
     private Console console;
@@ -62,13 +66,12 @@ public class GameView extends View {
         RNG.get().setSeed(1603923549811L);
 
         player = new Human("Jean Castex");
-        System.out.println(player);
 
         dungeon = new Dungeon(player, 300);
         dungeon.generate();
 
+        // TODO remove this
         dungeon.getItems().forEach(x -> {
-            System.out.println(x);
             player.getInventory().add(x);
         });
 
@@ -77,6 +80,7 @@ public class GameView extends View {
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
         inventoryDialog = new InventoryDialog(this, player);
+        characterDialog = new CharacterDialog(this, player);
 
         console = new Console(EngineConfig.WIDTH, 5);
         console.setY(EngineConfig.HEIGHT - console.getHeight());
@@ -84,7 +88,7 @@ public class GameView extends View {
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        add(console, cursorTextBox, inventoryDialog);
+        add(console, cursorTextBox, inventoryDialog, characterDialog);
     }
 
     @Override
@@ -140,6 +144,10 @@ public class GameView extends View {
 
             if (GUI.get().isKeyPressed(KEY_I)) {
                 inventoryDialog.setVisible(true);
+            }
+
+            if (GUI.get().isKeyPressed(KEY_C)) {
+                characterDialog.setVisible(true);
             }
         }
     }

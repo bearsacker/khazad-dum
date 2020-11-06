@@ -164,14 +164,14 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
         String text = name + " - " + type + "\n";
         text += "Quality level " + qualityLevel + " (" + rarity + ")\n\n";
         if (getValueName() != null) {
-            text += "\t" + getValueName() + ": " + value + "\n";
+            text += "     " + getValueName() + ": " + value + "\n";
         }
         if (getRequirementName() != null && requirement > 0) {
-            text += "\t" + getRequirementName() + " Requirement: " + requirement + "\n";
+            text += "     " + getRequirementName() + " Requirement: " + requirement + "\n";
         }
 
         for (AbstractAffixe attribute : affixes) {
-            text += "\n\t" + attribute;
+            text += "\n     " + attribute;
         }
 
         return text;

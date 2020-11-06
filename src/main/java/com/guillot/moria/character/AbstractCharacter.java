@@ -65,6 +65,8 @@ public abstract class AbstractCharacter {
 
     protected int lightningDamage;
 
+    protected int damages;
+
     protected int armor;
 
     // Equipment
@@ -342,6 +344,14 @@ public abstract class AbstractCharacter {
         this.chanceMagicFind = chanceMagicFind;
     }
 
+    public int getDamages() {
+        return damages;
+    }
+
+    public void setDamages(int damages) {
+        this.damages = damages;
+    }
+
     public int getArmor() {
         return armor;
     }
@@ -404,29 +414,28 @@ public abstract class AbstractCharacter {
 
     @Override
     public String toString() {
-        String text = this.getName() + " [lvl " + level + "]\n";
-        text += "===================================\n";
+        String text = this.getName() + " - Level " + level + "\n\n";
         text += "Strength: " + strength + "\n";
-        text += "\tPhysical damage: + 0-" + physicalDamage + "%\n";
+        text += "     Physical damage: + 0-" + physicalDamage + "%\n";
 
         text += "Agility: " + agility + "\n";
-        text += "\tChance to Hit: " + chanceHit + "%\n";
-        text += "\tChance to Block/Dodge: " + chanceDodge + "%\n";
-        text += "\tMovement: " + movement + "m\n";
+        text += "     Chance to Hit: " + chanceHit + "%\n";
+        text += "     Chance to Block/Dodge: " + chanceDodge + "%\n";
+        text += "     Movement: " + movement + "m\n";
 
         text += "Spirit: " + spirit + "\n";
-        text += "\tLife: " + currentLife + "/" + life + "\n";
-        text += "\tLight radius: " + lightRadius + "m\n";
+        text += "     Life: " + currentLife + "/" + life + "\n";
+        text += "     Light radius: " + lightRadius + "m\n";
 
         text += "Destiny: " + destiny + "\n";
-        text += "\tChance to find a magic object: + " + chanceMagicFind + "%\n";
-        text += "\tChance to pick a lock: " + chanceLockPicking + "%\n";
+        text += "     Chance to find a magic object: + " + chanceMagicFind + "%\n";
+        text += "     Chance to pick a lock: " + chanceLockPicking + "%\n\n";
 
-        text += "\n";
+        text += "Damages: " + damages + "\n";
         text += "Armor: " + armor + "\n";
         text += "Fire damage: + " + fireDamage + "%\n";
         text += "Frost damage: + " + frostDamage + "%\n";
-        text += "Lightning damage: + " + lightningDamage + "%\n";
+        text += "Lightning damage: + " + lightningDamage + "%";
 
         return text;
     }
