@@ -15,9 +15,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeChanceDodge extends AbstractAffixe {
 
     public AffixeChanceDodge() {
-        this.name = "+%d%% to Chance to Dodge";
-        this.type = RARE;
-        this.excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON, SHIELD});
+        name = "+%d%% to Chance to Dodge";
+        type = RARE;
+        excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON, SHIELD});
     }
 
     @Override
@@ -27,11 +27,11 @@ public class AffixeChanceDodge extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setChanceDodge(character.getChanceDodge() + this.value);
+        character.setChanceDodge(character.getChanceDodge() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setChanceDodge(character.getChanceDodge() - this.value);
+        character.setChanceDodge(character.getChanceDodge() - value);
     }
 }

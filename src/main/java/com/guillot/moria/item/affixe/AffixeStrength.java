@@ -7,8 +7,8 @@ import com.guillot.moria.character.AbstractCharacter;
 public class AffixeStrength extends AbstractAffixe {
 
     public AffixeStrength() {
-        this.name = "+%d to Strength";
-        this.type = RARE;
+        name = "+%d to Strength";
+        type = RARE;
     }
 
     @Override
@@ -18,11 +18,11 @@ public class AffixeStrength extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setStrength(character.getStrength() + this.value);
+        character.setStrength(character.getStrength() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setStrength(character.getStrength() - this.value);
+        character.setStrength(character.getStrength() - value);
     }
 }

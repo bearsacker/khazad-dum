@@ -14,9 +14,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeFireDamage extends AbstractAffixe {
 
     public AffixeFireDamage() {
-        this.name = "+%d to Fire Damage";
-        this.type = NORMAL;
-        this.excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
+        name = "+%d to Fire Damage";
+        type = NORMAL;
+        excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
     }
 
     @Override
@@ -26,11 +26,11 @@ public class AffixeFireDamage extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setFireDamage(character.getFireDamage() + this.value);
+        character.setFireDamage(character.getFireDamage() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setFireDamage(character.getFireDamage() - this.value);
+        character.setFireDamage(character.getFireDamage() - value);
     }
 }

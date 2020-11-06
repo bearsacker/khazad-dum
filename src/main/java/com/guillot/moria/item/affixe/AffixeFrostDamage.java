@@ -14,9 +14,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeFrostDamage extends AbstractAffixe {
 
     public AffixeFrostDamage() {
-        this.name = "+%d to Frost Damage";
-        this.type = AffixeRarity.NORMAL;
-        this.excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
+        name = "+%d to Frost Damage";
+        type = AffixeRarity.NORMAL;
+        excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
     }
 
     @Override
@@ -26,11 +26,11 @@ public class AffixeFrostDamage extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setFrostDamage(character.getFrostDamage() + this.value);
+        character.setFrostDamage(character.getFrostDamage() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setFrostDamage(character.getFrostDamage() - this.value);
+        character.setFrostDamage(character.getFrostDamage() - value);
     }
 }

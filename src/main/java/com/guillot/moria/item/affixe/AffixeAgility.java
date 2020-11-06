@@ -4,11 +4,11 @@ import static com.guillot.moria.item.affixe.AffixeRarity.RARE;
 
 import com.guillot.moria.character.AbstractCharacter;
 
-public class AffixeVitality extends AbstractAffixe {
+public class AffixeAgility extends AbstractAffixe {
 
-    public AffixeVitality() {
-        this.name = "+%d to Vitality";
-        this.type = RARE;
+    public AffixeAgility() {
+        name = "+%d to Agility";
+        type = RARE;
     }
 
     @Override
@@ -18,11 +18,11 @@ public class AffixeVitality extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setSpirit(character.getSpirit() + this.value);
+        character.setAgility(character.getAgility() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setSpirit(character.getSpirit() - this.value);
+        character.setAgility(character.getAgility() - value);
     }
 }

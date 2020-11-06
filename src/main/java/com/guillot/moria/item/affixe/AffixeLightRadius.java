@@ -7,8 +7,8 @@ import com.guillot.moria.character.AbstractCharacter;
 public class AffixeLightRadius extends AbstractAffixe {
 
     public AffixeLightRadius() {
-        this.name = "+%dm to Light Radius";
-        this.type = RARE;
+        name = "+%dm to Light Radius";
+        type = RARE;
     }
 
     @Override
@@ -18,11 +18,11 @@ public class AffixeLightRadius extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setLightRadius(character.getLightRadius() + this.value);
+        character.setLightRadius(character.getLightRadius() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setLightRadius(character.getLightRadius() - this.value);
+        character.setLightRadius(character.getLightRadius() - value);
     }
 }

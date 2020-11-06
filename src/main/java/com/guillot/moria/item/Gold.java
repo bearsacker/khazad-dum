@@ -11,7 +11,7 @@ import java.util.List;
 public class Gold extends AbstractItem {
 
     public Gold() {
-        this.type = GOLD;
+        type = GOLD;
     }
 
     @Override
@@ -40,8 +40,8 @@ public class Gold extends AbstractItem {
     @Override
     public void generateBase() {
         super.generateBase();
-        this.affixes = new ArrayList<>();
-        this.rarity = ItemRarity.NORMAL;
+        affixes = new ArrayList<>();
+        rarity = ItemRarity.NORMAL;
     }
 
     @Override

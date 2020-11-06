@@ -81,8 +81,6 @@ public abstract class AbstractCharacter {
 
     protected AbstractItem rightHand;
 
-    protected AbstractItem twoHands;
-
     protected AbstractItem finger;
 
     protected AbstractItem neck;
@@ -99,7 +97,6 @@ public abstract class AbstractCharacter {
         this.body = null;
         this.leftHand = null;
         this.rightHand = null;
-        this.twoHands = null;
         this.finger = null;
         this.neck = null;
 
@@ -140,7 +137,6 @@ public abstract class AbstractCharacter {
 
     public void equipItem(AbstractItem item) {
         if (item instanceof Equipable && ((Equipable) item).isEquipable(this)) {
-            // TODO Map to represents equipment
             switch (item.getBlock()) {
             case HEAD:
                 if (head != null) {
@@ -155,19 +151,21 @@ public abstract class AbstractCharacter {
                 body = item;
                 break;
             case LEFT_HAND:
-                if (twoHands != null) {
-                    unequipItem(twoHands);
-                }
                 if (leftHand != null) {
+                    if (rightHand == leftHand) {
+                        rightHand = null;
+                    }
+
                     unequipItem(leftHand);
                 }
                 leftHand = item;
                 break;
             case RIGHT_HAND:
-                if (twoHands != null) {
-                    unequipItem(twoHands);
-                }
                 if (rightHand != null) {
+                    if (rightHand == leftHand) {
+                        leftHand = null;
+                    }
+
                     unequipItem(rightHand);
                 }
                 rightHand = item;
@@ -179,7 +177,8 @@ public abstract class AbstractCharacter {
                 if (rightHand != null) {
                     unequipItem(rightHand);
                 }
-                twoHands = item;
+                leftHand = item;
+                rightHand = item;
                 break;
             case FINGER:
                 if (finger != null) {
@@ -198,7 +197,7 @@ public abstract class AbstractCharacter {
             }
 
             if (item instanceof Equipable) {
-                ((Equipable) item).setPassiveEffect(this);
+                ((Equipable) item).equip(this);
             }
             computeStatistics();
         }
@@ -206,9 +205,13 @@ public abstract class AbstractCharacter {
 
     public void unequipItem(AbstractItem item) {
         if (item instanceof Equipable) {
-            ((Equipable) item).unsetPassiveEffect(this);
+            ((Equipable) item).unequip(this);
         }
         item = null;
+    }
+
+    public boolean isEquipedByItem(AbstractItem item) {
+        return head == item || neck == item || finger == item || body == item || leftHand == item || rightHand == item;
     }
 
     public void draw(DepthBufferedImage image) {
@@ -373,10 +376,6 @@ public abstract class AbstractCharacter {
 
     public AbstractItem getRightHand() {
         return rightHand;
-    }
-
-    public AbstractItem getTwoHands() {
-        return twoHands;
     }
 
     public AbstractItem getFinger() {

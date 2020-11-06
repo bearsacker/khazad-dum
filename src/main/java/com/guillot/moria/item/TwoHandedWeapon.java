@@ -11,7 +11,7 @@ import com.guillot.moria.character.AbstractCharacter;
 public class TwoHandedWeapon extends AbstractItem implements Equipable {
 
     public TwoHandedWeapon() {
-        this.type = TWO_HANDED_WEAPON;
+        type = TWO_HANDED_WEAPON;
     }
 
     @Override
@@ -38,12 +38,16 @@ public class TwoHandedWeapon extends AbstractItem implements Equipable {
 
     @Override
     public boolean isEquipable(AbstractCharacter character) {
-        return character.getStrength() >= this.requirement;
+        return character.getStrength() >= requirement;
     }
 
     @Override
-    public void setPassiveEffect(AbstractCharacter character) {}
+    public void equip(AbstractCharacter character) {
+        setAffixesPassiveEffects(character);
+    }
 
     @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {}
+    public void unequip(AbstractCharacter character) {
+        unsetAffixesPassiveEffects(character);
+    }
 }

@@ -15,9 +15,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeLightningDamage extends AbstractAffixe {
 
     public AffixeLightningDamage() {
-        this.name = "+%d to Lightning Damage";
-        this.type = NORMAL;
-        this.excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
+        name = "+%d to Lightning Damage";
+        type = NORMAL;
+        excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
     }
 
     @Override
@@ -27,11 +27,11 @@ public class AffixeLightningDamage extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setLightningDamage(character.getLightningDamage() + this.value);
+        character.setLightningDamage(character.getLightningDamage() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setLightningDamage(character.getLightningDamage() - this.value);
+        character.setLightningDamage(character.getLightningDamage() - value);
     }
 }

@@ -7,8 +7,8 @@ import com.guillot.moria.character.AbstractCharacter;
 public class AffixeLife extends AbstractAffixe {
 
     public AffixeLife() {
-        this.name = "+%d to Life";
-        this.type = NORMAL;
+        name = "+%d to Life";
+        type = NORMAL;
     }
 
     @Override
@@ -18,11 +18,11 @@ public class AffixeLife extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setLife(character.getLife() + this.value);
+        character.setLife(character.getLife() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setLife(character.getLife() - this.value);
+        character.setLife(character.getLife() - value);
     }
 }

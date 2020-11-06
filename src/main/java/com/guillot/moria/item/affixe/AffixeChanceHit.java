@@ -12,9 +12,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeChanceHit extends AbstractAffixe {
 
     public AffixeChanceHit() {
-        this.name = "+%d%% to Chance to Hit";
-        this.type = RARE;
-        this.excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD});
+        name = "+%d%% to Chance to Hit";
+        type = RARE;
+        excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD});
     }
 
     @Override
@@ -24,11 +24,11 @@ public class AffixeChanceHit extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setChanceHit(character.getChanceHit() + this.value);
+        character.setChanceHit(character.getChanceHit() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setChanceHit(character.getChanceHit() - this.value);
+        character.setChanceHit(character.getChanceHit() - value);
     }
 }

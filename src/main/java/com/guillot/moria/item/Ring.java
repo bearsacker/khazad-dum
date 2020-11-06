@@ -7,10 +7,12 @@ import static com.guillot.moria.item.ItemType.RING;
 import java.util.Arrays;
 import java.util.List;
 
-public class Ring extends AbstractItem {
+import com.guillot.moria.character.AbstractCharacter;
+
+public class Ring extends AbstractItem implements Equipable {
 
     public Ring() {
-        this.type = RING;
+        type = RING;
     }
 
     @Override
@@ -20,6 +22,22 @@ public class Ring extends AbstractItem {
 
     @Override
     public boolean isEligible() {
-        return super.isEligible() && !this.rarity.equals(NORMAL);
+        return super.isEligible() && !rarity.equals(NORMAL);
     }
+
+    @Override
+    public void equip(AbstractCharacter character) {
+        setAffixesPassiveEffects(character);
+    }
+
+    @Override
+    public void unequip(AbstractCharacter character) {
+        unsetAffixesPassiveEffects(character);
+    }
+
+    @Override
+    public boolean isEquipable(AbstractCharacter character) {
+        return true;
+    }
+
 }

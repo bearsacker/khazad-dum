@@ -32,11 +32,11 @@ public enum ItemType {
     }
 
     public ItemBlock getBlock() {
-        return this.block;
+        return block;
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return name;
     }
 }

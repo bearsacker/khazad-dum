@@ -1,6 +1,7 @@
 package com.guillot.moria.item.affixe;
 
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 import java.util.List;
@@ -14,8 +15,8 @@ public abstract class AbstractAffixe {
 
     public final static List<AbstractAffixe> AFFIXES = asList(
             new AffixeStrength(), //
-            new AffixeDexterity(), //
-            new AffixeVitality(), //
+            new AffixeAgility(), //
+            new AffixeSpirit(), //
             new AffixeArmor(), //
             new AffixeAllAttributes(), //
             new AffixeChanceDodge(), //
@@ -38,24 +39,24 @@ public abstract class AbstractAffixe {
     protected int value;
 
     public int getCost() {
-        return this.type != null ? this.type.getCost() : 0;
+        return type != null ? type.getCost() : 0;
     }
 
     public boolean allowItemType(ItemType type) {
-        return this.excludedItemType != null ? !this.excludedItemType.contains(type) : true;
+        return excludedItemType != null ? !excludedItemType.contains(type) : true;
     }
 
     public AffixeRarity getType() {
-        return this.type != null ? this.type : null;
+        return type;
     }
 
     @Override
     public String toString() {
-        return String.format(this.name, this.value);
+        return format(name, value);
     }
 
     public void init(int qualityLevel) {
-        int[][] values = this.getValuesPerLevel();
+        int[][] values = getValuesPerLevel();
         int i = values.length;
         int min = 0;
         int max = 0;
@@ -66,7 +67,7 @@ public abstract class AbstractAffixe {
             max = values[i][2];
         } while (qualityLevel < values[i][0]);
 
-        this.value = RNG.get().randomNumberBetween(min, max);
+        value = RNG.get().randomNumberBetween(min, max);
     }
 
     public int[][] getValuesPerLevel() {

@@ -79,7 +79,7 @@ public class ItemGenerator {
         ItemRarity rarity = pickRarity(magicBonus);
         ItemType type = pickType();
 
-        ArrayList<AbstractAffixe> attributes = generateAffixes(type, rarity, qualityLevel);
+        ArrayList<AbstractAffixe> affixes = generateAffixes(type, rarity, qualityLevel);
         AbstractItem item = null;
 
         switch (type) {
@@ -124,7 +124,7 @@ public class ItemGenerator {
         }
 
         item.setRarity(rarity);
-        item.setAffixes(attributes);
+        item.setAffixes(affixes);
         item.setQualityLevel(qualityLevel);
         item.generateBase();
 

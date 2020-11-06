@@ -14,9 +14,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixePhysicalDamage extends AbstractAffixe {
 
     public AffixePhysicalDamage() {
-        this.name = "+%d%% to Physical Damage";
-        this.type = LEGENDARY;
-        this.excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD});
+        name = "+%d%% to Physical Damage";
+        type = LEGENDARY;
+        excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD});
     }
 
     @Override
@@ -26,11 +26,11 @@ public class AffixePhysicalDamage extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setPhysicalDamage(character.getPhysicalDamage() + this.value);
+        character.setPhysicalDamage(character.getPhysicalDamage() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setPhysicalDamage(character.getPhysicalDamage() - this.value);
+        character.setPhysicalDamage(character.getPhysicalDamage() - value);
     }
 }

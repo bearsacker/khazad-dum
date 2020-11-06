@@ -10,6 +10,6 @@ public enum AffixeRarity {
     }
 
     public int getCost() {
-        return this.cost;
+        return cost;
     }
 }

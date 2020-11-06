@@ -11,7 +11,7 @@ import com.guillot.moria.character.AbstractCharacter;
 public class Armor extends AbstractItem implements Equipable {
 
     public Armor() {
-        this.type = ARMOR;
+        type = ARMOR;
     }
 
     @Override
@@ -35,13 +35,15 @@ public class Armor extends AbstractItem implements Equipable {
     }
 
     @Override
-    public void setPassiveEffect(AbstractCharacter character) {
-        character.setArmor(character.getArmor() + this.value);
+    public void equip(AbstractCharacter character) {
+        character.setArmor(character.getArmor() + value);
+        setAffixesPassiveEffects(character);
     }
 
     @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setArmor(character.getArmor() - this.value);
+    public void unequip(AbstractCharacter character) {
+        character.setArmor(character.getArmor() - value);
+        unsetAffixesPassiveEffects(character);
     }
 
     @Override
@@ -56,6 +58,6 @@ public class Armor extends AbstractItem implements Equipable {
 
     @Override
     public boolean isEquipable(AbstractCharacter character) {
-        return character.getStrength() >= this.requirement;
+        return character.getStrength() >= requirement;
     }
 }

@@ -7,8 +7,8 @@ import com.guillot.moria.character.AbstractCharacter;
 public class AffixeAllAttributes extends AbstractAffixe {
 
     public AffixeAllAttributes() {
-        this.name = "+%d to All Attributes";
-        this.type = LEGENDARY;
+        name = "+%d to All Attributes";
+        type = LEGENDARY;
     }
 
     @Override

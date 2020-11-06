@@ -4,9 +4,9 @@ import com.guillot.moria.character.AbstractCharacter;
 
 public interface Equipable {
 
-    void setPassiveEffect(AbstractCharacter character);
+    void equip(AbstractCharacter character);
 
-    void unsetPassiveEffect(AbstractCharacter character);
+    void unequip(AbstractCharacter character);
 
     boolean isEquipable(AbstractCharacter character);
 }

@@ -13,7 +13,7 @@ import com.guillot.moria.character.AbstractCharacter;
 public class HealthPotion extends AbstractItem implements Usable {
 
     public HealthPotion() {
-        this.type = HEALTH_POTION;
+        type = HEALTH_POTION;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class HealthPotion extends AbstractItem implements Usable {
 
     @Override
     public boolean use(AbstractCharacter character) {
-        character.setCurrentLife(character.getCurrentLife() + this.value);
+        character.setCurrentLife(character.getCurrentLife() + value);
 
         return true;
     }
@@ -36,8 +36,8 @@ public class HealthPotion extends AbstractItem implements Usable {
     @Override
     public void generateBase() {
         super.generateBase();
-        this.affixes = new ArrayList<>();
-        this.rarity = ItemRarity.NORMAL;
+        affixes = new ArrayList<>();
+        rarity = ItemRarity.NORMAL;
     }
 
     @Override

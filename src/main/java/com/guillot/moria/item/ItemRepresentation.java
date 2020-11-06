@@ -32,7 +32,6 @@ public class ItemRepresentation {
     }
 
     public int getRandomValue() {
-        System.out.println(name + " " + valueMin + " " + valueMax);
         return RNG.get().randomNumberBetween(valueMin, valueMax);
     }
 

@@ -11,7 +11,7 @@ import com.guillot.moria.character.AbstractCharacter;
 public class Bow extends AbstractItem implements Equipable {
 
     public Bow() {
-        this.type = BOW;
+        type = BOW;
     }
 
     @Override
@@ -39,12 +39,16 @@ public class Bow extends AbstractItem implements Equipable {
 
     @Override
     public boolean isEquipable(AbstractCharacter character) {
-        return character.getAgility() >= this.requirement;
+        return character.getAgility() >= requirement;
     }
 
     @Override
-    public void setPassiveEffect(AbstractCharacter character) {}
+    public void equip(AbstractCharacter character) {
+        setAffixesPassiveEffects(character);
+    }
 
     @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {}
+    public void unequip(AbstractCharacter character) {
+        unsetAffixesPassiveEffects(character);
+    }
 }

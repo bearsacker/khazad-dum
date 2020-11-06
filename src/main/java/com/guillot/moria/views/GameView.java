@@ -31,8 +31,6 @@ import com.guillot.moria.utils.RNG;
 
 public class GameView extends View {
 
-    public final static int MAX_VIEW_DISTANCE = 10;
-
     public final static int SIZE = 64;
 
     private Dungeon dungeon;
@@ -147,16 +145,16 @@ public class GameView extends View {
     }
 
     private void compute(Tile[][] grid, Point position, int length) {
-        if (length >= MAX_VIEW_DISTANCE) {
+        if (length >= player.getLightRadius()) {
             return;
         }
 
         if (position.x >= 0 && position.y >= 0 && position.x < dungeon.getWidth() && position.y < dungeon.getHeight()) {
             Tile dungeonTile = dungeon.getFloor()[position.y][position.x];
 
-            int gridY = position.y - player.getPosition().y + MAX_VIEW_DISTANCE;
-            int gridX = position.x - player.getPosition().x + MAX_VIEW_DISTANCE;
-            if (gridX < 0 || gridY < 0 || gridX >= MAX_VIEW_DISTANCE * 2 + 1 || gridY >= MAX_VIEW_DISTANCE * 2 + 1) {
+            int gridY = position.y - player.getPosition().y + player.getLightRadius();
+            int gridX = position.x - player.getPosition().x + player.getLightRadius();
+            if (gridX < 0 || gridY < 0 || gridX >= player.getLightRadius() * 2 + 1 || gridY >= player.getLightRadius() * 2 + 1) {
                 return;
             }
 
@@ -175,13 +173,13 @@ public class GameView extends View {
     public void paintComponents(Graphics g) throws Exception {
         image.clear();
 
-        Tile[][] grid = new Tile[MAX_VIEW_DISTANCE * 2 + 1][MAX_VIEW_DISTANCE * 2 + 1];
+        Tile[][] grid = new Tile[player.getLightRadius() * 2 + 1][player.getLightRadius() * 2 + 1];
         compute(grid, player.getPosition(), 0);
 
-        for (int y = MAX_VIEW_DISTANCE * 2; y >= 0; y--) {
-            for (int x = 0; x < MAX_VIEW_DISTANCE * 2 + 1; x++) {
-                int i = player.getPosition().y + y - MAX_VIEW_DISTANCE;
-                int j = player.getPosition().x + x - MAX_VIEW_DISTANCE;
+        for (int y = player.getLightRadius() * 2; y >= 0; y--) {
+            for (int x = 0; x < player.getLightRadius() * 2 + 1; x++) {
+                int i = player.getPosition().y + y - player.getLightRadius();
+                int j = player.getPosition().x + x - player.getLightRadius();
 
                 if (grid[y][x] != null) {
                     Tile tile = grid[y][x];
@@ -189,12 +187,12 @@ public class GameView extends View {
                     boolean alternate = false;
 
                     if (grid[y][x].isWall) {
-                        if (y + 1 < MAX_VIEW_DISTANCE * 2 + 1 && grid[y + 1][x] != null
+                        if (y + 1 < player.getLightRadius() * 2 + 1 && grid[y + 1][x] != null
                                 && (grid[y + 1][x].isFloor || grid[y + 1][x].isDoor)) {
                             alternate = true;
                         } else if (x - 1 >= 0 && grid[y][x - 1] != null && (grid[y][x - 1].isFloor || grid[y][x - 1].isDoor)) {
                             alternate = true;
-                        } else if (y + 1 < MAX_VIEW_DISTANCE * 2 + 1 && x - 1 >= 0
+                        } else if (y + 1 < player.getLightRadius() * 2 + 1 && x - 1 >= 0
                                 && grid[y + 1][x - 1] != null && (grid[y + 1][x - 1].isFloor || grid[y + 1][x - 1].isDoor)) {
                             alternate = true;
                         }
@@ -208,16 +206,16 @@ public class GameView extends View {
                         for (int k = currentStep; k < path.getLength(); k++) {
                             Point step = path.getStep(k);
 
-                            if (step.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
-                                    && step.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
+                            if (step.y - player.getPosition().x + player.getLightRadius() == x
+                                    && step.x - player.getPosition().y + player.getLightRadius() == y) {
                                 drawPathTile(step.x, step.y);
                             }
                         }
                     }
 
                     if (cursor != null) {
-                        if (cursor.y - player.getPosition().x + MAX_VIEW_DISTANCE == x
-                                && cursor.x - player.getPosition().y + MAX_VIEW_DISTANCE == y) {
+                        if (cursor.y - player.getPosition().x + player.getLightRadius() == x
+                                && cursor.x - player.getPosition().y + player.getLightRadius() == y) {
                             drawCursor(cursor.x, cursor.y, grid[y][x]);
                         }
                     }
@@ -227,7 +225,7 @@ public class GameView extends View {
                         item.draw(image, player.getPosition());
                     }
 
-                    if (x == MAX_VIEW_DISTANCE && y == MAX_VIEW_DISTANCE) {
+                    if (x == player.getLightRadius() && y == player.getLightRadius()) {
                         player.draw(image);
                     }
                 }
@@ -273,7 +271,7 @@ public class GameView extends View {
     }
 
     public static void main(String[] args) throws SlickException {
-        new Game("Moria", new GameView());
+        new Game("Khazad-dûm", new GameView());
     }
 
 }

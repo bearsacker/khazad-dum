@@ -16,9 +16,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeChanceMagicFind extends AbstractAffixe {
 
     public AffixeChanceMagicFind() {
-        this.name = "+%d%% to chance to find a magic object";
-        this.type = RARE;
-        this.excludedItemType = Arrays.asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON});
+        name = "+%d%% to chance to find a magic object";
+        type = RARE;
+        excludedItemType = Arrays.asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON});
     }
 
     @Override
@@ -28,12 +28,12 @@ public class AffixeChanceMagicFind extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setChanceMagicFind(character.getChanceMagicFind() + this.value);
+        character.setChanceMagicFind(character.getChanceMagicFind() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setChanceMagicFind(character.getChanceMagicFind() - this.value);
+        character.setChanceMagicFind(character.getChanceMagicFind() - value);
     }
 
 }

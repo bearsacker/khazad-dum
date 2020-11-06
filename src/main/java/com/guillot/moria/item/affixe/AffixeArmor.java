@@ -15,9 +15,9 @@ import com.guillot.moria.item.ItemType;
 public class AffixeArmor extends AbstractAffixe {
 
     public AffixeArmor() {
-        this.name = "+%d to Armor";
-        this.type = NORMAL;
-        this.excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON});
+        name = "+%d to Armor";
+        type = NORMAL;
+        excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON});
     }
 
     @Override
@@ -27,11 +27,11 @@ public class AffixeArmor extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setArmor(character.getArmor() + this.value);
+        character.setArmor(character.getArmor() + value);
     }
 
     @Override
     public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setArmor(character.getArmor() - this.value);
+        character.setArmor(character.getArmor() - value);
     }
 }

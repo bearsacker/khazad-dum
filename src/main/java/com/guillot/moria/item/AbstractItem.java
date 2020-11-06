@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.newdawn.slick.Image;
 
+import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
@@ -35,17 +36,16 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
     protected Point position;
 
     public void generateBase() {
-        List<ItemRepresentation> representations =
-                this.getValuesPerLevel().stream().filter(x -> x.getLevel() <= this.qualityLevel).collect(toList());
+        List<ItemRepresentation> representations = getValuesPerLevel().stream().filter(x -> x.getLevel() <= qualityLevel).collect(toList());
 
         if (!representations.isEmpty()) {
             ItemRepresentation representation = representations.get(RNG.get().randomNumberBetween(1, representations.size()) - 1);
 
-            this.value = representation.getRandomValue();
-            this.requirement = representation.getRequirement();
-            this.name = representation.getName();
-            this.image = representation.getImage();
-            this.generated = true;
+            value = representation.getRandomValue();
+            requirement = representation.getRequirement();
+            name = representation.getName();
+            image = representation.getImage();
+            generated = true;
         }
     }
 
@@ -73,11 +73,11 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
     }
 
     public void setQualityLevel(int qualityLevel) {
-        this.qualityLevel = qualityLevel + this.rarity.getBonusQualityLevel();
+        this.qualityLevel = qualityLevel + rarity.getBonusQualityLevel();
     }
 
     public int getQualityLevel() {
-        return this.qualityLevel;
+        return qualityLevel;
     }
 
     public ArrayList<AbstractAffixe> getAffixes() {
@@ -89,11 +89,11 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
     }
 
     public ItemBlock getBlock() {
-        return this.type != null ? this.type.getBlock() : null;
+        return type != null ? type.getBlock() : null;
     }
 
     public int getPoints() {
-        return this.rarity != null ? this.rarity.getPoints() : 0;
+        return rarity != null ? rarity.getPoints() : 0;
     }
 
     public String getValueName() {
@@ -105,7 +105,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
     }
 
     public int getRequirement() {
-        return this.requirement;
+        return requirement;
     }
 
     public boolean isEligible() {
@@ -136,6 +136,18 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
         this.name = name;
     }
 
+    public void setAffixesPassiveEffects(AbstractCharacter character) {
+        for (AbstractAffixe affixe : affixes) {
+            affixe.setPassiveEffect(character);
+        }
+    }
+
+    public void unsetAffixesPassiveEffects(AbstractCharacter character) {
+        for (AbstractAffixe affixe : affixes) {
+            affixe.unsetPassiveEffect(character);
+        }
+    }
+
     public abstract List<ItemRepresentation> getValuesPerLevel();
 
     @Override
@@ -149,18 +161,17 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
 
     @Override
     public String toString() {
-        String text = this.name + " - " + this.type + "\n";
-        text += "Quality level " + this.qualityLevel + " (" + this.rarity + ")\n\n";
-        if (this.getValueName() != null) {
-            text += "\t" + this.getValueName() + ": " + this.value + "\n";
+        String text = name + " - " + type + "\n";
+        text += "Quality level " + qualityLevel + " (" + rarity + ")\n\n";
+        if (getValueName() != null) {
+            text += "\t" + getValueName() + ": " + value + "\n";
         }
-        if (this.getRequirementName() != null && this.requirement > 0) {
-            text += "\t" + this.getRequirementName() + " Requirement: " + this.requirement + "\n";
+        if (getRequirementName() != null && requirement > 0) {
+            text += "\t" + getRequirementName() + " Requirement: " + requirement + "\n";
         }
-        if (this.affixes != null) {
-            for (AbstractAffixe attribute : this.affixes) {
-                text += "\n\t" + attribute;
-            }
+
+        for (AbstractAffixe attribute : affixes) {
+            text += "\n\t" + attribute;
         }
 
         return text;
