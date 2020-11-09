@@ -34,8 +34,4 @@ public class AffixeChanceBlock extends AbstractAffixe {
         character.setChanceDodge(character.getChanceDodge() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setChanceDodge(character.getChanceDodge() - value);
-    }
 }

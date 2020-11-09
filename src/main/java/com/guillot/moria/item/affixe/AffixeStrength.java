@@ -21,8 +21,4 @@ public class AffixeStrength extends AbstractAffixe {
         character.setStrength(character.getStrength() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setStrength(character.getStrength() - value);
-    }
 }

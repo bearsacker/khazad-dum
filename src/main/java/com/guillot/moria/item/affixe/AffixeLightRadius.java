@@ -21,8 +21,4 @@ public class AffixeLightRadius extends AbstractAffixe {
         character.setLightRadius(character.getLightRadius() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setLightRadius(character.getLightRadius() - value);
-    }
 }

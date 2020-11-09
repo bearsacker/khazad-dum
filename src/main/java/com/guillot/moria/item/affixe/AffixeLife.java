@@ -21,8 +21,4 @@ public class AffixeLife extends AbstractAffixe {
         character.setLife(character.getLife() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setLife(character.getLife() - value);
-    }
 }

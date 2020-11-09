@@ -21,8 +21,4 @@ public class AffixeAgility extends AbstractAffixe {
         character.setAgility(character.getAgility() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setAgility(character.getAgility() - value);
-    }
 }

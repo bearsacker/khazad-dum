@@ -55,10 +55,4 @@ public class OneHandedWeapon extends AbstractItem implements Equipable {
         character.setDamages(character.getDamages() + value);
         setAffixesPassiveEffects(character);
     }
-
-    @Override
-    public void unequip(AbstractCharacter character) {
-        character.setDamages(character.getDamages() - value);
-        unsetAffixesPassiveEffects(character);
-    }
 }

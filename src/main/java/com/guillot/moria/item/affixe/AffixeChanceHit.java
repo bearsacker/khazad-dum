@@ -27,8 +27,4 @@ public class AffixeChanceHit extends AbstractAffixe {
         character.setChanceHit(character.getChanceHit() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setChanceHit(character.getChanceHit() - value);
-    }
 }

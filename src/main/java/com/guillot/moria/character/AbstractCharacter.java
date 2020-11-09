@@ -75,17 +75,17 @@ public abstract class AbstractCharacter {
 
     protected ArrayList<AbstractItem> inventory;
 
-    protected AbstractItem head;
+    protected Equipable head;
 
-    protected AbstractItem body;
+    protected Equipable body;
 
-    protected AbstractItem leftHand;
+    protected Equipable leftHand;
 
-    protected AbstractItem rightHand;
+    protected Equipable rightHand;
 
-    protected AbstractItem finger;
+    protected Equipable finger;
 
-    protected AbstractItem neck;
+    protected Equipable neck;
 
     protected AbstractCharacter(String name, Image image) {
         this.name = name;
@@ -127,6 +127,25 @@ public abstract class AbstractCharacter {
 
         chanceMagicFind = getChanceMagicFindMin() + destiny;
         chanceLockPicking = getChanceLockPickingMin() + destiny;
+
+        if (head != null) {
+            head.equip(this);
+        }
+        if (neck != null) {
+            neck.equip(this);
+        }
+        if (body != null) {
+            body.equip(this);
+        }
+        if (finger != null) {
+            finger.equip(this);
+        }
+        if (leftHand != null) {
+            leftHand.equip(this);
+        }
+        if (rightHand != null && rightHand != leftHand) {
+            rightHand.equip(this);
+        }
     }
 
     public boolean pickUpItem(AbstractItem item) {
@@ -137,79 +156,72 @@ public abstract class AbstractCharacter {
         return true;
     }
 
-    public void equipItem(AbstractItem item) {
-        if (item instanceof Equipable && ((Equipable) item).isEquipable(this)) {
-            switch (item.getBlock()) {
+    public boolean dropItem(AbstractItem item) {
+        inventory.remove(item);
+
+        return true;
+    }
+
+    public void equipItem(Equipable item) {
+        if (item.isEquipable(this)) {
+            switch (((AbstractItem) item).getBlock()) {
             case HEAD:
-                if (head != null) {
-                    unequipItem(head);
-                }
                 head = item;
                 break;
             case BODY:
-                if (body != null) {
-                    unequipItem(body);
-                }
                 body = item;
                 break;
             case LEFT_HAND:
-                if (leftHand != null) {
-                    if (rightHand == leftHand) {
-                        rightHand = null;
-                    }
-
-                    unequipItem(leftHand);
+                if (leftHand != null && rightHand == leftHand) {
+                    rightHand = null;
                 }
                 leftHand = item;
                 break;
             case RIGHT_HAND:
-                if (rightHand != null) {
-                    if (rightHand == leftHand) {
-                        leftHand = null;
-                    }
-
-                    unequipItem(rightHand);
+                if (rightHand != null && rightHand == leftHand) {
+                    leftHand = null;
                 }
                 rightHand = item;
                 break;
             case TWO_HANDS:
-                if (leftHand != null) {
-                    unequipItem(leftHand);
-                }
-                if (rightHand != null) {
-                    unequipItem(rightHand);
-                }
                 leftHand = item;
                 rightHand = item;
                 break;
             case FINGER:
-                if (finger != null) {
-                    unequipItem(finger);
-                }
                 finger = item;
                 break;
             case NECK:
-                if (neck != null) {
-                    unequipItem(neck);
-                }
                 neck = item;
                 break;
-            default:
+            case NONE:
                 break;
             }
 
-            if (item instanceof Equipable) {
-                ((Equipable) item).equip(this);
-            }
             computeStatistics();
         }
     }
 
     public void unequipItem(AbstractItem item) {
-        if (item instanceof Equipable) {
-            ((Equipable) item).unequip(this);
+        if (head == item) {
+            head = null;
         }
-        item = null;
+        if (neck == item) {
+            neck = null;
+        }
+        if (body == item) {
+            body = null;
+        }
+        if (finger == item) {
+            finger = null;
+        }
+        if (leftHand == item) {
+            leftHand = null;
+        }
+        if (rightHand == item) {
+            rightHand = null;
+        }
+
+        computeStatistics();
     }
 
     public boolean isEquipedByItem(AbstractItem item) {
@@ -372,30 +384,6 @@ public abstract class AbstractCharacter {
         return inventory;
     }
 
-    public AbstractItem getHead() {
-        return head;
-    }
-
-    public AbstractItem getBody() {
-        return body;
-    }
-
-    public AbstractItem getLeftHand() {
-        return leftHand;
-    }
-
-    public AbstractItem getRightHand() {
-        return rightHand;
-    }
-
-    public AbstractItem getFinger() {
-        return finger;
-    }
-
-    public AbstractItem getNeck() {
-        return neck;
-    }
-
     public Point getPosition() {
         return position;
     }
@@ -414,7 +402,7 @@ public abstract class AbstractCharacter {
 
     @Override
     public String toString() {
-        String text = this.getName() + " - Level " + level + "\n\n";
+        String text = getName() + " - " + getClassName() + " - Level " + level + "\n\n";
         text += "Strength: " + strength + "\n";
         text += "     Physical damage: + 0-" + physicalDamage + "%\n";
 

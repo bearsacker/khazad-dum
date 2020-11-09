@@ -23,10 +23,4 @@ public class AffixeAllAttributes extends AbstractAffixe {
         character.setAgility(character.getAgility() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setSpirit(character.getSpirit() - value);
-        character.setStrength(character.getStrength() - value);
-        character.setAgility(character.getAgility() - value);
-    }
 }

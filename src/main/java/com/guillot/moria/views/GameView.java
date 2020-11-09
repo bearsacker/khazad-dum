@@ -1,14 +1,12 @@
 package com.guillot.moria.views;
 
 import static com.guillot.moria.Images.CURSOR;
-import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
-import static com.guillot.moria.dungeon.Tile.OPEN_DOOR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
-import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
@@ -17,6 +15,7 @@ import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
+import com.guillot.moria.Images;
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
@@ -24,6 +23,9 @@ import com.guillot.moria.character.Human;
 import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.InventoryDialog;
+import com.guillot.moria.dungeon.Direction;
+import com.guillot.moria.dungeon.Door;
+import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
@@ -40,6 +42,8 @@ public class GameView extends View {
     private AbstractCharacter player;
 
     private DepthBufferedImage image;
+
+    private boolean needRepaint;
 
     private Point cursor;
 
@@ -63,21 +67,16 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        RNG.get().setSeed(1604673727658L);
-
+        RNG.get().setSeed(1604912991583L);
         player = new Human("Jean Castex");
 
         dungeon = new Dungeon(player, 25);
         dungeon.generate();
 
-        // TODO remove this
-        dungeon.getItems().forEach(x -> {
-            player.getInventory().add(x);
-        });
-
         astar = new AStar(dungeon, 100);
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
+        needRepaint = true;
 
         inventoryDialog = new InventoryDialog(this, player);
         characterDialog = new CharacterDialog(this, player);
@@ -98,12 +97,13 @@ public class GameView extends View {
         cursorTextBox.setVisible(false);
 
         long time = System.currentTimeMillis();
-        if (time - lastStep > 50) {
+        if (time - lastStep > 100) {
             if (path != null) {
                 player.setPosition(path.getStep(currentStep).inverseXY());
                 currentStep++;
+                needRepaint = true;
 
-                if (currentStep >= path.getLength()) {
+                if (currentStep > player.getMovement() || currentStep >= path.getLength()) {
                     path = null;
                 }
             } else {
@@ -111,6 +111,7 @@ public class GameView extends View {
                 if (item != null && player.pickUpItem(item)) {
                     dungeon.removeItem(item);
                     console.addMessage(player.getName() + " picked up " + item.getName());
+                    needRepaint = true;
                 }
             }
 
@@ -122,8 +123,19 @@ public class GameView extends View {
 
             if (cursor != null) {
                 if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-                    path = astar.findPath(player.getPosition().inverseXY(), cursor, false);
-                    currentStep = 0;
+                    Door door = dungeon.getDoorAt(cursor.inverseXY());
+                    if (door != null && player.getPosition().inverseXY().distanceFrom(cursor) == 1) {
+                        if (door.getState() == DoorState.SECRET) {
+                            door.setState(DoorState.OPEN);
+                            console.addMessage(player.getName() + " discover a secret door !");
+                        }
+
+                        player.setPosition(door.getDirectionPosition(player.getPosition()));
+                        needRepaint = true;
+                    } else {
+                        path = astar.findPath(player.getPosition().inverseXY(), cursor, false);
+                        currentStep = 0;
+                    }
                 }
 
                 if (player.getPosition().is(cursor.inverseXY())) {
@@ -168,7 +180,7 @@ public class GameView extends View {
 
             grid[gridY][gridX] = dungeonTile;
 
-            if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile == DOWN_STAIR || dungeonTile == UP_STAIR) {
+            if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile.isStairs) {
                 compute(grid, new Point(position.x - 1, position.y), length + 1);
                 compute(grid, new Point(position.x + 1, position.y), length + 1);
                 compute(grid, new Point(position.x, position.y - 1), length + 1);
@@ -179,73 +191,67 @@ public class GameView extends View {
 
     @Override
     public void paintComponents(Graphics g) throws Exception {
-        image.clear();
+        g.setColor(Color.white);
+        GUI.get().getFont().drawString(8, 8, "Level " + dungeon.getLevel());
 
-        Tile[][] grid = new Tile[player.getLightRadius() * 2 + 1][player.getLightRadius() * 2 + 1];
-        compute(grid, player.getPosition(), 0);
+        if (needRepaint) {
+            image.clear();
 
-        for (int y = player.getLightRadius() * 2; y >= 0; y--) {
-            for (int x = 0; x < player.getLightRadius() * 2 + 1; x++) {
-                int i = player.getPosition().y + y - player.getLightRadius();
-                int j = player.getPosition().x + x - player.getLightRadius();
+            Tile[][] grid = new Tile[player.getLightRadius() * 2 + 1][player.getLightRadius() * 2 + 1];
+            compute(grid, player.getPosition(), 0);
 
-                if (grid[y][x] != null) {
-                    Tile tile = grid[y][x];
+            for (int y = player.getLightRadius() * 2; y >= 0; y--) {
+                for (int x = 0; x < player.getLightRadius() * 2 + 1; x++) {
+                    int i = player.getPosition().y + y - player.getLightRadius();
+                    int j = player.getPosition().x + x - player.getLightRadius();
 
-                    boolean alternate = false;
+                    if (grid[y][x] != null) {
+                        Tile tile = grid[y][x];
 
-                    if (grid[y][x].isWall) {
-                        if (y + 1 < player.getLightRadius() * 2 + 1 && grid[y + 1][x] != null
-                                && (grid[y + 1][x].isFloor || grid[y + 1][x].isDoor)) {
-                            alternate = true;
-                        } else if (x - 1 >= 0 && grid[y][x - 1] != null && (grid[y][x - 1].isFloor || grid[y][x - 1].isDoor)) {
-                            alternate = true;
-                        } else if (y + 1 < player.getLightRadius() * 2 + 1 && x - 1 >= 0
-                                && grid[y + 1][x - 1] != null && (grid[y + 1][x - 1].isFloor || grid[y + 1][x - 1].isDoor)) {
-                            alternate = true;
-                        }
-                    } else if (tile == OPEN_DOOR) {
-                        alternate = true;
-                    }
+                        boolean alternate = false;
 
-                    drawTile(tile, i, j, alternate);
-
-                    if (path != null) {
-                        for (int k = currentStep; k < path.getLength(); k++) {
-                            Point step = path.getStep(k);
-
-                            if (step.y - player.getPosition().x + player.getLightRadius() == x
-                                    && step.x - player.getPosition().y + player.getLightRadius() == y) {
-                                drawPathTile(step.x, step.y);
+                        Door door = dungeon.getDoorAt(new Point(j, i));
+                        if (grid[y][x].isWall && (door == null || door.getState() == DoorState.SECRET)) {
+                            if (y + 1 < player.getLightRadius() * 2 + 1 && grid[y + 1][x] != null
+                                    && (grid[y + 1][x].isFloor || dungeon.getDoorAt(new Point(x, y + 1)) != null)) {
+                                alternate = true;
+                            } else if (x - 1 >= 0 && grid[y][x - 1] != null
+                                    && (grid[y][x - 1].isFloor || dungeon.getDoorAt(new Point(x - 1, y)) != null)) {
+                                alternate = true;
+                            } else if (y + 1 < player.getLightRadius() * 2 + 1 && x - 1 >= 0
+                                    && grid[y + 1][x - 1] != null
+                                    && (grid[y + 1][x - 1].isFloor || dungeon.getDoorAt(new Point(x - 1, y + 1)) != null)) {
+                                alternate = true;
                             }
                         }
-                    }
 
-                    if (cursor != null) {
-                        if (cursor.y - player.getPosition().x + player.getLightRadius() == x
-                                && cursor.x - player.getPosition().y + player.getLightRadius() == y) {
-                            drawCursor(cursor.x, cursor.y, grid[y][x]);
+                        drawTile(tile, i, j, alternate, door);
+
+                        AbstractItem item = dungeon.getItemAt(new Point(j, i));
+                        if (item != null) {
+                            item.draw(image, player.getPosition());
                         }
-                    }
 
-                    AbstractItem item = dungeon.getItemAt(new Point(j, i));
-                    if (item != null) {
-                        item.draw(image, player.getPosition());
-                    }
-
-                    if (x == player.getLightRadius() && y == player.getLightRadius()) {
-                        player.draw(image);
+                        if (x == player.getLightRadius() && y == player.getLightRadius()) {
+                            player.draw(image);
+                        }
                     }
                 }
             }
+
+            needRepaint = false;
         }
 
         g.drawImage(image.getImage(), 0, 0);
 
+        if (cursor != null) {
+            drawCursor(g, cursor.x, cursor.y, dungeon.getFloor()[cursor.x][cursor.y]);
+        }
+
         super.paintComponents(g);
     }
 
-    private void drawTile(Tile tile, int px, int py, boolean alternate) {
+    private void drawTile(Tile tile, int px, int py, boolean alternate, Door door) {
         int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
@@ -255,23 +261,35 @@ public class GameView extends View {
             } else {
                 image.drawImage(new Point(px, py), tile.image.getSubImage(0, 0, 64, 96), x, y);
             }
+
+            if (door != null && door.getState() != DoorState.SECRET) {
+                if (door.getDirection() == Direction.NORTH) {
+                    image.drawImage(new Point(px, py), Images.DOOR.getSubImage(1, 0), x, y);
+                } else if (door.getDirection() == Direction.WEST) {
+                    image.drawImage(new Point(px, py), Images.DOOR.getSubImage(0, 0), x, y);
+                }
+            }
         }
     }
 
-    private void drawCursor(int px, int py, Tile tile) {
-        int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
-        int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
+    private void drawCursor(Graphics g, int px, int py, Tile tile) {
+        if (tile != null) {
+            int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
+            int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
-        if (tile != null && tile.isFloor) {
-            image.drawImage(CURSOR.getSubImage(1, 0), x, y);
+            Door door = dungeon.getDoorAt(new Point(py, px));
+            if (tile.isFloor) {
+                g.drawImage(CURSOR.getSubImage(4, 0), x, y);
+            } else if (door != null && door.getState() != DoorState.SECRET) {
+                g.drawImage(CURSOR.getSubImage(3, 0), x, y);
+                cursorTextBox.setText(door.toString());
+                cursorTextBox.setX(GUI.get().getMouseX());
+                cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
+                cursorTextBox.setVisible(true);
+            } else if (tile.isStairs) {
+                g.drawImage(CURSOR.getSubImage(3, 0), x, y);
+            }
         }
-    }
-
-    private void drawPathTile(int px, int py) {
-        int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
-        int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
-
-        image.drawImage(CURSOR.getSubImage(0, 0), x, y);
     }
 
     public Console getConsole() {

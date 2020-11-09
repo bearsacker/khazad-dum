@@ -76,5 +76,4 @@ public abstract class AbstractAffixe {
 
     public abstract void setPassiveEffect(AbstractCharacter character);
 
-    public abstract void unsetPassiveEffect(AbstractCharacter character);
 }

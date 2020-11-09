@@ -29,8 +29,4 @@ public class AffixeFireDamage extends AbstractAffixe {
         character.setFireDamage(character.getFireDamage() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setFireDamage(character.getFireDamage() - value);
-    }
 }

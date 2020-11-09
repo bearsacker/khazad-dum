@@ -30,8 +30,4 @@ public class AffixeArmor extends AbstractAffixe {
         character.setArmor(character.getArmor() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setArmor(character.getArmor() - value);
-    }
 }

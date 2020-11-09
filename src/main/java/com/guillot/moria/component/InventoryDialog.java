@@ -27,7 +27,7 @@ public class InventoryDialog extends SubView {
 
     private final static Color OVERLAY_COLOR = new Color(0f, 0f, 0f, .75f);
 
-    private final static Color HOVERED_COLOR = new Color(1f, 1f, 1f, .1f);
+    private final static Color HOVERED_COLOR = new Color(1f, 1f, 1f, .2f);
 
     private final static Color SELECTED_COLOR = new Color(1f, 1f, 1f, .5f);
 
@@ -41,9 +41,9 @@ public class InventoryDialog extends SubView {
 
     private AbstractCharacter player;
 
-    private Button buttonUse;
+    private Button buttonAction;
 
-    private Button buttonEquip;
+    private Button buttonDrop;
 
     private AbstractItem selectedItem;
 
@@ -56,38 +56,45 @@ public class InventoryDialog extends SubView {
 
         this.player = player;
 
-        buttonUse = new Button("Use", WIDTH - 256 - 36, 36, 256, 32);
-        buttonUse.setEvent(new Event() {
+        buttonAction = new Button("Use", WIDTH - 256 - 36, 36, 256, 32);
+        buttonAction.setEvent(new Event() {
 
             @Override
             public void perform() throws Exception {
-                if (((Usable) selectedItem).use(player)) {
-                    player.getInventory().remove(selectedItem);
-                    parent.getConsole().addMessage(player.getName() + " use " + selectedItem.getName());
+                if (selectedItem instanceof Usable) {
+                    if (((Usable) selectedItem).use(player)) {
+                        player.getInventory().remove(selectedItem);
+                        parent.getConsole().addMessage(player.getName() + " uses " + selectedItem.getName());
+                        selectedItem = null;
+                    }
+                } else if (selectedItem instanceof Equipable) {
+                    player.equipItem((Equipable) selectedItem);
+                }
+            }
+        });
+        buttonAction.setVisible(false);
+
+        buttonDrop = new Button("Drop", WIDTH - 256 - 36, 80, 256, 32);
+        buttonDrop.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                if (player.dropItem(selectedItem)) {
+                    player.unequipItem(selectedItem);
+
+                    parent.getConsole().addMessage(player.getName() + " drops " + selectedItem.getName());
                     selectedItem = null;
                 }
             }
         });
-        buttonUse.setEnabled(false);
-
-        buttonEquip = new Button("Equip", WIDTH - 256 - 36, 80, 256, 32);
-        buttonEquip.setEvent(new Event() {
-
-            @Override
-            public void perform() throws Exception {
-                if (selectedItem instanceof Equipable) {
-                    player.equipItem(selectedItem);
-                }
-            }
-        });
-        buttonEquip.setEnabled(false);
+        buttonDrop.setVisible(false);
 
         itemTextBox = new TextBox();
         itemTextBox.setAutoWidth(false);
         itemTextBox.setWidth(WIDTH);
         itemTextBox.setVisible(false);
 
-        add(buttonUse, buttonEquip, itemTextBox);
+        add(buttonAction, buttonDrop, itemTextBox);
     }
 
     @Override
@@ -149,8 +156,9 @@ public class InventoryDialog extends SubView {
             itemTextBox.setVisible(false);
         }
 
-        buttonUse.setEnabled(selectedItem != null && selectedItem instanceof Usable);
-        buttonEquip.setEnabled(selectedItem != null && selectedItem instanceof Equipable);
+        buttonAction.setVisible(selectedItem instanceof Usable || selectedItem instanceof Equipable);
+        buttonAction.setText(selectedItem instanceof Usable ? "Use" : "Equip");
+        buttonDrop.setVisible(selectedItem != null);
     }
 
     @Override

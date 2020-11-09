@@ -31,11 +31,6 @@ public class Ring extends AbstractItem implements Equipable {
     }
 
     @Override
-    public void unequip(AbstractCharacter character) {
-        unsetAffixesPassiveEffects(character);
-    }
-
-    @Override
     public boolean isEquipable(AbstractCharacter character) {
         return true;
     }

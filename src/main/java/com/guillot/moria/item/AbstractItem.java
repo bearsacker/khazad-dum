@@ -143,12 +143,6 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
         }
     }
 
-    public void unsetAffixesPassiveEffects(AbstractCharacter character) {
-        for (AbstractAffixe affixe : affixes) {
-            affixe.unsetPassiveEffect(character);
-        }
-    }
-
     public abstract List<ItemRepresentation> getValuesPerLevel();
 
     @Override

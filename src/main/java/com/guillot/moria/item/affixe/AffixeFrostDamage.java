@@ -29,8 +29,4 @@ public class AffixeFrostDamage extends AbstractAffixe {
         character.setFrostDamage(character.getFrostDamage() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setFrostDamage(character.getFrostDamage() - value);
-    }
 }

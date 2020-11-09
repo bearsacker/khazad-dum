@@ -30,8 +30,4 @@ public class AffixeLightningDamage extends AbstractAffixe {
         character.setLightningDamage(character.getLightningDamage() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setLightningDamage(character.getLightningDamage() - value);
-    }
 }

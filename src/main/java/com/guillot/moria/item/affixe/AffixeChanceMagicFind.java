@@ -31,9 +31,4 @@ public class AffixeChanceMagicFind extends AbstractAffixe {
         character.setChanceMagicFind(character.getChanceMagicFind() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setChanceMagicFind(character.getChanceMagicFind() - value);
-    }
-
 }

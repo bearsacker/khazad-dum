@@ -41,12 +41,6 @@ public class Armor extends AbstractItem implements Equipable {
     }
 
     @Override
-    public void unequip(AbstractCharacter character) {
-        character.setArmor(character.getArmor() - value);
-        unsetAffixesPassiveEffects(character);
-    }
-
-    @Override
     public String getValueName() {
         return "Armor";
     }

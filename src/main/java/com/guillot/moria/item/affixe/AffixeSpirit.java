@@ -21,8 +21,4 @@ public class AffixeSpirit extends AbstractAffixe {
         character.setSpirit(character.getSpirit() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setSpirit(character.getSpirit() - value);
-    }
 }

@@ -62,7 +62,7 @@ public class AStar {
      */
     public Path findPath(Point start, Point end, boolean allowDiag) {
         // eastart.y first check, if the destination is blocked, we can't get there
-        if (map.getFloor()[end.x][end.y] == null || !map.getFloor()[end.x][end.y].isFloor) {
+        if (map.getFloor()[end.x][end.y] == null || !(map.getFloor()[end.x][end.y].isFloor || map.getFloor()[end.x][end.y].isStairs)) {
             return null;
         }
 
@@ -252,7 +252,7 @@ public class AStar {
         boolean invalid = (x < 0) || (y < 0) || (x >= map.getHeight()) || (y >= map.getWidth());
 
         if ((!invalid) && ((sx != x) || (sy != y))) {
-            invalid = map.getFloor()[x][y] == NULL || !map.getFloor()[x][y].isFloor;
+            invalid = map.getFloor()[x][y] == NULL || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs);
         }
 
         return !invalid;

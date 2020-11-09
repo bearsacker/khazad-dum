@@ -24,11 +24,12 @@ import static com.guillot.moria.configs.ScreenConfig.QUART_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.QUART_WIDTH;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_WIDTH;
+import static com.guillot.moria.dungeon.Direction.NORTH;
+import static com.guillot.moria.dungeon.Direction.WEST;
 import static com.guillot.moria.dungeon.PlacedObject.GOLD;
 import static com.guillot.moria.dungeon.PlacedObject.RANDOM;
 import static com.guillot.moria.dungeon.PlacedObject.RUBBLE;
 import static com.guillot.moria.dungeon.PlacedObject.TRAP;
-import static com.guillot.moria.dungeon.Tile.CLOSED_DOOR;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DARK_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
@@ -36,10 +37,8 @@ import static com.guillot.moria.dungeon.Tile.GRANITE_WALL;
 import static com.guillot.moria.dungeon.Tile.LIGHT_FLOOR;
 import static com.guillot.moria.dungeon.Tile.MAGMA_WALL;
 import static com.guillot.moria.dungeon.Tile.NULL;
-import static com.guillot.moria.dungeon.Tile.OPEN_DOOR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
 import static com.guillot.moria.dungeon.Tile.QUARTZ_WALL;
-import static com.guillot.moria.dungeon.Tile.SECRET_DOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
 import static com.guillot.moria.dungeon.Tile.TMP2_WALL;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
@@ -69,9 +68,9 @@ public class Dungeon {
 
     private Tile[][] floor;
 
-    private ArrayList<Point> doors;
-
     private AbstractCharacter player;
+
+    private ArrayList<Door> doors;
 
     private ArrayList<AbstractItem> items;
 
@@ -143,8 +142,9 @@ public class Dungeon {
             Collections.swap(locations, pick1, pick2);
         }
 
+        ArrayList<Point> wantedDoors = new ArrayList<>();
         for (int i = 0; i < locations.size() - 1; i++) {
-            buildTunnel(locations.get(i + 1), locations.get(i));
+            buildTunnel(wantedDoors, locations.get(i + 1), locations.get(i));
         }
 
         // Generate walls and streamers
@@ -159,7 +159,7 @@ public class Dungeon {
         placeBoundaryWalls();
 
         // Place intersection doors
-        for (Point door : doors) {
+        for (Point door : wantedDoors) {
             placeDoorIfNextToTwoWalls(new Point(door.x - 1, door.y));
             placeDoorIfNextToTwoWalls(new Point(door.x + 1, door.y));
             placeDoorIfNextToTwoWalls(new Point(door.x, door.y - 1));
@@ -523,7 +523,7 @@ public class Dungeon {
     }
 
     // Constructs a tunnel between two points
-    private void buildTunnel(Point start, Point end) {
+    private void buildTunnel(ArrayList<Point> wantedDoors, Point start, Point end) {
         System.out.println("Building tunnel between " + start + " and " + end + "...");
 
         ArrayList<Point> tunnels = new ArrayList<>();
@@ -603,8 +603,8 @@ public class Dungeon {
                 start.x = tmp_col;
 
                 if (!door_flag) {
-                    if (doors.size() < 100) {
-                        doors.add(new Point(start.x, start.y));
+                    if (wantedDoors.size() < 100) {
+                        wantedDoors.add(new Point(start.x, start.y));
                     }
                     door_flag = true;
                 }
@@ -640,7 +640,10 @@ public class Dungeon {
         for (Point wall : walls) {
             if (this.floor[wall.y][wall.x] == TMP2_WALL) {
                 if (RNG.get().randomNumber(100) < DUN_ROOM_DOORS) {
-                    placeDoor(wall);
+                    Direction doorDirection = isNextTo(wall);
+                    if (doorDirection != null) {
+                        placeDoor(wall, doorDirection);
+                    }
                 } else {
                     // these have to be doorways to rooms
                     this.floor[wall.y][wall.x] = CORRIDOR_FLOOR;
@@ -686,61 +689,57 @@ public class Dungeon {
         this.floor[coord.y][coord.x - 1] = PILLAR;
     }
 
-    private void placeDoor(Point coord) {
-        int door_type = RNG.get().randomNumber(3);
+    private void placeDoor(Point coord, Direction direction) {
+        int doorType = RNG.get().randomNumber(3);
 
-        if (door_type == 1) {
-            if (RNG.get().randomNumber(4) == 1) {
-                placeBrokenDoor(coord);
-            } else {
-                placeOpenDoor(coord);
-            }
-        } else if (door_type == 2) {
-            door_type = RNG.get().randomNumber(12);
+        if (doorType == 1) {
+            placeOpenDoor(coord, direction);
+        } else if (doorType == 2) {
+            doorType = RNG.get().randomNumber(10);
 
-            if (door_type > 3) {
-                placeClosedDoor(coord);
-            } else if (door_type == 3) {
-                placeStuckDoor(coord);
+            if (doorType == 1) {
+                placeStuckDoor(coord, direction);
             } else {
-                placeLockedDoor(coord);
+                placeLockedDoor(coord, direction);
             }
         } else {
-            placeSecretDoor(coord);
+            placeSecretDoor(coord, direction);
         }
     }
 
-    private void placeOpenDoor(Point coord) {
+    private void placeOpenDoor(Point coord, Direction direction) {
         System.out.println("\t-> Placing open door at " + coord + "...");
-        this.floor[coord.y][coord.x] = OPEN_DOOR;
+        this.floor[coord.y][coord.x] = GRANITE_WALL;
+
+        doors.add(new Door(coord, DoorState.OPEN, direction));
     }
 
-    private void placeBrokenDoor(Point coord) {
-        System.out.println("\t-> Placing broken door at " + coord + "...");
-        this.floor[coord.y][coord.x] = OPEN_DOOR;
-        // game.treasure.list[cur_pos].misc_use = 1;
-    }
-
-    private void placeClosedDoor(Point coord) {
-        System.out.println("\t-> Placing closed door at " + coord + "...");
-        this.floor[coord.y][coord.x] = CLOSED_DOOR;
-    }
-
-    private void placeLockedDoor(Point coord) {
+    private void placeLockedDoor(Point coord, Direction direction) {
         System.out.println("\t-> Placing locked door at " + coord + "...");
-        this.floor[coord.y][coord.x] = CLOSED_DOOR;
-        // game.treasure.list[cur_pos].misc_use = (int16_t)(randomNumber(10) + 10);
+        this.floor[coord.y][coord.x] = GRANITE_WALL;
+
+        doors.add(new Door(coord, DoorState.LOCKED, direction));
     }
 
-    private void placeStuckDoor(Point coord) {
+    private void placeStuckDoor(Point coord, Direction direction) {
         System.out.println("\t-> Placing stuck door at " + coord + "...");
-        this.floor[coord.y][coord.x] = CLOSED_DOOR;
-        // game.treasure.list[cur_pos].misc_use = (int16_t)(-randomNumber(10) - 10);
+        this.floor[coord.y][coord.x] = GRANITE_WALL;
+
+        doors.add(new Door(coord, DoorState.STUCK, direction));
     }
 
     private void placeSecretDoor(Point coord) {
+        Direction direction = isNextTo(coord);
+        if (direction != null) {
+            placeSecretDoor(coord, direction);
+        }
+    }
+
+    private void placeSecretDoor(Point coord, Direction direction) {
         System.out.println("\t-> Placing secret door at " + coord + "...");
-        this.floor[coord.y][coord.x] = SECRET_DOOR;
+        this.floor[coord.y][coord.x] = GRANITE_WALL;
+
+        doors.add(new Door(coord, DoorState.SECRET, direction));
     }
 
     private void placeRandomSecretDoor(Point coord, int depth, int height, int left, int right) {
@@ -754,7 +753,7 @@ public class Dungeon {
         case 3:
             placeSecretDoor(new Point(left - 1, coord.y));
             break;
-        default:
+        case 4:
             placeSecretDoor(new Point(right + 1, coord.y));
             break;
         }
@@ -822,7 +821,7 @@ public class Dungeon {
                         this.floor[spot.y][spot.x] = rock_type;
 
                         if (RNG.get().randomNumber(chance_of_treasure) == 1) {
-                            placeGold(spot);
+                            placeGoldNear(coord, 1);
                         }
                     }
                 }
@@ -892,9 +891,11 @@ public class Dungeon {
 
     // Places door at y, x position if at least 2 walls found
     private void placeDoorIfNextToTwoWalls(Point coord) {
-        if (this.floor[coord.y][coord.x] == CORRIDOR_FLOOR && RNG.get().randomNumber(100) > DUN_TUNNEL_DOORS
-                && isNextTo(coord)) {
-            placeDoor(coord);
+        if (this.floor[coord.y][coord.x] == CORRIDOR_FLOOR && RNG.get().randomNumber(100) > DUN_TUNNEL_DOORS) {
+            Direction direction = isNextTo(coord);
+            if (direction != null) {
+                placeDoor(coord, direction);
+            }
         }
     }
 
@@ -917,9 +918,9 @@ public class Dungeon {
         int offset = RNG.get().randomNumber(4);
         if (offset < 3) {
             // 1 -> y-1; 2 -> y+1
-            placeLockedDoor(new Point(coord.x, coord.y - 3 + (offset << 1)));
+            placeLockedDoor(new Point(coord.x, coord.y - 3 + (offset << 1)), NORTH);
         } else {
-            placeLockedDoor(new Point(coord.x - 7 + (offset << 1), coord.y));
+            placeLockedDoor(new Point(coord.x - 7 + (offset << 1), coord.y), WEST);
         }
     }
 
@@ -989,15 +990,19 @@ public class Dungeon {
         return y && x;
     }
 
-    private boolean isNextTo(Point coord) {
+    private Direction isNextTo(Point coord) {
         if (coordCorridorWallsNextTo(coord) > 2) {
             boolean vertical = this.floor[coord.y - 1][coord.x].isWall && this.floor[coord.y + 1][coord.x].isWall;
             boolean horizontal = this.floor[coord.y][coord.x - 1].isWall && this.floor[coord.y][coord.x + 1].isWall;
 
-            return vertical || horizontal;
+            if (vertical && !horizontal) {
+                return NORTH;
+            } else if (horizontal && !vertical) {
+                return WEST;
+            }
         }
 
-        return false;
+        return null;
     }
 
     private boolean moveIntoDirection(Direction direction, Point coord) {
@@ -1098,7 +1103,7 @@ public class Dungeon {
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 1; x <= coord.x + 1; x++) {
                 // should fail if there is already a door present
-                if (this.floor[y][x].isDoor) {
+                if (getDoorAt(new Point(x, y)) == null) {
                     walls++;
                 }
             }
@@ -1175,6 +1180,22 @@ public class Dungeon {
         } while (tries != 0);
     }
 
+    // Places a treasure (Gold or Gems) nearby the coordinates given
+    private void placeGoldNear(Point coord, int tries) {
+        do {
+            for (int i = 0; i <= 10; i++) {
+                Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
+
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && this.getItemAt(at) == null) {
+                    placeGold(at);
+                    i = 9;
+                }
+            }
+
+            tries--;
+        } while (tries != 0);
+    }
+
     // Places a treasure (Gold or Gems) at given row, column
     private void placeGold(Point coord) {
         System.out.println("\t-> Placing gold at " + coord + "...");
@@ -1241,35 +1262,35 @@ public class Dungeon {
     }
 
     private boolean isVisibleFromFloor(int x, int y) {
-        if (x - 1 >= 0 && (this.floor[x - 1][y].isFloor || this.floor[x - 1][y].isDoor)) {
+        if (x - 1 >= 0 && (this.floor[x - 1][y].isFloor || getDoorAt(new Point(y, x - 1)) != null)) {
             return true;
         }
 
-        if (x + 1 < height && (this.floor[x + 1][y].isFloor || this.floor[x + 1][y].isDoor)) {
+        if (x + 1 < height && (this.floor[x + 1][y].isFloor || getDoorAt(new Point(y, x + 1)) != null)) {
             return true;
         }
 
-        if (y - 1 >= 0 && (this.floor[x][y - 1].isFloor || this.floor[x][y - 1].isDoor)) {
+        if (y - 1 >= 0 && (this.floor[x][y - 1].isFloor || getDoorAt(new Point(y - 1, x)) != null)) {
             return true;
         }
 
-        if (y + 1 < width && (this.floor[x][y + 1].isFloor || this.floor[x][y + 1].isDoor)) {
+        if (y + 1 < width && (this.floor[x][y + 1].isFloor || getDoorAt(new Point(y + 1, x)) != null)) {
             return true;
         }
 
-        if (x - 1 >= 0 && y - 1 >= 0 && (this.floor[x - 1][y - 1].isFloor || this.floor[x - 1][y - 1].isDoor)) {
+        if (x - 1 >= 0 && y - 1 >= 0 && (this.floor[x - 1][y - 1].isFloor || getDoorAt(new Point(y - 1, x - 1)) != null)) {
             return true;
         }
 
-        if (x + 1 < height && y + 1 < width && (this.floor[x + 1][y + 1].isFloor || this.floor[x + 1][y + 1].isDoor)) {
+        if (x + 1 < height && y + 1 < width && (this.floor[x + 1][y + 1].isFloor || getDoorAt(new Point(y + 1, x + 1)) != null)) {
             return true;
         }
 
-        if (x + 1 < height && y - 1 >= 0 && (this.floor[x + 1][y - 1].isFloor || this.floor[x + 1][y - 1].isDoor)) {
+        if (x + 1 < height && y - 1 >= 0 && (this.floor[x + 1][y - 1].isFloor || getDoorAt(new Point(y - 1, x + 1)) != null)) {
             return true;
         }
 
-        if (x - 1 >= 0 && y + 1 < width && (this.floor[x - 1][y + 1].isFloor || this.floor[x - 1][y + 1].isDoor)) {
+        if (x - 1 >= 0 && y + 1 < width && (this.floor[x - 1][y + 1].isFloor || getDoorAt(new Point(y + 1, x - 1)) != null)) {
             return true;
         }
 
@@ -1328,6 +1349,15 @@ public class Dungeon {
 
     public ArrayList<AbstractItem> getItems() {
         return items;
+    }
+
+    public Door getDoorAt(Point coord) {
+        Optional<Door> door = doors.stream().filter(x -> x.getPosition().is(coord)).findFirst();
+        if (door.isPresent()) {
+            return door.get();
+        }
+
+        return null;
     }
 
 }

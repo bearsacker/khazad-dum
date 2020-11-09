@@ -6,7 +6,5 @@ public interface Equipable {
 
     void equip(AbstractCharacter character);
 
-    void unequip(AbstractCharacter character);
-
     boolean isEquipable(AbstractCharacter character);
 }

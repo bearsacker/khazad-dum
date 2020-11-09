@@ -29,8 +29,4 @@ public class AffixePhysicalDamage extends AbstractAffixe {
         character.setPhysicalDamage(character.getPhysicalDamage() + value);
     }
 
-    @Override
-    public void unsetPassiveEffect(AbstractCharacter character) {
-        character.setPhysicalDamage(character.getPhysicalDamage() - value);
-    }
 }
