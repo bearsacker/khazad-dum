@@ -1,7 +1,9 @@
 package com.guillot.moria.views;
 
 import static com.guillot.moria.Images.CURSOR;
+import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
+import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
@@ -16,7 +18,6 @@ import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.Images;
-import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
@@ -47,8 +48,6 @@ public class GameView extends View {
 
     private Point cursor;
 
-    private AStar astar;
-
     private Path path;
 
     private int currentStep;
@@ -70,10 +69,9 @@ public class GameView extends View {
         RNG.get().setSeed(1604912991583L);
         player = new Human("Jean Castex");
 
-        dungeon = new Dungeon(player, 25);
+        dungeon = new Dungeon(25);
         dungeon.generate();
-
-        astar = new AStar(dungeon, 100);
+        player.setPosition(dungeon.getSpawnUpStairs());
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
         needRepaint = true;
@@ -107,11 +105,26 @@ public class GameView extends View {
                     path = null;
                 }
             } else {
-                AbstractItem item = dungeon.getItemAt(player.getPosition());
-                if (item != null && player.pickUpItem(item)) {
-                    dungeon.removeItem(item);
-                    console.addMessage(player.getName() + " picked up " + item.getName());
+                Tile tile = dungeon.getFloor()[player.getPosition().y][player.getPosition().x];
+                if (tile == UP_STAIR) {
+                    dungeon = new Dungeon(dungeon.getLevel() - 1);
+                    dungeon.generate();
+                    player.setPosition(dungeon.getSpawnDownStairs());
+                    console.addMessage(player.getName() + " comes back to level " + dungeon.getLevel());
                     needRepaint = true;
+                } else if (tile == DOWN_STAIR) {
+                    dungeon = new Dungeon(dungeon.getLevel() + 1);
+                    dungeon.generate();
+                    player.setPosition(dungeon.getSpawnUpStairs());
+                    console.addMessage(player.getName() + " goes to level " + dungeon.getLevel());
+                    needRepaint = true;
+                } else {
+                    AbstractItem item = dungeon.getItemAt(player.getPosition());
+                    if (item != null && player.pickUpItem(item)) {
+                        dungeon.removeItem(item);
+                        console.addMessage(player.getName() + " picked up " + item.getName());
+                        needRepaint = true;
+                    }
                 }
             }
 
@@ -133,7 +146,7 @@ public class GameView extends View {
                         player.setPosition(door.getDirectionPosition(player.getPosition()));
                         needRepaint = true;
                     } else {
-                        path = astar.findPath(player.getPosition().inverseXY(), cursor, false);
+                        path = dungeon.findPath(player.getPosition().inverseXY(), cursor);
                         currentStep = 0;
                     }
                 }
@@ -213,14 +226,16 @@ public class GameView extends View {
                         Door door = dungeon.getDoorAt(new Point(j, i));
                         if (grid[y][x].isWall && (door == null || door.getState() == DoorState.SECRET)) {
                             if (y + 1 < player.getLightRadius() * 2 + 1 && grid[y + 1][x] != null
-                                    && (grid[y + 1][x].isFloor || dungeon.getDoorAt(new Point(x, y + 1)) != null)) {
+                                    && (grid[y + 1][x].isFloor || grid[y + 1][x].isStairs
+                                            || dungeon.getDoorAt(new Point(x, y + 1)) != null)) {
                                 alternate = true;
                             } else if (x - 1 >= 0 && grid[y][x - 1] != null
-                                    && (grid[y][x - 1].isFloor || dungeon.getDoorAt(new Point(x - 1, y)) != null)) {
+                                    && (grid[y][x - 1].isFloor || grid[y][x - 1].isStairs
+                                            || dungeon.getDoorAt(new Point(x - 1, y)) != null)) {
                                 alternate = true;
-                            } else if (y + 1 < player.getLightRadius() * 2 + 1 && x - 1 >= 0
-                                    && grid[y + 1][x - 1] != null
-                                    && (grid[y + 1][x - 1].isFloor || dungeon.getDoorAt(new Point(x - 1, y + 1)) != null)) {
+                            } else if (y + 1 < player.getLightRadius() * 2 + 1 && x - 1 >= 0 && grid[y + 1][x - 1] != null
+                                    && (grid[y + 1][x - 1].isFloor || grid[y + 1][x - 1].isStairs
+                                            || dungeon.getDoorAt(new Point(x - 1, y + 1)) != null)) {
                                 alternate = true;
                             }
                         }
@@ -282,12 +297,23 @@ public class GameView extends View {
                 g.drawImage(CURSOR.getSubImage(4, 0), x, y);
             } else if (door != null && door.getState() != DoorState.SECRET) {
                 g.drawImage(CURSOR.getSubImage(3, 0), x, y);
+
                 cursorTextBox.setText(door.toString());
                 cursorTextBox.setX(GUI.get().getMouseX());
                 cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
                 cursorTextBox.setVisible(true);
             } else if (tile.isStairs) {
                 g.drawImage(CURSOR.getSubImage(3, 0), x, y);
+
+                if (tile == UP_STAIR) {
+                    cursorTextBox.setText("Back to level " + (dungeon.getLevel() - 1));
+                } else {
+                    cursorTextBox.setText("Go to level " + (dungeon.getLevel() + 1));
+                }
+
+                cursorTextBox.setX(GUI.get().getMouseX());
+                cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
+                cursorTextBox.setVisible(true);
             }
         }
     }

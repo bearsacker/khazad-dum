@@ -51,7 +51,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.ai.AStar;
+import com.guillot.moria.ai.Path;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
 import com.guillot.moria.item.ItemGenerator;
@@ -68,31 +69,45 @@ public class Dungeon {
 
     private Tile[][] floor;
 
-    private AbstractCharacter player;
-
     private ArrayList<Door> doors;
 
     private ArrayList<AbstractItem> items;
 
-    public Dungeon(AbstractCharacter player, int level) {
-        this.player = player;
+    private AStar astar;
+
+    private Point spawnUpStairs;
+
+    private Point spawnDownStairs;
+
+    public Dungeon(int level) {
         this.level = level;
-        this.height = DUN_MAX_HEIGHT;
-        this.width = DUN_MAX_WIDTH;
-        this.floor = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
+        height = DUN_MAX_HEIGHT;
+        width = DUN_MAX_WIDTH;
+        floor = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
         for (int y = 0; y < DUN_MAX_HEIGHT; y++) {
             for (int x = 0; x < DUN_MAX_WIDTH; x++) {
-                this.floor[y][x] = NULL;
+                floor[y][x] = NULL;
             }
         }
 
-        this.doors = new ArrayList<>();
-        this.items = new ArrayList<>();
+        doors = new ArrayList<>();
+        items = new ArrayList<>();
+
+        astar = new AStar(this, 1000);
     }
 
     // Cave logic flow for generation of new dungeon
     public void generate() {
         System.out.println("Generating dungeon of level " + level + " [seed=" + RNG.get().getSeed() + "]...");
+
+        for (int y = 0; y < DUN_MAX_HEIGHT; y++) {
+            for (int x = 0; x < DUN_MAX_WIDTH; x++) {
+                floor[y][x] = NULL;
+            }
+        }
+
+        doors.clear();
+        items.clear();
 
         // Room initialization
         int row_rooms = 2 * (height / SCREEN_HEIGHT);
@@ -166,13 +181,18 @@ public class Dungeon {
             placeDoorIfNextToTwoWalls(new Point(door.x, door.y + 1));
         }
 
-        placeStairs(2, RNG.get().randomNumber(2) + 2, 3);
-        placeStairs(1, RNG.get().randomNumber(2), 3);
+        Point upStairs = placeStairs(1, 0);
+        spawnUpStairs = newSpotNear(upStairs, 10);
+
+        Point downStairs = placeStairs(2, 0);
+        spawnDownStairs = newSpotNear(downStairs, 10);
 
         cleaningGraniteWalls();
 
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
-        player.setPosition(newSpot());
+        if (this.level == 1) {
+            spawnUpStairs = newSpot();
+        }
 
         int allocLevel = (this.level / 3);
         if (allocLevel < 2) {
@@ -191,6 +211,17 @@ public class Dungeon {
         allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), GOLD,
                 RNG.get().randomNumberNormalDistribution(LEVEL_TOTAL_GOLD_AND_GEMS, 3));
         allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), TRAP, RNG.get().randomNumber(allocLevel));
+
+        // Verify level eligibility
+        Path path = astar.findPath(spawnUpStairs.inverseXY(), downStairs.inverseXY(), true);
+        if (path != null) {
+            generate();
+        }
+
+        path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), true);
+        if (path != null) {
+            generate();
+        }
     }
 
     // Fills in empty spots with desired rock
@@ -830,51 +861,40 @@ public class Dungeon {
     }
 
     // Places a staircase 1=up, 2=down
-    private void placeStairs(int stair_type, int number, int walls) {
-        System.out.println("Placing stairs of type " + stair_type + "...");
+    private Point placeStairs(int stairType, int walls) {
+        System.out.println("Placing stairs of type " + stairType + "...");
 
         Point coord1 = new Point();
         Point coord2 = new Point();
 
-        for (int i = 0; i < number; i++) {
-            boolean placed = false;
+        do {
+            // Note:
+            // don't let y1/x1 be zero,
+            // don't let y2/x2 be equal to dg.height-1/dg.width-1,
+            // these values are always BOUNDARY_ROCK.
+            coord1.y = RNG.get().randomNumber(this.height - 14);
+            coord1.x = RNG.get().randomNumber(this.width - 14);
+            coord2.y = coord1.y + 12;
+            coord2.x = coord1.x + 12;
 
-            while (!placed) {
-                int j = 0;
-
+            do {
                 do {
-                    // Note:
-                    // don't let y1/x1 be zero,
-                    // don't let y2/x2 be equal to dg.height-1/dg.width-1,
-                    // these values are always BOUNDARY_ROCK.
-                    coord1.y = RNG.get().randomNumber(this.height - 14);
-                    coord1.x = RNG.get().randomNumber(this.width - 14);
-                    coord2.y = coord1.y + 12;
-                    coord2.x = coord1.x + 12;
+                    if (!this.floor[coord1.y][coord1.x].isWall && coordWallsNextTo(coord1, true) == walls) {
+                        if (stairType == 1) {
+                            placeUpStairs(coord1);
+                        } else {
+                            placeDownStairs(coord1);
+                        }
 
-                    do {
-                        do {
-                            if (!this.floor[coord1.y][coord1.x].isWall && coordWallsNextTo(coord1) >= walls) {
-                                placed = true;
-                                if (stair_type == 1) {
-                                    placeUpStairs(coord1);
-                                } else {
-                                    placeDownStairs(coord1);
-                                }
-                            }
-                            coord1.x++;
-                        } while ((coord1.x != coord2.x) && (!placed));
+                        return coord1;
+                    }
+                    coord1.x++;
+                } while (coord1.x != coord2.x);
 
-                        coord1.x = coord2.x - 12;
-                        coord1.y++;
-                    } while ((coord1.y != coord2.y) && (!placed));
-
-                    j++;
-                } while ((!placed) && (j <= 30));
-
-                walls--;
-            }
-        }
+                coord1.x = coord2.x - 12;
+                coord1.y++;
+            } while (coord1.y != coord2.y);
+        } while (true);
     }
 
     // Place an up staircase at given y, x
@@ -961,7 +981,7 @@ public class Dungeon {
     // Checks points north, south, east, and west for a wall
     // note that y,x is always coordInBounds(), i.e. 0 < y < dg.height-1,
     // and 0 < x < dg.width-1
-    private int coordWallsNextTo(Point coord) {
+    private int coordWallsNextTo(Point coord, boolean allowDiag) {
         int walls = 0;
 
         if (this.floor[coord.y - 1][coord.x].isWall) {
@@ -978,6 +998,24 @@ public class Dungeon {
 
         if (this.floor[coord.y][coord.x + 1].isWall) {
             walls++;
+        }
+
+        if (allowDiag) {
+            if (this.floor[coord.y - 1][coord.x - 1].isWall) {
+                walls++;
+            }
+
+            if (this.floor[coord.y + 1][coord.x + 1].isWall) {
+                walls++;
+            }
+
+            if (this.floor[coord.y + 1][coord.x - 1].isWall) {
+                walls++;
+            }
+
+            if (this.floor[coord.y - 1][coord.x + 1].isWall) {
+                walls++;
+            }
         }
 
         return walls;
@@ -1152,9 +1190,10 @@ public class Dungeon {
     // Places an object at given row, column co-ordinate
     private void placeRandomObjectAt(Point coord) {
         System.out.println("\t-> Placing random object at " + coord + "...");
-        int qualityLevel = player.getLevel() + RNG.get().randomNumber(5);
+        int qualityLevel = level + RNG.get().randomNumber(5);
 
-        AbstractItem item = ItemGenerator.generateItem(player.getChanceMagicFind(), qualityLevel);
+        // TODO
+        AbstractItem item = ItemGenerator.generateItem(0, qualityLevel);
         item.setPosition(coord);
 
         items.add(item);
@@ -1186,7 +1225,7 @@ public class Dungeon {
             for (int i = 0; i <= 10; i++) {
                 Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
 
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && this.getItemAt(at) == null) {
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && getItemAt(at) == null) {
                     placeGold(at);
                     i = 9;
                 }
@@ -1223,10 +1262,10 @@ public class Dungeon {
             // don't put an object beneath the player, this could cause
             // problems if player is standing under rubble, or on a trap.
             do {
-                coord.y = RNG.get().randomNumber(this.height) - 1;
-                coord.x = RNG.get().randomNumber(this.width) - 1;
-            } while (!types.contains(this.floor[coord.y][coord.x]) || this.player.getPosition().is(coord)
-                    || this.getItemAt(coord) != null);
+                coord.y = RNG.get().randomNumber(height) - 1;
+                coord.x = RNG.get().randomNumber(width) - 1;
+            } while (!types.contains(this.floor[coord.y][coord.x]) || spawnUpStairs.is(coord) || spawnDownStairs.is(coord)
+                    || getItemAt(coord) != null);
 
             switch (type) {
             case TRAP:
@@ -1259,6 +1298,22 @@ public class Dungeon {
         } while (!tile.isFloor || getItemAt(position) != null || getMonsterAt(position) != null);
 
         return position;
+    }
+
+    private Point newSpotNear(Point coord, int tries) {
+        do {
+            for (int i = 0; i <= 10; i++) {
+                Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
+
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor) {
+                    return at;
+                }
+            }
+
+            tries--;
+        } while (tries != 0);
+
+        return null;
     }
 
     private boolean isVisibleFromFloor(int x, int y) {
@@ -1329,6 +1384,14 @@ public class Dungeon {
         this.floor = floor;
     }
 
+    public Point getSpawnUpStairs() {
+        return spawnUpStairs;
+    }
+
+    public Point getSpawnDownStairs() {
+        return spawnDownStairs;
+    }
+
     public AbstractItem getItemAt(Point coord) {
         Optional<AbstractItem> item = items.stream().filter(x -> x.getPosition().is(coord)).findFirst();
         if (item.isPresent()) {
@@ -1358,6 +1421,10 @@ public class Dungeon {
         }
 
         return null;
+    }
+
+    public Path findPath(Point start, Point end) {
+        return astar.findPath(start, end, false);
     }
 
 }

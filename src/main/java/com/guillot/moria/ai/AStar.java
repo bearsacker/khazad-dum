@@ -5,6 +5,8 @@ import static com.guillot.moria.dungeon.Tile.NULL;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.guillot.moria.dungeon.Door;
+import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.utils.Point;
 
@@ -56,11 +58,11 @@ public class AStar {
      * 
      * @param start The starting point
      * @param end The ending point
-     * @param allowDiag
+     * @param allowDoor
      * 
      * @return the path or null
      */
-    public Path findPath(Point start, Point end, boolean allowDiag) {
+    public Path findPath(Point start, Point end, boolean allowDoor) {
         // eastart.y first check, if the destination is blocked, we can't get there
         if (map.getFloor()[end.x][end.y] == null || !(map.getFloor()[end.x][end.y].isFloor || map.getFloor()[end.x][end.y].isStairs)) {
             return null;
@@ -98,19 +100,11 @@ public class AStar {
                         continue;
                     }
 
-                    // if we're not allowing diaganol movement then only
-                    // one of x or y can be set
-                    if (!allowDiag) {
-                        if ((x != 0) && (y != 0)) {
-                            continue;
-                        }
-                    }
-
                     // determine the location of the neighbour and evaluate it
                     int xp = x + current.getX();
                     int yp = y + current.getY();
 
-                    if (isValidLocation(start.x, start.y, current.getX(), current.getY(), xp, yp)) {
+                    if (isValidLocation(start.x, start.y, current.getX(), current.getY(), xp, yp) || (allowDoor && isOpenDoor(xp, yp))) {
                         // the cost to get to this node is cost the current plus
                         // the movement
                         // cost to reach this node. Note that the heursitic
@@ -256,5 +250,10 @@ public class AStar {
         }
 
         return !invalid;
+    }
+
+    protected boolean isOpenDoor(int x, int y) {
+        Door door = map.getDoorAt(new Point(x, y));
+        return door != null && door.getState() == DoorState.OPEN;
     }
 }
