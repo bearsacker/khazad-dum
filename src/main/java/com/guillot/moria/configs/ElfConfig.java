@@ -35,4 +35,8 @@ public class ElfConfig extends Config {
     public static final int CHANCE_MAGIC_FIND = get().getInt("chance-magic-find");
 
     public static final int CHANCE_LOCK_PICKING = get().getInt("chance-lock-picking");
+
+    public static final int CHANCE_CRITICAL_HIT = get().getInt("chance-critical-hit");
+
+    public static final int INVENTORY_LIMIT = get().getInt("inventory-limit");
 }

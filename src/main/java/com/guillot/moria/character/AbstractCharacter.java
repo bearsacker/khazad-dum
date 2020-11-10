@@ -37,6 +37,8 @@ public abstract class AbstractCharacter {
 
     protected int physicalDamage;
 
+    protected int inventoryLimit;
+
     // Computed from agility
 
     protected int chanceHit;
@@ -56,6 +58,8 @@ public abstract class AbstractCharacter {
     protected int chanceMagicFind;
 
     protected int chanceLockPicking;
+
+    protected int chanceCriticalHit;
 
     // Computed from equipment
 
@@ -117,6 +121,7 @@ public abstract class AbstractCharacter {
 
     public void computeStatistics() {
         physicalDamage = strength / 3;
+        inventoryLimit = getInventoryLimitMin() + strength / 2;
 
         chanceHit = getChanceHitMin() + agility / 2;
         chanceDodge = agility / 2;
@@ -127,6 +132,7 @@ public abstract class AbstractCharacter {
 
         chanceMagicFind = getChanceMagicFindMin() + destiny;
         chanceLockPicking = getChanceLockPickingMin() + destiny;
+        chanceCriticalHit = getChanceCriticalHitMin() + destiny / 3;
 
         if (head != null) {
             head.equip(this);
@@ -149,7 +155,7 @@ public abstract class AbstractCharacter {
     }
 
     public boolean pickUpItem(AbstractItem item) {
-        if (!inventory.contains(item)) {
+        if (!inventory.contains(item) && inventory.size() < inventoryLimit) {
             inventory.add(item);
         }
 
@@ -356,6 +362,30 @@ public abstract class AbstractCharacter {
         this.chanceMagicFind = chanceMagicFind;
     }
 
+    public int getChanceLockPicking() {
+        return chanceLockPicking;
+    }
+
+    public void setChanceLockPicking(int chanceLockPicking) {
+        this.chanceLockPicking = chanceLockPicking;
+    }
+
+    public int getChanceCriticalHit() {
+        return chanceCriticalHit;
+    }
+
+    public void setChanceCriticalHit(int chanceCriticalHit) {
+        this.chanceCriticalHit = chanceCriticalHit;
+    }
+
+    public int getInventoryLimit() {
+        return inventoryLimit;
+    }
+
+    public void setInventoryLimit(int inventoryLimit) {
+        this.inventoryLimit = inventoryLimit;
+    }
+
     public int getDamages() {
         return damages;
     }
@@ -405,6 +435,7 @@ public abstract class AbstractCharacter {
         String text = getName() + " - " + getClassName() + " - Level " + level + "\n\n";
         text += "Strength: " + strength + "\n";
         text += "     Physical damage: + 0-" + physicalDamage + "%\n";
+        text += "     Inventory limit: + " + inventoryLimit + " blocks\n";
 
         text += "Agility: " + agility + "\n";
         text += "     Chance to Hit: " + chanceHit + "%\n";
@@ -417,7 +448,8 @@ public abstract class AbstractCharacter {
 
         text += "Destiny: " + destiny + "\n";
         text += "     Chance to find a magic object: + " + chanceMagicFind + "%\n";
-        text += "     Chance to pick a lock: " + chanceLockPicking + "%\n\n";
+        text += "     Chance to pick a lock: " + chanceLockPicking + "%\n";
+        text += "     Chance of critical hit: " + chanceCriticalHit + "%\n\n";
 
         text += "Damages: " + damages + "\n";
         text += "Armor: " + armor + "\n";
@@ -449,4 +481,8 @@ public abstract class AbstractCharacter {
     public abstract int getChanceMagicFindMin();
 
     public abstract int getChanceLockPickingMin();
+
+    public abstract int getChanceCriticalHitMin();
+
+    public abstract int getInventoryLimitMin();
 }

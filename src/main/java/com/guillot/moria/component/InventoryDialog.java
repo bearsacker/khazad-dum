@@ -2,9 +2,11 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static org.newdawn.slick.Input.KEY_DELETE;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
+import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 
 import java.util.Collections;
 
@@ -27,7 +29,7 @@ public class InventoryDialog extends SubView {
 
     private final static Color OVERLAY_COLOR = new Color(0f, 0f, 0f, .75f);
 
-    private final static Color HOVERED_COLOR = new Color(1f, 1f, 1f, .2f);
+    private final static Color BLOCK_COLOR = new Color(1f, 1f, 1f, .2f);
 
     private final static Color SELECTED_COLOR = new Color(1f, 1f, 1f, .5f);
 
@@ -37,7 +39,9 @@ public class InventoryDialog extends SubView {
 
     private final static Color MAGIC_COLOR = new Color(Color.cyan);
 
-    private final static int INVENTORY_WIDTH = 11;
+    private final static int INVENTORY_WIDTH = 10;
+
+    private GameView parent;
 
     private AbstractCharacter player;
 
@@ -54,9 +58,10 @@ public class InventoryDialog extends SubView {
     public InventoryDialog(GameView parent, AbstractCharacter player) throws Exception {
         super(parent);
 
+        this.parent = parent;
         this.player = player;
 
-        buttonAction = new Button("Use", WIDTH - 256 - 36, 36, 256, 32);
+        buttonAction = new Button("Use", WIDTH - 256 - 4, 64, 192, 32);
         buttonAction.setEvent(new Event() {
 
             @Override
@@ -74,7 +79,7 @@ public class InventoryDialog extends SubView {
         });
         buttonAction.setVisible(false);
 
-        buttonDrop = new Button("Drop", WIDTH - 256 - 36, 80, 256, 32);
+        buttonDrop = new Button("Drop", WIDTH - 256 - 4, 108, 192, 32);
         buttonDrop.setEvent(new Event() {
 
             @Override
@@ -114,25 +119,10 @@ public class InventoryDialog extends SubView {
             GUI.get().clearKeysPressed();
         }
 
-        if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-            if (GUI.get().getMouseX() >= 32 && GUI.get().getMouseX() < INVENTORY_WIDTH * 40 + 32 && GUI.get().getMouseY() >= 32
-                    && GUI.get().getMouseY() < player.getInventory().size() / INVENTORY_WIDTH * 40 + 32 + 40) {
-                int x = (GUI.get().getMouseX() - 32) / 40;
-                int y = (GUI.get().getMouseY() - 32) / 40;
-                int index = y * INVENTORY_WIDTH + x;
-
-                if (index >= 0 && index < player.getInventory().size()) {
-                    selectedItem = player.getInventory().get(index);
-                } else {
-                    selectedItem = null;
-                }
-            }
-        }
-
-        if (GUI.get().getMouseX() >= 32 && GUI.get().getMouseX() < INVENTORY_WIDTH * 40 + 32 && GUI.get().getMouseY() >= 32
-                && GUI.get().getMouseY() < player.getInventory().size() / INVENTORY_WIDTH * 40 + 32 + 40) {
-            int x = (GUI.get().getMouseX() - 32) / 40;
-            int y = (GUI.get().getMouseY() - 32) / 40;
+        if (GUI.get().getMouseX() >= 64 && GUI.get().getMouseX() < INVENTORY_WIDTH * 40 + 64 && GUI.get().getMouseY() >= 64
+                && GUI.get().getMouseY() < player.getInventory().size() / INVENTORY_WIDTH * 40 + 64 + 40) {
+            int x = (GUI.get().getMouseX() - 64) / 40;
+            int y = (GUI.get().getMouseY() - 64) / 40;
             int index = y * INVENTORY_WIDTH + x;
 
             if (index >= 0 && index < player.getInventory().size()) {
@@ -142,6 +132,33 @@ public class InventoryDialog extends SubView {
             }
         } else {
             hoveredItem = null;
+        }
+
+        if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+            selectedItem = hoveredItem;
+        }
+
+        if (GUI.get().getInput().isMousePressed(MOUSE_RIGHT_BUTTON)) {
+            if (hoveredItem != null) {
+                if (hoveredItem instanceof Usable) {
+                    if (((Usable) hoveredItem).use(player)) {
+                        player.getInventory().remove(hoveredItem);
+                        parent.getConsole().addMessage(player.getName() + " uses " + hoveredItem.getName());
+                        hoveredItem = null;
+                    }
+                } else if (hoveredItem instanceof Equipable) {
+                    player.equipItem((Equipable) hoveredItem);
+                }
+            }
+        }
+
+        if (GUI.get().isKeyPressed(KEY_DELETE) && selectedItem != null) {
+            if (player.dropItem(selectedItem)) {
+                player.unequipItem(selectedItem);
+
+                parent.getConsole().addMessage(player.getName() + " drops " + selectedItem.getName());
+                selectedItem = null;
+            }
         }
 
         if (hoveredItem != null) {
@@ -166,20 +183,24 @@ public class InventoryDialog extends SubView {
         g.setColor(OVERLAY_COLOR);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
+        for (int i = 0; i < player.getInventoryLimit(); i++) {
+            int x = (i % INVENTORY_WIDTH) * 40 + 64;
+            int y = (i / INVENTORY_WIDTH) * 40 + 64;
+
+            g.setColor(BLOCK_COLOR);
+            g.fillRect(x + 2, y + 2, 36, 36);
+        }
+
         for (int i = 0; i < player.getInventory().size(); i++) {
             AbstractItem item = player.getInventory().get(i);
-            int x = (i % INVENTORY_WIDTH) * 40 + 32;
-            int y = (i / INVENTORY_WIDTH) * 40 + 32;
-
+            int x = (i % INVENTORY_WIDTH) * 40 + 64;
+            int y = (i / INVENTORY_WIDTH) * 40 + 64;
 
             if (player.isEquipedByItem(item)) {
                 g.setColor(EQUIPED_COLOR);
                 g.fillRect(x + 2, y + 2, 36, 36);
-            } else if (selectedItem == item) {
+            } else if (selectedItem == item || hoveredItem == item) {
                 g.setColor(SELECTED_COLOR);
-                g.fillRect(x + 2, y + 2, 36, 36);
-            } else if (hoveredItem == item) {
-                g.setColor(HOVERED_COLOR);
                 g.fillRect(x + 2, y + 2, 36, 36);
             }
 

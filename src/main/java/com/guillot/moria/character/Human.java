@@ -2,10 +2,12 @@ package com.guillot.moria.character;
 
 import static com.guillot.moria.Images.HUMAN;
 import static com.guillot.moria.configs.HumanConfig.AGILITY;
+import static com.guillot.moria.configs.HumanConfig.CHANCE_CRITICAL_HIT;
 import static com.guillot.moria.configs.HumanConfig.CHANCE_LOCK_PICKING;
 import static com.guillot.moria.configs.HumanConfig.CHANCE_MAGIC_FIND;
 import static com.guillot.moria.configs.HumanConfig.CHANCE_TO_HIT;
 import static com.guillot.moria.configs.HumanConfig.DESITINY;
+import static com.guillot.moria.configs.HumanConfig.INVENTORY_LIMIT;
 import static com.guillot.moria.configs.HumanConfig.LIFE;
 import static com.guillot.moria.configs.HumanConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.LIGHT_RADIUS;
@@ -71,6 +73,16 @@ public class Human extends AbstractCharacter {
     @Override
     public int getChanceLockPickingMin() {
         return CHANCE_LOCK_PICKING;
+    }
+
+    @Override
+    public int getChanceCriticalHitMin() {
+        return CHANCE_CRITICAL_HIT;
+    }
+
+    @Override
+    public int getInventoryLimitMin() {
+        return INVENTORY_LIMIT;
     }
 
 }

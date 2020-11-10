@@ -73,6 +73,10 @@ public class GameView extends View {
         dungeon.generate();
         player.setPosition(dungeon.getSpawnUpStairs());
 
+        for (AbstractItem item : dungeon.getItems()) {
+            player.pickUpItem(item);
+        }
+
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
         needRepaint = true;
 
