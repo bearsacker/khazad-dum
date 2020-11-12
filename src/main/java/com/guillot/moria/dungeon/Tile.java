@@ -15,8 +15,8 @@ public enum Tile {
     GRANITE_WALL(Images.GRANITE_WALL.getImage(), false, true), //
     MAGMA_WALL(Images.MAGMA_WALL.getImage(), false, true), //
     QUARTZ_WALL(Images.QUARTZ_WALL.getImage(), false, true), //
-    UP_STAIR(Images.UP_STAIRS.getImage(), false, false, true), //
-    DOWN_STAIR(Images.DOWN_STAIRS.getImage(), false, false, true);
+    UP_STAIR(Images.STAIRS.getSubImage(1, 0), false, false, true), //
+    DOWN_STAIR(Images.STAIRS.getSubImage(0, 0), false, false, true);
 
     public boolean isFloor;
 

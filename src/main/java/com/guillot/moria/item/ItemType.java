@@ -20,7 +20,9 @@ public enum ItemType {
     SHIELD("Shield", LEFT_HAND), //
     ARMOR("Armor", BODY), //
     HEALTH_POTION("Health Potion", NONE), //
-    GOLD("Gold", NONE);
+    GOLD("Gold", NONE), //
+    KEY("Key", NONE), //
+    BAG("Bag", NONE);
 
     private String name;
 

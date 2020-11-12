@@ -10,8 +10,7 @@ public enum Images {
     LIGHT_FLOOR("sprites/light_floor.png"), //
     DARK_FLOOR("sprites/dark_floor.png"), //
     PILLAR("sprites/pillar.png"), //
-    UP_STAIRS("sprites/up_stairs.png"), //
-    DOWN_STAIRS("sprites/down_stairs.png"), //
+    STAIRS("sprites/stairs.png", 64, 96), //
     DOOR("sprites/door.png", 64, 96), //
     HUMAN("sprites/human.png"), //
     CURSOR("sprites/cursor.png", 64, 96), //

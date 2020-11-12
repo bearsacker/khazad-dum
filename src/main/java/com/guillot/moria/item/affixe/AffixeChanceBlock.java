@@ -19,7 +19,7 @@ import com.guillot.moria.item.ItemType;
 public class AffixeChanceBlock extends AbstractAffixe {
 
     public AffixeChanceBlock() {
-        name = "+%d%% to Chance to Block";
+        name = "+%d%% to Chance to block";
         type = NORMAL;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, AMULET, BOW, ONE_HANDED_WEAPON, RING, STAFF, TWO_HANDED_WEAPON});
     }

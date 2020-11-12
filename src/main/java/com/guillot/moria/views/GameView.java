@@ -156,17 +156,11 @@ public class GameView extends View {
                 }
 
                 if (player.getPosition().is(cursor.inverseXY())) {
-                    cursorTextBox.setText(player.getName() + " - Level " + player.getLevel());
-                    cursorTextBox.setX(GUI.get().getMouseX());
-                    cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
-                    cursorTextBox.setVisible(true);
+                    showTextBox(player.getName() + " - Level " + player.getLevel());
                 } else {
                     AbstractItem item = dungeon.getItemAt(cursor.inverseXY());
                     if (item != null) {
-                        cursorTextBox.setText(item.getName());
-                        cursorTextBox.setX(GUI.get().getMouseX());
-                        cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
-                        cursorTextBox.setVisible(true);
+                        showTextBox(item.getName());
                     }
                 }
             }
@@ -302,24 +296,25 @@ public class GameView extends View {
             } else if (door != null && door.getState() != DoorState.SECRET) {
                 g.drawImage(CURSOR.getSubImage(3, 0), x, y);
 
-                cursorTextBox.setText(door.toString());
-                cursorTextBox.setX(GUI.get().getMouseX());
-                cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
-                cursorTextBox.setVisible(true);
+                showTextBox(door.toString());
             } else if (tile.isStairs) {
-                g.drawImage(CURSOR.getSubImage(3, 0), x, y);
-
                 if (tile == UP_STAIR) {
-                    cursorTextBox.setText("Back to level " + (dungeon.getLevel() - 1));
+                    g.drawImage(CURSOR.getSubImage(3, 0), x, y);
+                    showTextBox("Back to level " + (dungeon.getLevel() - 1));
                 } else {
-                    cursorTextBox.setText("Go to level " + (dungeon.getLevel() + 1));
-                }
+                    g.drawImage(CURSOR.getSubImage(5, 0), x, y);
+                    showTextBox("Go to level " + (dungeon.getLevel() + 1));
 
-                cursorTextBox.setX(GUI.get().getMouseX());
-                cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
-                cursorTextBox.setVisible(true);
+                }
             }
         }
+    }
+
+    private void showTextBox(String text) {
+        cursorTextBox.setText(text);
+        cursorTextBox.setX(GUI.get().getMouseX());
+        cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
+        cursorTextBox.setVisible(true);
     }
 
     public Console getConsole() {

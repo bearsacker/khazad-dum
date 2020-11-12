@@ -66,15 +66,7 @@ public class InventoryDialog extends SubView {
 
             @Override
             public void perform() throws Exception {
-                if (selectedItem instanceof Usable) {
-                    if (((Usable) selectedItem).use(player)) {
-                        player.getInventory().remove(selectedItem);
-                        parent.getConsole().addMessage(player.getName() + " uses " + selectedItem.getName());
-                        selectedItem = null;
-                    }
-                } else if (selectedItem instanceof Equipable) {
-                    player.equipItem((Equipable) selectedItem);
-                }
+                useOrEquipeItem(selectedItem);
             }
         });
         buttonAction.setVisible(false);
@@ -84,12 +76,7 @@ public class InventoryDialog extends SubView {
 
             @Override
             public void perform() throws Exception {
-                if (player.dropItem(selectedItem)) {
-                    player.unequipItem(selectedItem);
-
-                    parent.getConsole().addMessage(player.getName() + " drops " + selectedItem.getName());
-                    selectedItem = null;
-                }
+                dropItem(selectedItem);
             }
         });
         buttonDrop.setVisible(false);
@@ -135,30 +122,17 @@ public class InventoryDialog extends SubView {
         }
 
         if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-            selectedItem = hoveredItem;
+            if (hoveredItem != null) {
+                selectedItem = hoveredItem;
+            }
         }
 
         if (GUI.get().getInput().isMousePressed(MOUSE_RIGHT_BUTTON)) {
-            if (hoveredItem != null) {
-                if (hoveredItem instanceof Usable) {
-                    if (((Usable) hoveredItem).use(player)) {
-                        player.getInventory().remove(hoveredItem);
-                        parent.getConsole().addMessage(player.getName() + " uses " + hoveredItem.getName());
-                        hoveredItem = null;
-                    }
-                } else if (hoveredItem instanceof Equipable) {
-                    player.equipItem((Equipable) hoveredItem);
-                }
-            }
+            useOrEquipeItem(hoveredItem);
         }
 
         if (GUI.get().isKeyPressed(KEY_DELETE) && selectedItem != null) {
-            if (player.dropItem(selectedItem)) {
-                player.unequipItem(selectedItem);
-
-                parent.getConsole().addMessage(player.getName() + " drops " + selectedItem.getName());
-                selectedItem = null;
-            }
+            dropItem(selectedItem);
         }
 
         if (hoveredItem != null) {
@@ -174,7 +148,7 @@ public class InventoryDialog extends SubView {
         }
 
         buttonAction.setVisible(selectedItem instanceof Usable || selectedItem instanceof Equipable);
-        buttonAction.setText(selectedItem instanceof Usable ? "Use" : "Equip");
+        buttonAction.setText(selectedItem instanceof Usable ? "Use" : (player.isEquipedByItem(selectedItem) ? "Unequip" : "Equip"));
         buttonDrop.setVisible(selectedItem != null);
     }
 
@@ -225,4 +199,30 @@ public class InventoryDialog extends SubView {
         super.paint(g);
     }
 
+    private void useOrEquipeItem(AbstractItem item) {
+        if (item != null) {
+            if (item instanceof Usable) {
+                if (((Usable) item).use(player)) {
+                    player.getInventory().remove(item);
+                    parent.getConsole().addMessage(player.getName() + " uses " + item.getName());
+                    item = null;
+                }
+            } else if (item instanceof Equipable) {
+                if (player.isEquipedByItem(item)) {
+                    player.unequipItem(item);
+                } else {
+                    player.equipItem((Equipable) item);
+                }
+            }
+        }
+    }
+
+    private void dropItem(AbstractItem item) {
+        if (player.dropItem(item)) {
+            player.unequipItem(item);
+
+            parent.getConsole().addMessage(player.getName() + " drops " + item.getName());
+            item = null;
+        }
+    }
 }

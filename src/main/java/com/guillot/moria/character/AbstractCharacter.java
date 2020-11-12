@@ -134,6 +134,8 @@ public abstract class AbstractCharacter {
         chanceLockPicking = getChanceLockPickingMin() + destiny;
         chanceCriticalHit = getChanceCriticalHitMin() + destiny / 3;
 
+        damages = 1;
+
         if (head != null) {
             head.equip(this);
         }
@@ -410,6 +412,14 @@ public abstract class AbstractCharacter {
         this.strength = strength;
     }
 
+    public int getDestiny() {
+        return destiny;
+    }
+
+    public void setDestiny(int destiny) {
+        this.destiny = destiny;
+    }
+
     public ArrayList<AbstractItem> getInventory() {
         return inventory;
     }
@@ -438,8 +448,8 @@ public abstract class AbstractCharacter {
         text += "     Inventory limit: + " + inventoryLimit + " blocks\n";
 
         text += "Agility: " + agility + "\n";
-        text += "     Chance to Hit: " + chanceHit + "%\n";
-        text += "     Chance to Block/Dodge: " + chanceDodge + "%\n";
+        text += "     Chance to hit: " + chanceHit + "%\n";
+        text += "     Chance to block/dodge: " + chanceDodge + "%\n";
         text += "     Movement: " + movement + "m\n";
 
         text += "Spirit: " + spirit + "\n";

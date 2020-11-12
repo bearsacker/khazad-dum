@@ -21,6 +21,7 @@ public class AffixeAllAttributes extends AbstractAffixe {
         character.setSpirit(character.getSpirit() + value);
         character.setStrength(character.getStrength() + value);
         character.setAgility(character.getAgility() + value);
+        character.setDestiny(character.getDestiny() + value);
     }
 
 }

@@ -113,6 +113,12 @@ public class ItemGenerator {
         case HEALTH_POTION:
             item = new HealthPotion();
             break;
+        case KEY:
+            item = new Key();
+            break;
+        case BAG:
+            item = new Bag();
+            break;
         case GOLD:
             // Cannot be generated
         default:

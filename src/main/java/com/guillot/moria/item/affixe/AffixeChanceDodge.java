@@ -15,7 +15,7 @@ import com.guillot.moria.item.ItemType;
 public class AffixeChanceDodge extends AbstractAffixe {
 
     public AffixeChanceDodge() {
-        name = "+%d%% to Chance to Dodge";
+        name = "+%d%% to Chance to dodge";
         type = RARE;
         excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON, SHIELD});
     }

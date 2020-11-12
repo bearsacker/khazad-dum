@@ -28,7 +28,8 @@ public abstract class AbstractAffixe {
             new AffixeFireDamage(), //
             new AffixeFrostDamage(), //
             new AffixeLightningDamage(), //
-            new AffixeChanceMagicFind());
+            new AffixeChanceMagicFind(), //
+            new AffixeChanceCriticalHit());
 
     protected String name;
 
