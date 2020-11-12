@@ -92,7 +92,6 @@ public class Dungeon {
 
         doors = new ArrayList<>();
         items = new ArrayList<>();
-
         astar = new AStar(this, 1000);
     }
 
@@ -188,6 +187,7 @@ public class Dungeon {
         spawnDownStairs = newSpotNear(downStairs, 10);
 
         cleaningGraniteWalls();
+        cleaningDoors();
 
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
         if (this.level == 1) {
@@ -214,12 +214,12 @@ public class Dungeon {
 
         // Verify level eligibility
         Path path = astar.findPath(spawnUpStairs.inverseXY(), downStairs.inverseXY(), true);
-        if (path != null) {
+        if (path == null) {
             generate();
         }
 
         path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), true);
-        if (path != null) {
+        if (path == null) {
             generate();
         }
     }
@@ -1182,6 +1182,19 @@ public class Dungeon {
             for (int j = 0; j < this.width; j++) {
                 if (this.floor[i][j] == GRANITE_WALL && !isVisibleFromFloor(i, j)) {
                     this.floor[i][j] = NULL;
+                }
+            }
+        }
+    }
+
+    private void cleaningDoors() {
+        System.out.println("Cleaning doors...");
+
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                Door door = getDoorAt(new Point(j, i));
+                if (door != null && !this.floor[i][j].isWall) {
+                    doors.remove(door);
                 }
             }
         }

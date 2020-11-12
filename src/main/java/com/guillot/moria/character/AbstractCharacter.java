@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
+import com.guillot.moria.item.ItemType;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
@@ -234,6 +235,14 @@ public abstract class AbstractCharacter {
 
     public boolean isEquipedByItem(AbstractItem item) {
         return head == item || neck == item || finger == item || body == item || leftHand == item || rightHand == item;
+    }
+
+    public boolean hasItemType(ItemType type) {
+        return inventory.stream().anyMatch(x -> x.getType() == type);
+    }
+
+    public AbstractItem getFirstItemOfType(ItemType type) {
+        return inventory.stream().filter(x -> x.getType() == type).findAny().orElse(null);
     }
 
     public void draw(DepthBufferedImage image) {

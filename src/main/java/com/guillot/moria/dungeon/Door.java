@@ -10,6 +10,8 @@ public class Door {
 
     private Direction direction;
 
+    private boolean picked;
+
     public Door(Point position, DoorState state, Direction direction) {
         this.position = position;
         this.state = state;
@@ -61,6 +63,14 @@ public class Door {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public boolean isPicked() {
+        return picked;
+    }
+
+    public void setPicked(boolean picked) {
+        this.picked = picked;
     }
 
     @Override
