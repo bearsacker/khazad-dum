@@ -8,6 +8,8 @@ import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
+import java.util.HashMap;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -175,31 +177,6 @@ public class GameView extends View {
         }
     }
 
-    private void compute(Tile[][] grid, Point position, int length) {
-        if (length >= player.getLightRadius()) {
-            return;
-        }
-
-        if (position.x >= 0 && position.y >= 0 && position.x < dungeon.getWidth() && position.y < dungeon.getHeight()) {
-            Tile dungeonTile = dungeon.getFloor()[position.y][position.x];
-
-            int gridY = position.y - player.getPosition().y + player.getLightRadius();
-            int gridX = position.x - player.getPosition().x + player.getLightRadius();
-            if (gridX < 0 || gridY < 0 || gridX >= player.getLightRadius() * 2 + 1 || gridY >= player.getLightRadius() * 2 + 1) {
-                return;
-            }
-
-            grid[gridY][gridX] = dungeonTile;
-
-            if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile.isStairs) {
-                compute(grid, new Point(position.x - 1, position.y), length + 1);
-                compute(grid, new Point(position.x + 1, position.y), length + 1);
-                compute(grid, new Point(position.x, position.y - 1), length + 1);
-                compute(grid, new Point(position.x, position.y + 1), length + 1);
-            }
-        }
-    }
-
     @Override
     public void paintComponents(Graphics g) throws Exception {
         g.setColor(Color.white);
@@ -209,7 +186,7 @@ public class GameView extends View {
             image.clear();
 
             Tile[][] grid = new Tile[player.getLightRadius() * 2 + 1][player.getLightRadius() * 2 + 1];
-            compute(grid, player.getPosition(), 0);
+            computeViewedTiles(new HashMap<>(), grid, player.getPosition(), 0);
 
             for (int y = player.getLightRadius() * 2; y >= 0; y--) {
                 for (int x = 0; x < player.getLightRadius() * 2 + 1; x++) {
@@ -262,6 +239,38 @@ public class GameView extends View {
         }
 
         super.paintComponents(g);
+    }
+
+    private void computeViewedTiles(HashMap<Point, Integer> depthList, Tile[][] grid, Point position, int length) {
+        if (length >= player.getLightRadius()) {
+            return;
+        }
+
+        Integer depthValue = depthList.get(position);
+        if (depthValue != null && depthValue < length) {
+            return;
+        }
+
+        depthList.put(position, length);
+
+        if (position.x >= 0 && position.y >= 0 && position.x < dungeon.getWidth() && position.y < dungeon.getHeight()) {
+            Tile dungeonTile = dungeon.getFloor()[position.y][position.x];
+
+            int gridY = position.y - player.getPosition().y + player.getLightRadius();
+            int gridX = position.x - player.getPosition().x + player.getLightRadius();
+            if (gridX < 0 || gridY < 0 || gridX >= player.getLightRadius() * 2 + 1 || gridY >= player.getLightRadius() * 2 + 1) {
+                return;
+            }
+
+            grid[gridY][gridX] = dungeonTile;
+
+            if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile.isStairs) {
+                computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1);
+                computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y), length + 1);
+                computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1);
+                computeViewedTiles(depthList, grid, new Point(position.x, position.y + 1), length + 1);
+            }
+        }
     }
 
     private void drawTile(Tile tile, int px, int py, boolean alternate, Door door) {
