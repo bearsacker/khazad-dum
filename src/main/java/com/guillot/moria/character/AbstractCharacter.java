@@ -2,11 +2,11 @@ package com.guillot.moria.character;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Image;
-
+import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
@@ -22,7 +22,9 @@ public abstract class AbstractCharacter {
 
     protected Point position;
 
-    protected Image image;
+    protected Direction direction;
+
+    protected Images image;
 
     // Attributes
 
@@ -92,12 +94,13 @@ public abstract class AbstractCharacter {
 
     protected Equipable neck;
 
-    protected AbstractCharacter(String name, Image image) {
+    protected AbstractCharacter(String name, Images image) {
         this.name = name;
         this.image = image;
 
         this.level = 1;
         this.xp = 0;
+        this.direction = Direction.SOUTH;
 
         this.inventory = new ArrayList<>();
         this.head = null;
@@ -246,7 +249,8 @@ public abstract class AbstractCharacter {
     }
 
     public void draw(DepthBufferedImage image) {
-        image.drawImage(this.image, image.getCenterOfRotationX() - 32, image.getCenterOfRotationY() - 48);
+        image.drawImage(this.image.getSubImage(direction.getValue(), 0), image.getCenterOfRotationX() - 32,
+                image.getCenterOfRotationY() - 48);
     }
 
     public int getLevel() {
@@ -439,6 +443,14 @@ public abstract class AbstractCharacter {
 
     public void setPosition(Point position) {
         this.position = new Point(position);
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public int getGold() {

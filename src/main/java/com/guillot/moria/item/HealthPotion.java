@@ -1,7 +1,7 @@
 package com.guillot.moria.item;
 
-import static com.guillot.moria.Images.ITEMS;
 import static com.guillot.moria.item.ItemType.HEALTH_POTION;
+import static com.guillot.moria.ressources.Images.ITEMS;
 
 import java.util.ArrayList;
 import java.util.Arrays;

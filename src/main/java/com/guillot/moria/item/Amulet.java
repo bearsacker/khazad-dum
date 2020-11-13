@@ -1,8 +1,8 @@
 package com.guillot.moria.item;
 
-import static com.guillot.moria.Images.ITEMS;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.item.ItemType.AMULET;
+import static com.guillot.moria.ressources.Images.ITEMS;
 
 import java.util.Arrays;
 import java.util.List;

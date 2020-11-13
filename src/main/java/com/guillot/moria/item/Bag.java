@@ -1,7 +1,7 @@
 package com.guillot.moria.item;
 
-import static com.guillot.moria.Images.ITEMS;
 import static com.guillot.moria.item.ItemType.BAG;
+import static com.guillot.moria.ressources.Images.ITEMS;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;

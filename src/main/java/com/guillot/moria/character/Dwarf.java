@@ -12,11 +12,12 @@ import static com.guillot.moria.configs.DwarfConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.DwarfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.DwarfConfig.SPIRIT;
 import static com.guillot.moria.configs.DwarfConfig.STRENGTH;
+import static com.guillot.moria.ressources.Images.DWARF;
 
 public class Dwarf extends AbstractCharacter {
 
     public Dwarf(String name) {
-        super(name, null);
+        super(name, DWARF);
     }
 
     @Override

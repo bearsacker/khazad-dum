@@ -12,11 +12,12 @@ import static com.guillot.moria.configs.ElfConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.ElfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.ElfConfig.SPIRIT;
 import static com.guillot.moria.configs.ElfConfig.STRENGTH;
+import static com.guillot.moria.ressources.Images.ELF;
 
 public class Elf extends AbstractCharacter {
 
     public Elf(String name) {
-        super(name, null);
+        super(name, ELF);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.guillot.moria.character;
 
-import static com.guillot.moria.Images.HUMAN;
 import static com.guillot.moria.configs.HumanConfig.AGILITY;
 import static com.guillot.moria.configs.HumanConfig.CHANCE_CRITICAL_HIT;
 import static com.guillot.moria.configs.HumanConfig.CHANCE_LOCK_PICKING;
@@ -13,11 +12,12 @@ import static com.guillot.moria.configs.HumanConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HumanConfig.SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.STRENGTH;
+import static com.guillot.moria.ressources.Images.HUMAN;
 
 public class Human extends AbstractCharacter {
 
     public Human(String name) {
-        super(name, HUMAN.getImage());
+        super(name, HUMAN);
     }
 
     @Override

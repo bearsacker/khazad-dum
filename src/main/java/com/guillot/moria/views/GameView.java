@@ -1,9 +1,13 @@
 package com.guillot.moria.views;
 
-import static com.guillot.moria.Images.CURSOR;
+import static com.guillot.moria.dungeon.Direction.EAST;
+import static com.guillot.moria.dungeon.Direction.NORTH;
+import static com.guillot.moria.dungeon.Direction.SOUTH;
+import static com.guillot.moria.dungeon.Direction.WEST;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
@@ -19,7 +23,6 @@ import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
-import com.guillot.moria.Images;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
@@ -33,6 +36,7 @@ import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
@@ -105,8 +109,19 @@ public class GameView extends View {
         long time = System.currentTimeMillis();
         if (time - lastStep > 50) {
             if (path != null) {
-                player.setPosition(path.getStep(currentStep).inverseXY());
+                Point newPosition = path.getStep(currentStep).inverseXY();
                 currentStep++;
+
+                if (player.getPosition().x - newPosition.x == 1) {
+                    player.setDirection(NORTH);
+                } else if (player.getPosition().x - newPosition.x == -1) {
+                    player.setDirection(SOUTH);
+                } else if (player.getPosition().y - newPosition.y == 1) {
+                    player.setDirection(WEST);
+                } else if (player.getPosition().y - newPosition.y == -1) {
+                    player.setDirection(EAST);
+                }
+                player.setPosition(newPosition);
 
                 if (currentStep > player.getMovement() || currentStep >= path.getLength()) {
                     path = null;

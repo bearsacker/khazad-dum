@@ -11,12 +11,12 @@ import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.SubView;
-import com.guillot.moria.Images;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.ItemType;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameView;
 

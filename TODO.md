@@ -1,11 +1,10 @@
-Map dialog
-Game state
-Escape dialog / Save / Load
 Show equiped item
 Drop object  
-Character orientation  
+Game state
+Map dialog
 Monsters 
 Combat system  
 Leveling system   
+Escape dialog / Save / Load
 Traps  
 Bug: Caracteristique character

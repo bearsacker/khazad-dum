@@ -12,11 +12,12 @@ import static com.guillot.moria.configs.HobbitConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.HobbitConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HobbitConfig.SPIRIT;
 import static com.guillot.moria.configs.HobbitConfig.STRENGTH;
+import static com.guillot.moria.ressources.Images.HOBBIT;
 
 public class Hobbit extends AbstractCharacter {
 
     public Hobbit(String name) {
-        super(name, null);
+        super(name, HOBBIT);
     }
 
     @Override

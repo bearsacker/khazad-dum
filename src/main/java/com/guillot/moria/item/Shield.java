@@ -1,7 +1,7 @@
 package com.guillot.moria.item;
 
-import static com.guillot.moria.Images.ITEMS;
 import static com.guillot.moria.item.ItemType.SHIELD;
+import static com.guillot.moria.ressources.Images.ITEMS;
 
 import java.util.Arrays;
 import java.util.List;
