@@ -100,7 +100,7 @@ public class Dungeon {
     }
 
     // Cave logic flow for generation of new dungeon
-    public void generate() {
+    public boolean generate() {
         System.out.println("Generating dungeon of level " + level + " [seed=" + RNG.get().getSeed() + "]...");
 
         for (int y = 0; y < DUN_MAX_HEIGHT; y++) {
@@ -113,6 +113,7 @@ public class Dungeon {
 
         doors.clear();
         items.clear();
+        astar = new AStar(this, 1000);
 
         // Room initialization
         int row_rooms = 2 * (height / SCREEN_HEIGHT);
@@ -187,17 +188,17 @@ public class Dungeon {
         }
 
         Point upStairs = placeStairs(1, 0);
-        spawnUpStairs = newSpotNear(upStairs, 10);
+        spawnUpStairs = newSpotNear(upStairs);
 
         Point downStairs = placeStairs(2, 0);
-        spawnDownStairs = newSpotNear(downStairs, 10);
+        spawnDownStairs = newSpotNear(downStairs);
 
         cleaningGraniteWalls();
         cleaningDoors();
 
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
         if (this.level == 1) {
-            spawnUpStairs = newSpot();
+            this.floor[upStairs.y][upStairs.x] = LIGHT_FLOOR;
         }
 
         int allocLevel = (this.level / 3);
@@ -219,15 +220,21 @@ public class Dungeon {
         allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), TRAP, RNG.get().randomNumber(allocLevel));
 
         // Verify level eligibility
+        if (spawnUpStairs == null || spawnDownStairs == null) {
+            return false;
+        }
+
         Path path = astar.findPath(spawnUpStairs.inverseXY(), downStairs.inverseXY(), true);
         if (path == null) {
-            generate();
+            return false;
         }
 
         path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), true);
         if (path == null) {
-            generate();
+            return false;
         }
+
+        return true;
     }
 
     // Fills in empty spots with desired rock
@@ -1211,8 +1218,7 @@ public class Dungeon {
         System.out.println("\t-> Placing random object at " + coord + "...");
         int qualityLevel = level + RNG.get().randomNumber(5);
 
-        // TODO
-        AbstractItem item = ItemGenerator.generateItem(0, qualityLevel);
+        AbstractItem item = ItemGenerator.generateItem(level, qualityLevel);
         item.setPosition(coord);
 
         items.add(item);
@@ -1319,18 +1325,17 @@ public class Dungeon {
         return position;
     }
 
-    private Point newSpotNear(Point coord, int tries) {
-        do {
-            for (int i = 0; i <= 10; i++) {
-                Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
-
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor) {
-                    return at;
+    private Point newSpotNear(Point coord) {
+        for (int i = -1; i < 1; i++) {
+            for (int j = -1; j < 1; j++) {
+                if (i != 0 && j != 0) {
+                    Point at = new Point(coord.x + i, coord.y + j);
+                    if (coordInBounds(at) && this.floor[at.y][at.x].isFloor) {
+                        return at;
+                    }
                 }
             }
-
-            tries--;
-        } while (tries != 0);
+        }
 
         return null;
     }

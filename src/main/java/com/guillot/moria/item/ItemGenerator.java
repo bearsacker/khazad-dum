@@ -125,14 +125,12 @@ public class ItemGenerator {
             break;
         }
 
-        if (item == null) {
-            return generateItem(magicBonus, qualityLevel);
+        if (item != null) {
+            item.setRarity(rarity);
+            item.setAffixes(affixes);
+            item.generateBase(qualityLevel);
         }
 
-        item.setRarity(rarity);
-        item.setAffixes(affixes);
-        item.generateBase(qualityLevel);
-
-        return item.isEligible() ? item : generateItem(magicBonus, qualityLevel);
+        return item != null && item.isEligible() ? item : generateItem(magicBonus, qualityLevel);
     }
 }

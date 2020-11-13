@@ -37,7 +37,7 @@ public class Bag extends AbstractItem implements Usable {
     @Override
     public boolean use(AbstractCharacter character) {
         AbstractItem item = ItemGenerator.generateItem(character.getChanceMagicFind(), character.getLevel() + RNG.get().randomNumber(5));
-        if (item != null) {
+        if (item != null && character.dropItem(this)) {
             return character.pickUpItem(item);
         }
 
