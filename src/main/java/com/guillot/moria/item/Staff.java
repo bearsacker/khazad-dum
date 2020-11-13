@@ -19,7 +19,7 @@ public class Staff extends AbstractItem implements Equipable {
         return Arrays.asList(
                 new ItemRepresentation("Short Staff", 1, 2, 4, 0, ITEMS.getSubImage(0, 11)), //
                 new ItemRepresentation("Long Staff", 4, 4, 8, 0, ITEMS.getSubImage(1, 11)), //
-                new ItemRepresentation("Composite Staff", 6, 5, 10, 0, ITEMS.getSubImage(2, 11)), //
+                new ItemRepresentation("Composite Staff", 6, 5, 10, 15, ITEMS.getSubImage(2, 11)), //
                 new ItemRepresentation("Quarter Staff", 9, 6, 12, 20, ITEMS.getSubImage(3, 11)), //
                 new ItemRepresentation("War Staff", 12, 8, 16, 30, ITEMS.getSubImage(4, 11)));
     }

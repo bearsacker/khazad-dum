@@ -1,6 +1,8 @@
+Map dialog
+Game state
+Escape dialog / Save / Load
 Show equiped item
 Drop object  
-Show discovered tiles  
 Character orientation  
 Monsters 
 Combat system  

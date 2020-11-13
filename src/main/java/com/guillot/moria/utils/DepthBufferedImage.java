@@ -1,5 +1,6 @@
 package com.guillot.moria.utils;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -25,6 +26,10 @@ public class DepthBufferedImage {
 
     public void drawImage(Image image, float x, float y) {
         graphics.drawImage(image, x, y);
+    }
+
+    public void drawImage(Image image, float x, float y, Color filter) {
+        graphics.drawImage(image, x, y, filter);
     }
 
     public void drawImage(Point point, Image image, float x, float y) {

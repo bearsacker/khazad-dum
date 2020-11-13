@@ -69,6 +69,8 @@ public class Dungeon {
 
     private Tile[][] floor;
 
+    private Tile[][] discoveredTiles;
+
     private ArrayList<Door> doors;
 
     private ArrayList<AbstractItem> items;
@@ -90,6 +92,8 @@ public class Dungeon {
             }
         }
 
+        discoveredTiles = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
+
         doors = new ArrayList<>();
         items = new ArrayList<>();
         astar = new AStar(this, 1000);
@@ -104,6 +108,8 @@ public class Dungeon {
                 floor[y][x] = NULL;
             }
         }
+
+        discoveredTiles = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
 
         doors.clear();
         items.clear();
@@ -1438,6 +1444,10 @@ public class Dungeon {
 
     public Path findPath(Point start, Point end) {
         return astar.findPath(start, end, false);
+    }
+
+    public Tile[][] getDiscoveredTiles() {
+        return discoveredTiles;
     }
 
 }

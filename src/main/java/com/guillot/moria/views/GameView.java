@@ -69,17 +69,12 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        RNG.get().setSeed(1605214487997L);
+        RNG.get().setSeed(1605263903206L);
         player = new Human("Jean Castex");
 
         dungeon = new Dungeon(25);
         dungeon.generate();
         player.setPosition(dungeon.getSpawnUpStairs());
-
-        // TODO remove
-        for (AbstractItem item : dungeon.getItems()) {
-            player.pickUpItem(item);
-        }
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
@@ -104,7 +99,7 @@ public class GameView extends View {
         cursorTextBox.setVisible(false);
 
         long time = System.currentTimeMillis();
-        if (time - lastStep > 100) {
+        if (time - lastStep > 50) {
             if (path != null) {
                 player.setPosition(path.getStep(currentStep).inverseXY());
                 currentStep++;
@@ -191,32 +186,30 @@ public class GameView extends View {
 
         image.clear();
 
-        Tile[][] grid = new Tile[player.getLightRadius() * 2 + 1][player.getLightRadius() * 2 + 1];
+        Tile[][] grid = new Tile[dungeon.getHeight()][dungeon.getWidth()];
         computeViewedTiles(new HashMap<>(), grid, player.getPosition(), 0);
 
-        for (int y = player.getLightRadius() * 2; y >= 0; y--) {
-            for (int x = 0; x < player.getLightRadius() * 2 + 1; x++) {
-                int i = player.getPosition().y + y - player.getLightRadius();
-                int j = player.getPosition().x + x - player.getLightRadius();
-
-                if (grid[y][x] != null) {
-                    Tile tile = grid[y][x];
+        for (int i = dungeon.getHeight() - 1; i >= 0; i--) {
+            for (int j = 0; j < dungeon.getWidth(); j++) {
+                if (grid[i][j] != null) {
+                    Tile tile = grid[i][j];
+                    dungeon.getDiscoveredTiles()[i][j] = tile;
 
                     boolean alternate = false;
 
                     Door door = dungeon.getDoorAt(new Point(j, i));
-                    if (grid[y][x].isWall && (door == null || door.getState() == DoorState.SECRET)) {
-                        if (y + 1 < player.getLightRadius() * 2 + 1 && grid[y + 1][x] != null
-                                && (grid[y + 1][x].isFloor || grid[y + 1][x].isStairs
-                                        || dungeon.getDoorAt(new Point(x, y + 1)) != null)) {
+                    if (grid[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
+                        if (i + 1 < dungeon.getHeight() && grid[i + 1][j] != null
+                                && (grid[i + 1][j].isFloor || grid[i + 1][j].isStairs
+                                        || dungeon.getDoorAt(new Point(j, i + 1)) != null)) {
                             alternate = true;
-                        } else if (x - 1 >= 0 && grid[y][x - 1] != null
-                                && (grid[y][x - 1].isFloor || grid[y][x - 1].isStairs
-                                        || dungeon.getDoorAt(new Point(x - 1, y)) != null)) {
+                        } else if (j - 1 >= 0 && grid[i][j - 1] != null
+                                && (grid[i][j - 1].isFloor || grid[i][j - 1].isStairs
+                                        || dungeon.getDoorAt(new Point(j - 1, i)) != null)) {
                             alternate = true;
-                        } else if (y + 1 < player.getLightRadius() * 2 + 1 && x - 1 >= 0 && grid[y + 1][x - 1] != null
-                                && (grid[y + 1][x - 1].isFloor || grid[y + 1][x - 1].isStairs
-                                        || dungeon.getDoorAt(new Point(x - 1, y + 1)) != null)) {
+                        } else if (i + 1 < dungeon.getHeight() && j - 1 >= 0 && grid[i + 1][j - 1] != null
+                                && (grid[i + 1][j - 1].isFloor || grid[i + 1][j - 1].isStairs
+                                        || dungeon.getDoorAt(new Point(j - 1, i + 1)) != null)) {
                             alternate = true;
                         }
                     }
@@ -228,9 +221,11 @@ public class GameView extends View {
                         item.draw(image, player.getPosition());
                     }
 
-                    if (x == player.getLightRadius() && y == player.getLightRadius()) {
+                    if (player.getPosition().is(j, i)) {
                         player.draw(image);
                     }
+                } else if (dungeon.getDiscoveredTiles()[i][j] != null) {
+                    drawTile(dungeon.getDiscoveredTiles()[i][j], i, j);
                 }
             }
         }
@@ -258,14 +253,7 @@ public class GameView extends View {
 
         if (position.x >= 0 && position.y >= 0 && position.x < dungeon.getWidth() && position.y < dungeon.getHeight()) {
             Tile dungeonTile = dungeon.getFloor()[position.y][position.x];
-
-            int gridY = position.y - player.getPosition().y + player.getLightRadius();
-            int gridX = position.x - player.getPosition().x + player.getLightRadius();
-            if (gridX < 0 || gridY < 0 || gridX >= player.getLightRadius() * 2 + 1 || gridY >= player.getLightRadius() * 2 + 1) {
-                return;
-            }
-
-            grid[gridY][gridX] = dungeonTile;
+            grid[position.y][position.x] = dungeonTile;
 
             if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile.isStairs) {
                 computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1);
@@ -273,6 +261,15 @@ public class GameView extends View {
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1);
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y + 1), length + 1);
             }
+        }
+    }
+
+    private void drawTile(Tile tile, int px, int py) {
+        int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
+        int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
+
+        if (tile.image != null) {
+            image.drawImage(tile.image.getSubImage(0, 0, 64, 96), x, y, Color.gray);
         }
     }
 
@@ -316,7 +313,6 @@ public class GameView extends View {
                 } else {
                     g.drawImage(CURSOR.getSubImage(5, 0), x, y);
                     showTextBox("Go to level " + (dungeon.getLevel() + 1));
-
                 }
             }
         }
@@ -324,8 +320,8 @@ public class GameView extends View {
 
     private void showTextBox(String text) {
         cursorTextBox.setText(text);
-        cursorTextBox.setX(GUI.get().getMouseX());
-        cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight());
+        cursorTextBox.setX(GUI.get().getMouseX() + 16);
+        cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight() - 16);
         cursorTextBox.setVisible(true);
     }
 
