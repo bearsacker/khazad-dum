@@ -348,6 +348,10 @@ public class GameView extends View {
         return console;
     }
 
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
     public static void main(String[] args) throws SlickException {
         new Game("Khazad-dûm", new GameView());
     }

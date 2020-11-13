@@ -3,6 +3,7 @@ package com.guillot.moria.character;
 import java.util.ArrayList;
 
 import com.guillot.moria.dungeon.Direction;
+import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;
@@ -169,9 +170,24 @@ public abstract class AbstractCharacter {
     }
 
     public boolean dropItem(AbstractItem item) {
-        inventory.remove(item);
+        return inventory.remove(item);
+    }
 
-        return true;
+    public boolean dropItem(Dungeon dungeon, AbstractItem item) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i != 0 || j != 0) {
+                    Point coord = new Point(position.x + i, position.y + j);
+                    if (dungeon.getItemAt(coord) == null) {
+                        item.setPosition(coord);
+                        dungeon.getItems().add(item);
+                        return inventory.remove(item);
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public void equipItem(Equipable item) {

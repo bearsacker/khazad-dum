@@ -1,5 +1,5 @@
 Show equiped item
-Drop object  
+Rubbles
 Game state
 Map dialog
 Monsters 

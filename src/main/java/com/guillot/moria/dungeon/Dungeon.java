@@ -1311,24 +1311,10 @@ public class Dungeon {
         }
     }
 
-    // Returns random co-ordinates
-    private Point newSpot() {
-        Tile tile = null;
-        Point position = new Point();
-
-        do {
-            position.y = RNG.get().randomNumber(this.height - 2);
-            position.x = RNG.get().randomNumber(this.width - 2);
-            tile = this.floor[position.y][position.x];
-        } while (!tile.isFloor || getItemAt(position) != null || getMonsterAt(position) != null);
-
-        return position;
-    }
-
     private Point newSpotNear(Point coord) {
-        for (int i = -1; i < 1; i++) {
-            for (int j = -1; j < 1; j++) {
-                if (i != 0 && j != 0) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i != 0 || j != 0) {
                     Point at = new Point(coord.x + i, coord.y + j);
                     if (coordInBounds(at) && this.floor[at.y][at.x].isFloor) {
                         return at;

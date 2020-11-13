@@ -218,7 +218,7 @@ public class InventoryDialog extends SubView {
     }
 
     private void dropItem(AbstractItem item) {
-        if (player.dropItem(item)) {
+        if (player.dropItem(parent.getDungeon(), item)) {
             player.unequipItem(item);
 
             parent.getConsole().addMessage(player.getName() + " drops " + item.getName());
