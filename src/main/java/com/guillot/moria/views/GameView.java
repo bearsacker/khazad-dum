@@ -6,6 +6,7 @@ import static com.guillot.moria.dungeon.Direction.SOUTH;
 import static com.guillot.moria.dungeon.Direction.WEST;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
+import static com.guillot.moria.dungeon.Tile.RUBBLE;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
@@ -39,6 +40,7 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
+import com.guillot.moria.utils.RNG;
 
 public class GameView extends View {
 
@@ -72,7 +74,7 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        // RNG.get().setSeed(1605275186902L);
+        RNG.get().setSeed(1605305871457L);
         player = new Human("Jean");
 
         dungeon = new Dungeon(1);
@@ -81,6 +83,7 @@ public class GameView extends View {
             eligible = dungeon.generate();
         }
         player.setPosition(dungeon.getSpawnUpStairs());
+        player.setPosition(new Point(64, 21));
 
         dungeon.getItems().forEach(x -> player.pickUpItem(x));
 
@@ -274,7 +277,7 @@ public class GameView extends View {
             Tile dungeonTile = dungeon.getFloor()[position.y][position.x];
             grid[position.y][position.x] = dungeonTile;
 
-            if (dungeonTile.isFloor || dungeonTile == PILLAR || dungeonTile.isStairs) {
+            if (dungeonTile.isFloor || dungeonTile == RUBBLE || dungeonTile == PILLAR || dungeonTile.isStairs) {
                 computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1);
                 computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y), length + 1);
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1);

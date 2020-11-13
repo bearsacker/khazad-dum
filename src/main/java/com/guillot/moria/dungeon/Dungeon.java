@@ -922,6 +922,12 @@ public class Dungeon {
         this.floor[coord.y][coord.x] = DOWN_STAIR;
     }
 
+    // Places rubble at location y, x
+    private void placeRubble(Point coord) {
+        System.out.println("\t-> Placing rubble at " + coord + "...");
+        this.floor[coord.y][coord.x] = Tile.RUBBLE;
+    }
+
     // Places door at y, x position if at least 2 walls found
     private void placeDoorIfNextToTwoWalls(Point coord) {
         if (this.floor[coord.y][coord.x] == CORRIDOR_FLOOR && RNG.get().randomNumber(100) > DUN_TUNNEL_DOORS) {
@@ -1298,8 +1304,7 @@ public class Dungeon {
                 // setTrap(coord, RNG.get().randomNumber(ObjectsConfig.MAX_TRAPS) - 1);
                 break;
             case RUBBLE:
-                // TODO
-                // placeRubble(coord);
+                placeRubble(coord);
                 break;
             case GOLD:
                 placeGold(coord);

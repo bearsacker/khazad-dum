@@ -17,7 +17,8 @@ public enum Images {
     DWARF("sprites/human.png", 64, 96), //
     HOBBIT("sprites/human.png", 64, 96), //
     CURSOR("sprites/cursor.png", 64, 96), //
-    ITEMS("sprites/items.png", 16, 16);
+    ITEMS("sprites/items.png", 16, 16), //
+    RUBBLE("sprites/rubble.png", 64, 96);
 
     private Image image;
 
