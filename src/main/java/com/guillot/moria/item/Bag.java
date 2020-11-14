@@ -1,13 +1,13 @@
 package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemType.BAG;
-import static com.guillot.moria.ressources.Images.ITEMS;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.RNG;
 
 
@@ -19,7 +19,7 @@ public class Bag extends AbstractItem implements Usable {
 
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
-        return asList(new ItemRepresentation("Mysterious bag", 1, 0, 0, 0, ITEMS.getSubImage(12, 11)));
+        return asList(new ItemRepresentation("Mysterious bag", 1, 0, 0, 0, Images.BAG.getImage()));
     }
 
     @Override

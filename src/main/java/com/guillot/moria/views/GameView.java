@@ -40,6 +40,7 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
+import com.guillot.moria.utils.RNG;
 
 public class GameView extends View {
 
@@ -73,7 +74,7 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        // RNG.get().setSeed(1605305871457L);
+        RNG.get().setSeed(1605372358709L);
         player = new Human("Jean");
 
         dungeon = new Dungeon(1);
@@ -245,7 +246,8 @@ public class GameView extends View {
                         player.draw(image);
                     }
                 } else if (dungeon.getDiscoveredTiles()[i][j] != null) {
-                    drawTile(dungeon.getDiscoveredTiles()[i][j], i, j);
+                    Door door = dungeon.getDoorAt(new Point(j, i));
+                    drawTile(dungeon.getDiscoveredTiles()[i][j], i, j, door);
                 }
             }
         }
@@ -284,12 +286,20 @@ public class GameView extends View {
         }
     }
 
-    private void drawTile(Tile tile, int px, int py) {
+    private void drawTile(Tile tile, int px, int py, Door door) {
         int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
         if (tile.image != null) {
             image.drawImage(tile.image.getSubImage(0, 0, 64, 96), x, y, Color.gray);
+
+            if (door != null && door.getState() != DoorState.SECRET) {
+                if (door.getDirection() == Direction.NORTH) {
+                    image.drawImage(Images.DOOR.getSubImage(1, 0), x, y, Color.gray);
+                } else if (door.getDirection() == Direction.WEST) {
+                    image.drawImage(Images.DOOR.getSubImage(0, 0), x, y, Color.gray);
+                }
+            }
         }
     }
 
