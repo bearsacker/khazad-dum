@@ -1,6 +1,9 @@
 package com.guillot.moria.character;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Dungeon;
@@ -28,6 +31,16 @@ public abstract class AbstractCharacter {
     protected Images image;
 
     // Attributes
+
+    protected int strengthBase;
+
+    protected int agilityBase;
+
+    protected int spiritBase;
+
+    protected int destinyBase;
+
+    // Computed attributes
 
     protected int strength;
 
@@ -99,47 +112,36 @@ public abstract class AbstractCharacter {
         this.name = name;
         this.image = image;
 
-        this.level = 1;
-        this.xp = 0;
-        this.direction = Direction.SOUTH;
+        level = 1;
+        xp = 0;
+        direction = Direction.SOUTH;
 
-        this.inventory = new ArrayList<>();
-        this.head = null;
-        this.body = null;
-        this.leftHand = null;
-        this.rightHand = null;
-        this.finger = null;
-        this.neck = null;
+        inventory = new ArrayList<>();
+        head = null;
+        body = null;
+        leftHand = null;
+        rightHand = null;
+        finger = null;
+        neck = null;
 
-        this.strength = this.getStrengthMin();
-        this.agility = this.getAgilityMin();
-        this.spirit = this.getSpiritMin();
-        this.destiny = this.getDestinyMin();
+        strengthBase = getStrengthMin();
+        agilityBase = getAgilityMin();
+        spiritBase = getSpiritMin();
+        destinyBase = getDestinyMin();
 
         computeStatistics();
-        this.currentLife = this.life;
+        currentLife = life;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void computeStatistics() {
-        physicalDamage = strength / 3;
-        inventoryLimit = getInventoryLimitMin() + strength / 2;
-
-        chanceHit = getChanceHitMin() + agility / 2;
-        chanceDodge = agility / 2;
-        movement = agility / 3;
-
-        life = getLifeMin() + spirit * getLifePerSpirit();
-        lightRadius = getLightRadiusMin() + spirit / 4;
-
-        chanceMagicFind = getChanceMagicFindMin() + destiny;
-        chanceLockPicking = getChanceLockPickingMin() + destiny;
-        chanceCriticalHit = getChanceCriticalHitMin() + destiny / 3;
-
-        damages = 1;
+        strength = 0;
+        agility = 0;
+        spirit = 0;
+        destiny = 0;
 
         if (head != null) {
             head.equip(this);
@@ -159,6 +161,27 @@ public abstract class AbstractCharacter {
         if (rightHand != null && rightHand != leftHand) {
             rightHand.equip(this);
         }
+
+        strength += strengthBase;
+        agility += agilityBase;
+        spirit += spiritBase;
+        destiny += destinyBase;
+
+        physicalDamage = strength / 3;
+        inventoryLimit = getInventoryLimitMin() + strength / 2;
+
+        chanceHit = getChanceHitMin() + agility / 2;
+        chanceDodge = agility / 2;
+        movement = agility / 3;
+
+        life = getLifeMin() + spirit * getLifePerSpirit();
+        lightRadius = getLightRadiusMin() + spirit / 4;
+
+        chanceMagicFind = getChanceMagicFindMin() + destiny;
+        chanceLockPicking = getChanceLockPickingMin() + destiny;
+        chanceCriticalHit = getChanceCriticalHitMin() + destiny / 3;
+
+        damages = 1;
     }
 
     public boolean pickUpItem(AbstractItem item) {
@@ -174,16 +197,20 @@ public abstract class AbstractCharacter {
     }
 
     public boolean dropItem(Dungeon dungeon, AbstractItem item) {
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if (i != 0 || j != 0) {
-                    Point coord = new Point(position.x + i, position.y + j);
-                    if (dungeon.getItemAt(coord) == null) {
-                        item.setPosition(coord);
-                        dungeon.getItems().add(item);
-                        return inventory.remove(item);
-                    }
-                }
+        if (isEquipedByItem(item)) {
+            unequipItem(item);
+        }
+
+        List<Point> coords = asList(new Point(position.x, position.y - 1),
+                new Point(position.x, position.y + 1),
+                new Point(position.x - 1, position.y),
+                new Point(position.x + 1, position.y));
+
+        for (Point coord : coords) {
+            if (dungeon.getFloor()[coord.y][coord.x].isFloor && dungeon.getItemAt(coord) == null) {
+                item.setPosition(coord);
+                dungeon.getItems().add(item);
+                return inventory.remove(item);
             }
         }
 
@@ -290,8 +317,8 @@ public abstract class AbstractCharacter {
     }
 
     public void setCurrentLife(int currentLife) {
-        if (currentLife > this.life) {
-            currentLife = this.life;
+        if (currentLife > life) {
+            currentLife = life;
         }
 
         this.currentLife = currentLife;

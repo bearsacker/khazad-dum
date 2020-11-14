@@ -35,6 +35,8 @@ public class InventoryDialog extends SubView {
 
     private final static Color EQUIPED_COLOR = new Color(1f, 1f, 0f, .5f);
 
+    private final static Color NOT_EQUIPABLE_COLOR = new Color(1f, 0f, 0f, .5f);
+
     private final static Color LEGENDARY_COLOR = new Color(Color.yellow);
 
     private final static Color MAGIC_COLOR = new Color(Color.cyan);
@@ -176,6 +178,11 @@ public class InventoryDialog extends SubView {
             } else if (selectedItem == item || hoveredItem == item) {
                 g.setColor(SELECTED_COLOR);
                 g.fillRect(x + 2, y + 2, 36, 36);
+            }
+
+            if (item instanceof Equipable && !((Equipable) item).isEquipable(player)) {
+                g.setColor(NOT_EQUIPABLE_COLOR);
+                g.drawRect(x + 2, y + 2, 36, 36);
             }
 
             g.drawImage(item.getImage(), x + 3, y + 4, x + 35, y + 36, 0, 0, 16, 16);
