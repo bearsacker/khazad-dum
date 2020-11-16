@@ -42,7 +42,6 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
-import com.guillot.moria.utils.RNG;
 
 public class GameView extends View {
 
@@ -78,7 +77,6 @@ public class GameView extends View {
 
     @Override
     public void start() throws Exception {
-        RNG.get().setSeed(1605372358709L);
         player = new Human("Jean");
 
         dungeon = new Dungeon(1);
@@ -87,8 +85,6 @@ public class GameView extends View {
             eligible = dungeon.generate();
         }
         player.setPosition(dungeon.getSpawnUpStairs());
-
-        dungeon.getItems().forEach(x -> player.pickUpItem(x));
 
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 

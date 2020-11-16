@@ -96,27 +96,27 @@ public class InventoryDialog extends SubView {
 
         itemBlockNeck = new ItemBlockComponent(this, player, ItemBlock.NECK);
         itemBlockNeck.setX(WIDTH - 336);
-        itemBlockNeck.setY(HEIGHT / 2 - 48);
+        itemBlockNeck.setY(HEIGHT / 2 - 80);
 
         itemBlockHead = new ItemBlockComponent(this, player, ItemBlock.HEAD);
         itemBlockHead.setX(WIDTH - 256);
-        itemBlockHead.setY(HEIGHT / 2 - 48);
+        itemBlockHead.setY(HEIGHT / 2 - 80);
 
         itemBlockBody = new ItemBlockComponent(this, player, ItemBlock.BODY);
         itemBlockBody.setX(WIDTH - 256);
-        itemBlockBody.setY(HEIGHT / 2 + 32);
+        itemBlockBody.setY(HEIGHT / 2);
 
         itemBlockLeftHand = new ItemBlockComponent(this, player, ItemBlock.LEFT_HAND);
         itemBlockLeftHand.setX(WIDTH - 176);
-        itemBlockLeftHand.setY(HEIGHT / 2 + 32);
+        itemBlockLeftHand.setY(HEIGHT / 2);
 
         itemBlockRightHand = new ItemBlockComponent(this, player, ItemBlock.RIGHT_HAND);
         itemBlockRightHand.setX(WIDTH - 336);
-        itemBlockRightHand.setY(HEIGHT / 2 + 32);
+        itemBlockRightHand.setY(HEIGHT / 2);
 
         itemBlockFinger = new ItemBlockComponent(this, player, ItemBlock.FINGER);
         itemBlockFinger.setX(WIDTH - 176);
-        itemBlockFinger.setY(HEIGHT / 2 + 112);
+        itemBlockFinger.setY(HEIGHT / 2 + 80);
 
         add(buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
                 itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, itemTextBox, cursorTextBox);
