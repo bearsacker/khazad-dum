@@ -19,7 +19,8 @@ public enum Images {
     CURSOR("sprites/cursor.png", 64, 96), //
     ITEMS("sprites/items.png", 16, 16), //
     BAG("sprites/bag.png"), //
-    RUBBLE("sprites/rubble.png", 64, 96);
+    RUBBLE("sprites/rubble.png", 64, 96), //
+    PARCHMENT("sprites/parchment.png");
 
     private Image image;
 

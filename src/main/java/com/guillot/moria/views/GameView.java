@@ -11,6 +11,7 @@ import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_I;
+import static org.newdawn.slick.Input.KEY_M;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.DoorDialog;
 import com.guillot.moria.component.InventoryDialog;
+import com.guillot.moria.component.MapDialog;
 import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.DoorState;
@@ -66,6 +68,8 @@ public class GameView extends View {
 
     private CharacterDialog characterDialog;
 
+    private MapDialog mapDialog;
+
     private DoorDialog doorDialog;
 
     private TextBox cursorTextBox;
@@ -93,13 +97,15 @@ public class GameView extends View {
 
         doorDialog = new DoorDialog(this, player);
 
+        mapDialog = new MapDialog(this, dungeon);
+
         console = new Console(EngineConfig.WIDTH, 5);
         console.setY(EngineConfig.HEIGHT - console.getHeight());
 
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        add(console, cursorTextBox, inventoryDialog, characterDialog, doorDialog);
+        add(console, cursorTextBox, inventoryDialog, characterDialog, doorDialog, mapDialog);
     }
 
     @Override
@@ -197,6 +203,10 @@ public class GameView extends View {
 
             if (GUI.get().isKeyPressed(KEY_C)) {
                 characterDialog.setVisible(true);
+            }
+
+            if (GUI.get().isKeyPressed(KEY_M)) {
+                mapDialog.setVisible(true);
             }
         }
     }

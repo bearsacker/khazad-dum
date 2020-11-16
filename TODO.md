@@ -1,7 +1,8 @@
 Game state
 Monsters 
 Leveling system   
-Map dialog
 IA
 Escape dialog / Save / Load
+GUI
+
 Traps  
