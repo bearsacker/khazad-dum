@@ -2,17 +2,13 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static org.newdawn.slick.Input.KEY_DELETE;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_I;
-import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
-import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 
 import java.util.Collections;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Polygon;
 
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
@@ -22,26 +18,13 @@ import com.guillot.engine.gui.TextBox;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
+import com.guillot.moria.item.ItemBlock;
 import com.guillot.moria.item.Usable;
 import com.guillot.moria.views.GameView;
 
 public class InventoryDialog extends SubView {
 
     private final static Color OVERLAY_COLOR = new Color(0f, 0f, 0f, .75f);
-
-    private final static Color BLOCK_COLOR = new Color(1f, 1f, 1f, .2f);
-
-    private final static Color SELECTED_COLOR = new Color(1f, 1f, 1f, .5f);
-
-    private final static Color EQUIPED_COLOR = new Color(1f, 1f, 0f, .5f);
-
-    private final static Color NOT_EQUIPABLE_COLOR = new Color(1f, 0f, 0f, .5f);
-
-    private final static Color LEGENDARY_COLOR = new Color(Color.yellow);
-
-    private final static Color MAGIC_COLOR = new Color(Color.cyan);
-
-    private final static int INVENTORY_WIDTH = 10;
 
     private GameView parent;
 
@@ -57,13 +40,29 @@ public class InventoryDialog extends SubView {
 
     private TextBox itemTextBox;
 
+    private TextBox cursorTextBox;
+
+    private InventoryGridComponent inventoryGrid;
+
+    private ItemBlockComponent itemBlockHead;
+
+    private ItemBlockComponent itemBlockNeck;
+
+    private ItemBlockComponent itemBlockBody;
+
+    private ItemBlockComponent itemBlockLeftHand;
+
+    private ItemBlockComponent itemBlockRightHand;
+
+    private ItemBlockComponent itemBlockFinger;
+
     public InventoryDialog(GameView parent, AbstractCharacter player) throws Exception {
         super(parent);
 
         this.parent = parent;
         this.player = player;
 
-        buttonAction = new Button("Use", WIDTH - 256 - 4, 64, 192, 32);
+        buttonAction = new Button("Use", WIDTH - 336, 72, 224, 32);
         buttonAction.setEvent(new Event() {
 
             @Override
@@ -73,7 +72,7 @@ public class InventoryDialog extends SubView {
         });
         buttonAction.setVisible(false);
 
-        buttonDrop = new Button("Drop", WIDTH - 256 - 4, 108, 192, 32);
+        buttonDrop = new Button("Drop", WIDTH - 336, 120, 224, 32);
         buttonDrop.setEvent(new Event() {
 
             @Override
@@ -83,12 +82,44 @@ public class InventoryDialog extends SubView {
         });
         buttonDrop.setVisible(false);
 
+        inventoryGrid = new InventoryGridComponent(this, player);
+        inventoryGrid.setX(128);
+        inventoryGrid.setY(64);
+
         itemTextBox = new TextBox();
         itemTextBox.setAutoWidth(false);
         itemTextBox.setWidth(WIDTH);
         itemTextBox.setVisible(false);
 
-        add(buttonAction, buttonDrop, itemTextBox);
+        cursorTextBox = new TextBox();
+        cursorTextBox.setVisible(false);
+
+        itemBlockNeck = new ItemBlockComponent(this, player, ItemBlock.NECK);
+        itemBlockNeck.setX(WIDTH - 336);
+        itemBlockNeck.setY(HEIGHT / 2 - 48);
+
+        itemBlockHead = new ItemBlockComponent(this, player, ItemBlock.HEAD);
+        itemBlockHead.setX(WIDTH - 256);
+        itemBlockHead.setY(HEIGHT / 2 - 48);
+
+        itemBlockBody = new ItemBlockComponent(this, player, ItemBlock.BODY);
+        itemBlockBody.setX(WIDTH - 256);
+        itemBlockBody.setY(HEIGHT / 2 + 32);
+
+        itemBlockLeftHand = new ItemBlockComponent(this, player, ItemBlock.LEFT_HAND);
+        itemBlockLeftHand.setX(WIDTH - 176);
+        itemBlockLeftHand.setY(HEIGHT / 2 + 32);
+
+        itemBlockRightHand = new ItemBlockComponent(this, player, ItemBlock.RIGHT_HAND);
+        itemBlockRightHand.setX(WIDTH - 336);
+        itemBlockRightHand.setY(HEIGHT / 2 + 32);
+
+        itemBlockFinger = new ItemBlockComponent(this, player, ItemBlock.FINGER);
+        itemBlockFinger.setX(WIDTH - 176);
+        itemBlockFinger.setY(HEIGHT / 2 + 112);
+
+        add(buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
+                itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, itemTextBox, cursorTextBox);
     }
 
     @Override
@@ -101,40 +132,13 @@ public class InventoryDialog extends SubView {
 
     @Override
     public void update() throws Exception {
+        cursorTextBox.setVisible(false);
+
         super.update();
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE) || GUI.get().isKeyPressed(KEY_I)) {
             setVisible(false);
             GUI.get().clearKeysPressed();
-        }
-
-        if (GUI.get().getMouseX() >= 64 && GUI.get().getMouseX() < INVENTORY_WIDTH * 40 + 64 && GUI.get().getMouseY() >= 64
-                && GUI.get().getMouseY() < player.getInventory().size() / INVENTORY_WIDTH * 40 + 64 + 40) {
-            int x = (GUI.get().getMouseX() - 64) / 40;
-            int y = (GUI.get().getMouseY() - 64) / 40;
-            int index = y * INVENTORY_WIDTH + x;
-
-            if (index >= 0 && index < player.getInventory().size()) {
-                hoveredItem = player.getInventory().get(index);
-            } else {
-                hoveredItem = null;
-            }
-        } else {
-            hoveredItem = null;
-        }
-
-        if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-            if (hoveredItem != null) {
-                selectedItem = hoveredItem;
-            }
-        }
-
-        if (GUI.get().getInput().isMousePressed(MOUSE_RIGHT_BUTTON)) {
-            useOrEquipeItem(hoveredItem);
-        }
-
-        if (GUI.get().isKeyPressed(KEY_DELETE) && selectedItem != null) {
-            dropItem(selectedItem);
         }
 
         if (hoveredItem != null) {
@@ -159,54 +163,10 @@ public class InventoryDialog extends SubView {
         g.setColor(OVERLAY_COLOR);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        for (int i = 0; i < player.getInventoryLimit(); i++) {
-            int x = (i % INVENTORY_WIDTH) * 40 + 64;
-            int y = (i / INVENTORY_WIDTH) * 40 + 64;
-
-            g.setColor(BLOCK_COLOR);
-            g.fillRect(x + 2, y + 2, 36, 36);
-        }
-
-        for (int i = 0; i < player.getInventory().size(); i++) {
-            AbstractItem item = player.getInventory().get(i);
-            int x = (i % INVENTORY_WIDTH) * 40 + 64;
-            int y = (i / INVENTORY_WIDTH) * 40 + 64;
-
-            if (player.isEquipedByItem(item)) {
-                g.setColor(EQUIPED_COLOR);
-                g.fillRect(x + 2, y + 2, 36, 36);
-            } else if (selectedItem == item || hoveredItem == item) {
-                g.setColor(SELECTED_COLOR);
-                g.fillRect(x + 2, y + 2, 36, 36);
-            }
-
-            if (item instanceof Equipable && !((Equipable) item).isEquipable(player)) {
-                g.setColor(NOT_EQUIPABLE_COLOR);
-                g.drawRect(x + 2, y + 2, 36, 36);
-            }
-
-            g.drawImage(item.getImage(), x + 3, y + 4, x + 35, y + 36, 0, 0, 16, 16);
-
-            Polygon shape = new Polygon(new float[] {x, y, x + 8f, y, x, y + 8f});
-
-            switch (item.getRarity()) {
-            case LEGENDARY:
-                g.setColor(LEGENDARY_COLOR);
-                g.fill(shape);
-                break;
-            case MAGIC:
-                g.setColor(MAGIC_COLOR);
-                g.fill(shape);
-                break;
-            default:
-                break;
-            }
-        }
-
         super.paint(g);
     }
 
-    private void useOrEquipeItem(AbstractItem item) {
+    public void useOrEquipeItem(AbstractItem item) {
         if (item != null) {
             if (item instanceof Usable) {
                 if (((Usable) item).use(player)) {
@@ -224,12 +184,35 @@ public class InventoryDialog extends SubView {
         }
     }
 
-    private void dropItem(AbstractItem item) {
+    public void dropItem(AbstractItem item) {
         if (player.dropItem(parent.getDungeon(), item)) {
             player.unequipItem(item);
 
             parent.getConsole().addMessage(player.getName() + " drops " + item.getName());
             item = null;
         }
+    }
+
+    public void setHoveredItem(AbstractItem hoveredItem) {
+        this.hoveredItem = hoveredItem;
+    }
+
+    public AbstractItem getHoveredItem() {
+        return hoveredItem;
+    }
+
+    public void setSelectedItem(AbstractItem selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public AbstractItem getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void showCursorTextBox(int x, int y, String text) {
+        cursorTextBox.setText(text);
+        cursorTextBox.setX(x);
+        cursorTextBox.setY(y);
+        cursorTextBox.setVisible(true);
     }
 }

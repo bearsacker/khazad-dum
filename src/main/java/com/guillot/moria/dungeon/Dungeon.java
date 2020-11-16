@@ -96,7 +96,7 @@ public class Dungeon {
 
         doors = new ArrayList<>();
         items = new ArrayList<>();
-        astar = new AStar(this, 1000);
+        astar = new AStar(this, 300);
     }
 
     // Cave logic flow for generation of new dungeon
@@ -113,7 +113,7 @@ public class Dungeon {
 
         doors.clear();
         items.clear();
-        astar = new AStar(this, 1000);
+        astar = new AStar(this, 300);
 
         // Room initialization
         int row_rooms = 2 * (height / SCREEN_HEIGHT);
@@ -1049,12 +1049,17 @@ public class Dungeon {
 
     private Direction isNextTo(Point coord) {
         if (coordCorridorWallsNextTo(coord) > 2) {
-            boolean vertical = this.floor[coord.y - 1][coord.x].isWall && this.floor[coord.y + 1][coord.x].isWall;
-            boolean horizontal = this.floor[coord.y][coord.x - 1].isWall && this.floor[coord.y][coord.x + 1].isWall;
+            boolean north = this.floor[coord.y - 1][coord.x].isWall;
+            boolean south = this.floor[coord.y + 1][coord.x].isWall;
+            boolean west = this.floor[coord.y][coord.x - 1].isWall;
+            boolean east = this.floor[coord.y][coord.x + 1].isWall;
 
-            if (vertical && !horizontal) {
+            boolean vertical = north && south;
+            boolean horizontal = west && east;
+
+            if (vertical && !west && !east) {
                 return NORTH;
-            } else if (horizontal && !vertical) {
+            } else if (horizontal && !north && !south) {
                 return WEST;
             }
         }

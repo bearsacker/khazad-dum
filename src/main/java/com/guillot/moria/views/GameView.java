@@ -246,8 +246,27 @@ public class GameView extends View {
                         player.draw(image);
                     }
                 } else if (dungeon.getDiscoveredTiles()[i][j] != null) {
+                    boolean alternate = false;
+
                     Door door = dungeon.getDoorAt(new Point(j, i));
-                    drawTile(dungeon.getDiscoveredTiles()[i][j], i, j, door);
+                    if (dungeon.getDiscoveredTiles()[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
+                        if (i + 1 < dungeon.getHeight() && dungeon.getDiscoveredTiles()[i + 1][j] != null
+                                && (dungeon.getDiscoveredTiles()[i + 1][j].isFloor || dungeon.getDiscoveredTiles()[i + 1][j].isStairs
+                                        || dungeon.getDoorAt(new Point(j, i + 1)) != null)) {
+                            alternate = true;
+                        } else if (j - 1 >= 0 && dungeon.getDiscoveredTiles()[i][j - 1] != null
+                                && (dungeon.getDiscoveredTiles()[i][j - 1].isFloor || dungeon.getDiscoveredTiles()[i][j - 1].isStairs
+                                        || dungeon.getDoorAt(new Point(j - 1, i)) != null)) {
+                            alternate = true;
+                        } else if (i + 1 < dungeon.getHeight() && j - 1 >= 0 && dungeon.getDiscoveredTiles()[i + 1][j - 1] != null
+                                && (dungeon.getDiscoveredTiles()[i + 1][j - 1].isFloor
+                                        || dungeon.getDiscoveredTiles()[i + 1][j - 1].isStairs
+                                        || dungeon.getDoorAt(new Point(j - 1, i + 1)) != null)) {
+                            alternate = true;
+                        }
+                    }
+
+                    drawShadowedTile(dungeon.getDiscoveredTiles()[i][j], i, j, alternate, door);
                 }
             }
         }
@@ -286,12 +305,16 @@ public class GameView extends View {
         }
     }
 
-    private void drawTile(Tile tile, int px, int py, Door door) {
+    private void drawShadowedTile(Tile tile, int px, int py, boolean alternate, Door door) {
         int x = (px - player.getPosition().y) * 32 + (py - player.getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (py - player.getPosition().x) * 16 - (px - player.getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
         if (tile.image != null) {
-            image.drawImage(tile.image.getSubImage(0, 0, 64, 96), x, y, Color.gray);
+            if (alternate) {
+                image.drawImage(tile.image.getSubImage(64, 0, 64, 96), x, y, Color.gray);
+            } else {
+                image.drawImage(tile.image.getSubImage(0, 0, 64, 96), x, y, Color.gray);
+            }
 
             if (door != null && door.getState() != DoorState.SECRET) {
                 if (door.getDirection() == Direction.NORTH) {

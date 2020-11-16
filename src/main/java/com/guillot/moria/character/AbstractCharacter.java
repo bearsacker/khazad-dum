@@ -504,6 +504,30 @@ public abstract class AbstractCharacter {
         this.gold = gold;
     }
 
+    public Equipable getHead() {
+        return head;
+    }
+
+    public Equipable getBody() {
+        return body;
+    }
+
+    public Equipable getLeftHand() {
+        return leftHand;
+    }
+
+    public Equipable getRightHand() {
+        return rightHand;
+    }
+
+    public Equipable getFinger() {
+        return finger;
+    }
+
+    public Equipable getNeck() {
+        return neck;
+    }
+
     @Override
     public String toString() {
         String text = getName() + " - " + getClassName() + " - Level " + level + "\n\n";

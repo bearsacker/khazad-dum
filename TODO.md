@@ -1,5 +1,3 @@
-Show equiped item
-
 Game state
 Monsters 
 Leveling system   
