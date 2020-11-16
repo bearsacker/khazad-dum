@@ -172,7 +172,8 @@ public class InventoryDialog extends SubView {
                 if (((Usable) item).use(player)) {
                     player.getInventory().remove(item);
                     parent.getConsole().addMessage(player.getName() + " uses " + item.getName());
-                    item = null;
+                    selectedItem = null;
+                    hoveredItem = null;
                 }
             } else if (item instanceof Equipable) {
                 if (player.isEquipedByItem(item)) {
@@ -189,7 +190,8 @@ public class InventoryDialog extends SubView {
             player.unequipItem(item);
 
             parent.getConsole().addMessage(player.getName() + " drops " + item.getName());
-            item = null;
+            selectedItem = null;
+            hoveredItem = null;
         }
     }
 

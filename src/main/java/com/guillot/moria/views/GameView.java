@@ -107,6 +107,7 @@ public class GameView extends View {
         super.update();
 
         cursorTextBox.setVisible(false);
+        cursor = null;
 
         long time = System.currentTimeMillis();
         if (time - lastStep > 50) {

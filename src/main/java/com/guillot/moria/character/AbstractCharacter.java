@@ -143,6 +143,22 @@ public abstract class AbstractCharacter {
         spirit = 0;
         destiny = 0;
 
+        damages = 1;
+
+        physicalDamage = 0;
+        inventoryLimit = 0;
+
+        chanceHit = 0;
+        chanceDodge = 0;
+        movement = 0;
+
+        life = 0;
+        lightRadius = 0;
+
+        chanceMagicFind = 0;
+        chanceLockPicking = 0;
+        chanceCriticalHit = 0;
+
         if (head != null) {
             head.equip(this);
         }
@@ -167,21 +183,19 @@ public abstract class AbstractCharacter {
         spirit += spiritBase;
         destiny += destinyBase;
 
-        physicalDamage = strength / 3;
-        inventoryLimit = getInventoryLimitMin() + strength / 2;
+        physicalDamage += strength / 3;
+        inventoryLimit += getInventoryLimitMin() + strength / 2;
 
-        chanceHit = getChanceHitMin() + agility / 2;
-        chanceDodge = agility / 2;
-        movement = agility / 3;
+        chanceHit += getChanceHitMin() + agility / 2;
+        chanceDodge += agility / 2;
+        movement += agility / 3;
 
-        life = getLifeMin() + spirit * getLifePerSpirit();
-        lightRadius = getLightRadiusMin() + spirit / 4;
+        life += getLifeMin() + spirit * getLifePerSpirit();
+        lightRadius += getLightRadiusMin() + spirit / 4;
 
-        chanceMagicFind = getChanceMagicFindMin() + destiny;
-        chanceLockPicking = getChanceLockPickingMin() + destiny;
-        chanceCriticalHit = getChanceCriticalHitMin() + destiny / 3;
-
-        damages = 1;
+        chanceMagicFind += getChanceMagicFindMin() + destiny;
+        chanceLockPicking += getChanceLockPickingMin() + destiny;
+        chanceCriticalHit += getChanceCriticalHitMin() + destiny / 3;
     }
 
     public boolean pickUpItem(AbstractItem item) {
