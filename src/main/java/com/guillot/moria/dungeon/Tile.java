@@ -8,10 +8,9 @@ public enum Tile {
     NULL, //
     TMP1_WALL(null, false, true), //
     TMP2_WALL(null, false, true), //
-    DARK_FLOOR(Images.DARK_FLOOR.getImage(), true), //
-    LIGHT_FLOOR(Images.LIGHT_FLOOR.getImage(), true), //
+    ROOM_FLOOR(Images.ROOM_FLOOR.getImage(), true), //
+    CORRIDOR_FLOOR(Images.CORRIDOR_FLOOR.getImage(), true), //
     RUBBLE(Images.RUBBLE.getImage(), false, true), //
-    CORRIDOR_FLOOR(Images.DARK_FLOOR.getImage(), true), //
     PILLAR(Images.PILLAR.getImage(), false, true), //
     GRANITE_WALL(Images.GRANITE_WALL.getImage(), false, true), //
     MAGMA_WALL(Images.MAGMA_WALL.getImage(), false, true), //

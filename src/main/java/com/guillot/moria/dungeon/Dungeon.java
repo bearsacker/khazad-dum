@@ -31,10 +31,9 @@ import static com.guillot.moria.dungeon.PlacedObject.RANDOM;
 import static com.guillot.moria.dungeon.PlacedObject.RUBBLE;
 import static com.guillot.moria.dungeon.PlacedObject.TRAP;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
-import static com.guillot.moria.dungeon.Tile.DARK_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.GRANITE_WALL;
-import static com.guillot.moria.dungeon.Tile.LIGHT_FLOOR;
+import static com.guillot.moria.dungeon.Tile.ROOM_FLOOR;
 import static com.guillot.moria.dungeon.Tile.MAGMA_WALL;
 import static com.guillot.moria.dungeon.Tile.NULL;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
@@ -198,7 +197,7 @@ public class Dungeon {
 
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
         if (this.level == 1) {
-            this.floor[upStairs.y][upStairs.x] = LIGHT_FLOOR;
+            this.floor[upStairs.y][upStairs.x] = ROOM_FLOOR;
         }
 
         int allocLevel = (this.level / 3);
@@ -211,13 +210,13 @@ public class Dungeon {
         // TODO
         // monsterPlaceNewWithinDistance((RNG.get().randomNumber(8) + MonstersConfig.MON_MIN_PER_LEVEL + allocLevel), 0, true);
         allocateAndPlaceObject(asList(CORRIDOR_FLOOR), RUBBLE, RNG.get().randomNumber(allocLevel));
-        allocateAndPlaceObject(asList(LIGHT_FLOOR, DARK_FLOOR), RANDOM,
+        allocateAndPlaceObject(asList(ROOM_FLOOR), RANDOM,
                 RNG.get().randomNumberNormalDistribution(LEVEL_OBJECTS_PER_ROOM, 3));
-        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), RANDOM,
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, ROOM_FLOOR), RANDOM,
                 RNG.get().randomNumberNormalDistribution(LEVEL_OBJECTS_PER_CORRIDOR, 3));
-        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), GOLD,
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, ROOM_FLOOR), GOLD,
                 RNG.get().randomNumberNormalDistribution(LEVEL_TOTAL_GOLD_AND_GEMS, 3));
-        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, LIGHT_FLOOR, DARK_FLOOR), TRAP, RNG.get().randomNumber(allocLevel));
+        allocateAndPlaceObject(asList(CORRIDOR_FLOOR, ROOM_FLOOR), TRAP, RNG.get().randomNumber(allocLevel));
 
         // Verify level eligibility
         if (spawnUpStairs == null || spawnDownStairs == null) {
@@ -252,7 +251,7 @@ public class Dungeon {
     // Type 1 unusual rooms are several overlapping rectangular ones
     private void buildRoomOverlappingRectangles(Point coord) {
         System.out.println("Building room overlapping rectangles at " + coord + "...");
-        Tile floor = floorTileForLevel();
+        Tile floor = ROOM_FLOOR;
 
         int limit = 1 + RNG.get().randomNumber(2);
 
@@ -294,7 +293,7 @@ public class Dungeon {
 
     // Builds a type 2 unusual room at a row, column coordinate
     private void buildRoomWithInnerRooms(Point coord) {
-        Tile floor = floorTileForLevel();
+        Tile floor = ROOM_FLOOR;
 
         int height = coord.y - 4;
         int depth = coord.y + 4;
@@ -422,7 +421,7 @@ public class Dungeon {
     // Builds a room at a row, column coordinate
     // Type 3 unusual rooms are cross shaped
     private void buildRoomCrossShaped(Point coord) {
-        Tile floor = floorTileForLevel();
+        Tile floor = ROOM_FLOOR;
 
         int random_offset = 2 + RNG.get().randomNumber(2);
 
@@ -540,7 +539,7 @@ public class Dungeon {
     // Builds a room at a row, column coordinate
     private void buildRoom(Point coord) {
         System.out.println("Building room at " + coord + "...");
-        Tile floor = floorTileForLevel();
+        Tile floor = ROOM_FLOOR;
 
         int height = coord.y - RNG.get().randomNumber(4);
         int depth = coord.y + RNG.get().randomNumber(3);
@@ -1172,14 +1171,6 @@ public class Dungeon {
         }
 
         return walls;
-    }
-
-    // Returns a Dark/Light floor tile based on dg.current_level, and random number
-    private Tile floorTileForLevel() {
-        if (level <= RNG.get().randomNumber(25)) {
-            return LIGHT_FLOOR;
-        }
-        return DARK_FLOOR;
     }
 
     // Places indestructible rock around edges of dungeon

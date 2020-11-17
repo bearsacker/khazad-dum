@@ -12,9 +12,9 @@ import org.newdawn.slick.Graphics;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.SubView;
 import com.guillot.moria.dungeon.Door;
-import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.utils.Point;
+import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
 public class MapDialog extends SubView {
@@ -33,17 +33,17 @@ public class MapDialog extends SubView {
 
     private final static int PIXEL_SIZE = 4;
 
-    private Dungeon dungeon;
+    private GameState game;
 
     private float[][] alphas;
 
-    public MapDialog(GameView parent, Dungeon dungeon) throws Exception {
+    public MapDialog(GameView parent, GameState game) throws Exception {
         super(parent);
 
-        this.dungeon = dungeon;
-        alphas = new float[dungeon.getHeight() / PIXEL_SIZE + 1][dungeon.getWidth() / PIXEL_SIZE + 1];
-        for (int i = 0; i < dungeon.getHeight() / PIXEL_SIZE; i++) {
-            for (int j = 0; j < dungeon.getWidth() / PIXEL_SIZE; j++) {
+        this.game = game;
+        alphas = new float[game.getDungeon().getHeight() / PIXEL_SIZE + 1][game.getDungeon().getWidth() / PIXEL_SIZE + 1];
+        for (int i = 0; i < game.getDungeon().getHeight() / PIXEL_SIZE; i++) {
+            for (int j = 0; j < game.getDungeon().getWidth() / PIXEL_SIZE; j++) {
                 alphas[i][j] = Math.min(1f, (float) (Math.random() + .9f)) - .4f;
             }
         }
@@ -80,18 +80,18 @@ public class MapDialog extends SubView {
 
         g.popTransform();
 
-        int mapWidth = dungeon.getWidth() * PIXEL_SIZE;
-        int mapHeight = dungeon.getHeight() * PIXEL_SIZE;
+        int mapWidth = game.getDungeon().getWidth() * PIXEL_SIZE;
+        int mapHeight = game.getDungeon().getHeight() * PIXEL_SIZE;
 
         g.pushTransform();
         g.translate(x + (WIDTH - mapWidth) / 2, y + (HEIGHT - mapHeight) / 2);
 
-        for (int i = 0; i < dungeon.getHeight(); i++) {
-            for (int j = 0; j < dungeon.getWidth(); j++) {
-                Tile tile = dungeon.getDiscoveredTiles()[i][j];
+        for (int i = 0; i < game.getDungeon().getHeight(); i++) {
+            for (int j = 0; j < game.getDungeon().getWidth(); j++) {
+                Tile tile = game.getDungeon().getDiscoveredTiles()[i][j];
 
                 float alpha = alphas[i / PIXEL_SIZE][j / PIXEL_SIZE];
-                g.setColor(new Color(0f, 0f, 0f, alpha));
+                g.setColor(TRANSPARENT_COLOR);
 
                 if (tile != null) {
                     switch (tile) {
@@ -102,17 +102,23 @@ public class MapDialog extends SubView {
                     case DOWN_STAIR:
                         g.setColor(STAIRS_COLOR);
                         break;
-                    case LIGHT_FLOOR:
-                    case DARK_FLOOR:
+                    case GRANITE_WALL:
+                    case MAGMA_WALL:
+                    case PILLAR:
+                    case QUARTZ_WALL:
+                    case TMP1_WALL:
+                    case TMP2_WALL:
+                        g.setColor(new Color(0f, 0f, 0f, alpha));
+                        break;
+                    case ROOM_FLOOR:
                     case CORRIDOR_FLOOR:
-                        g.setColor(TRANSPARENT_COLOR);
+                        g.setColor(new Color(1f, 1f, 1f, 1f - alpha));
                         break;
                     default:
-                        g.setColor(new Color(0f, 0f, 0f, alpha));
                         break;
                     }
 
-                    Door door = dungeon.getDoorAt(new Point(j, i));
+                    Door door = game.getDungeon().getDoorAt(new Point(j, i));
                     if (door != null) {
                         switch (door.getState()) {
                         case LOCKED:
@@ -135,6 +141,11 @@ public class MapDialog extends SubView {
         }
 
         g.popTransform();
+
+        String text = "Level " + game.getDungeon().getLevel();
+        int widthText = GUI.get().getFont(1).getWidth(text);
+
+        GUI.get().getFont(1).drawString(WIDTH / 2 - widthText / 2, HEIGHT - 80, text, Color.black);
 
         super.paint(g);
     }

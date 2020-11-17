@@ -7,8 +7,8 @@ public enum Images {
     GRANITE_WALL("sprites/granite_wall.png", 64, 96), //
     MAGMA_WALL("sprites/magma_wall.png", 64, 96), //
     QUARTZ_WALL("sprites/quartz_wall.png", 64, 96), //
-    LIGHT_FLOOR("sprites/light_floor.png"), //
-    DARK_FLOOR("sprites/dark_floor.png"), //
+    ROOM_FLOOR("sprites/room_floor.png"), //
+    CORRIDOR_FLOOR("sprites/corridor_floor.png"), //
     PILLAR("sprites/pillar.png"), //
     STAIRS("sprites/stairs.png", 64, 96), //
     DOOR("sprites/door.png", 64, 96), //

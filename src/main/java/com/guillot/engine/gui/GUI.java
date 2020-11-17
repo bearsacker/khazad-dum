@@ -2,6 +2,7 @@ package com.guillot.engine.gui;
 
 import java.awt.Font;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.GameContainer;
@@ -10,12 +11,11 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
+import com.guillot.engine.configs.GUIConfig;
 import com.guillot.engine.utils.FileLoader;
 
 
 public class GUI {
-
-    public final static String DEFAULT_FONT = "fonts/8bits.ttf";
 
     private static GUI instance = new GUI();
 
@@ -35,28 +35,41 @@ public class GUI {
 
     private View currentView;
 
-    private TrueTypeFont font;
+    private ArrayList<TrueTypeFont> fonts;
 
     public static GUI get() {
         return instance;
     }
 
     private GUI() {
-        try {
-            Font awtFont = FileLoader.fontFromResource(DEFAULT_FONT);
-            awtFont = awtFont.deriveFont(24f);
-            font = new TrueTypeFont(awtFont, false);
+        fonts = new ArrayList<>();
+        String[] fontSizes = GUIConfig.FONT_SIZES.split(",");
 
-            keysPressed = new boolean[256];
-            mouseButtonsDown = new boolean[Mouse.getButtonCount()];
-            mouseButtonsReleased = new boolean[Mouse.getButtonCount()];
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (String size : fontSizes) {
+            try {
+                Font awtFont = FileLoader.fontFromResource(GUIConfig.FONT);
+                awtFont = awtFont.deriveFont(Float.parseFloat(size));
+                fonts.add(new TrueTypeFont(awtFont, false));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+        keysPressed = new boolean[256];
+        mouseButtonsDown = new boolean[Mouse.getButtonCount()];
+        mouseButtonsReleased = new boolean[Mouse.getButtonCount()];
     }
 
     public TrueTypeFont getFont() {
-        return this.font;
+        return fonts.get(0);
+    }
+
+    public TrueTypeFont getFont(int index) {
+        if (index < fonts.size()) {
+            return fonts.get(index);
+        }
+
+        return fonts.get(0);
     }
 
     public TrueTypeFont loadFont(String font, float size) {
