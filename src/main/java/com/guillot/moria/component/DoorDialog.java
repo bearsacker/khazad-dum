@@ -2,6 +2,7 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.engine.configs.GUIConfig.BUTTON_DISABLED_FILTER;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import org.newdawn.slick.Color;
@@ -10,7 +11,7 @@ import org.newdawn.slick.Graphics;
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
-import com.guillot.engine.gui.SubView;
+import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.DoorState;
@@ -20,9 +21,7 @@ import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameView;
 
-public class DoorDialog extends SubView {
-
-    private final static Color OVERLAY_COLOR = new Color(0f, 0f, 0f, .75f);
+public class DoorDialog extends Window {
 
     private GameView parent;
 
@@ -35,12 +34,13 @@ public class DoorDialog extends SubView {
     private Button buttonPickingLock;
 
     public DoorDialog(GameView parent, AbstractCharacter player) throws Exception {
-        super(parent);
+        super(parent, 256, 128, WIDTH - 512, HEIGHT - 256);
 
+        showHeader = false;
         this.parent = parent;
         this.player = player;
 
-        buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, 384, 288, 32);
+        buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, y + 288, 288, 48);
         buttonUseKey.setEvent(new Event() {
 
             @Override
@@ -49,7 +49,7 @@ public class DoorDialog extends SubView {
             }
         });
 
-        buttonPickingLock = new Button("Pick the lock", WIDTH / 2 - 144, 440, 288, 32);
+        buttonPickingLock = new Button("Pick the lock", WIDTH / 2 - 144, y + 352, 288, 48);
         buttonPickingLock.setEvent(new Event() {
 
             @Override
@@ -87,27 +87,30 @@ public class DoorDialog extends SubView {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(OVERLAY_COLOR);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        super.paint(g);
 
         String title = "The door is locked!";
-        int titleWidth = GUI.get().getFont().getWidth(title);
+        int titleWidth = GUI.get().getFont(1).getWidth(title);
+
+        g.pushTransform();
+        g.translate(0, y);
 
         g.setColor(Color.white);
-        GUI.get().getFont().drawString(WIDTH / 2 - titleWidth / 2, 128, title);
+        GUI.get().getFont(1).drawString(WIDTH / 2 - titleWidth / 2, 64, title);
 
         int x = WIDTH / 2 - 92;
-        int y = 92;
+        int y = 32;
         g.drawImage(Images.DOOR.getSubImage(0, 0), x, y, x + 384, y + 384, 0, 0, 64, 96);
+
+        g.popTransform();
 
         parent.getConsole().paint(g);
 
-        super.paint(g);
-
-        g.drawImage(Images.ITEMS.getSubImage(11, 3), buttonUseKey.getX() + 8, buttonUseKey.getY() + 4, buttonUseKey.getX() + 32,
-                buttonUseKey.getY() + 28, 0, 0, 16, 16);
-        g.drawImage(Images.ITEMS.getSubImage(12, 11), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 4,
-                buttonPickingLock.getX() + 32, buttonPickingLock.getY() + 28, 0, 0, 16, 16);
+        g.drawImage(Images.ITEMS.getSubImage(11, 3), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
+                buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? Color.white : BUTTON_DISABLED_FILTER);
+        g.drawImage(Images.ITEMS.getSubImage(12, 11), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 6,
+                buttonPickingLock.getX() + 40, buttonPickingLock.getY() + 38, 0, 0, 16, 16,
+                buttonPickingLock.isEnabled() ? Color.white : BUTTON_DISABLED_FILTER);
     }
 
     public void setDoor(Door door) {

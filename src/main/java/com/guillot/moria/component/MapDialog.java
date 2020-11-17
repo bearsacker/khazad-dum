@@ -2,6 +2,7 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.engine.configs.GUIConfig.OVERLAY_COLOR;
 import static com.guillot.moria.ressources.Images.PARCHMENT;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_M;
@@ -18,8 +19,6 @@ import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
 public class MapDialog extends SubView {
-
-    private final static Color OVERLAY_COLOR = new Color(0f, 0f, 0f, .75f);
 
     private final static Color TRANSPARENT_COLOR = new Color(0f, 0f, 0f, 0f);
 

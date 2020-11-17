@@ -1,17 +1,21 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.FONT;
+import static com.guillot.engine.configs.GUIConfig.FONT_SIZES;
+
 import java.awt.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
-import com.guillot.engine.configs.GUIConfig;
 import com.guillot.engine.utils.FileLoader;
 
 
@@ -43,11 +47,9 @@ public class GUI {
 
     private GUI() {
         fonts = new ArrayList<>();
-        String[] fontSizes = GUIConfig.FONT_SIZES.split(",");
-
-        for (String size : fontSizes) {
+        for (String size : FONT_SIZES) {
             try {
-                Font awtFont = FileLoader.fontFromResource(GUIConfig.FONT);
+                Font awtFont = FileLoader.fontFromResource(FONT);
                 awtFont = awtFont.deriveFont(Float.parseFloat(size));
                 fonts.add(new TrueTypeFont(awtFont, false));
             } catch (Exception e) {
@@ -203,15 +205,41 @@ public class GUI {
         return input;
     }
 
-    public void associate(Button button) {
-        for (int i = 0; i < input.getControllerCount(); i++) {
-            /*
-             * input. if (input.isControlPressed(i, button.getIdentifier()) && !input.getAssociated().contains(i)) { id = i;
-             * input.getAssociated().add(id); logger.info("XBox360 controller associated with id " + id);
-             * 
-             * int j = 0; for (String axisName : input.getAxisNames(id)) { Axis axis = Axis.getFromName(axisName); if (axis != null) {
-             * this.axis.add(axis); logger.info("\tAxis " + j + ": " + axis); } j++; } }
-             */
+    public static void drawTiledImage(Image image, Color filter, int width, int height, int spriteSize, int borderSize) {
+        for (int i = borderSize; i < width - borderSize; i += (spriteSize - borderSize * 2)) {
+            int sizeW = spriteSize - borderSize * 2;
+            if (i + sizeW > width - borderSize) {
+                sizeW = width - borderSize - i;
+            }
+
+            for (int j = borderSize; j < height - borderSize; j += (spriteSize - borderSize * 2)) {
+                int sizeH = spriteSize - borderSize * 2;
+                if (j + sizeH > height - borderSize) {
+                    sizeH = height - borderSize - j;
+                }
+
+                image.draw(i, j, i + sizeW, j + sizeH, borderSize, borderSize, borderSize + sizeW, borderSize + sizeH, filter);
+            }
+
+            image.draw(i, 0, i + sizeW, borderSize, borderSize, 0, borderSize + sizeW, borderSize, filter);
+            image.draw(i, height - borderSize, i + sizeW, height, borderSize, spriteSize - borderSize, borderSize + sizeW, spriteSize,
+                    filter);
         }
+
+        for (int j = borderSize; j < height - borderSize; j += (spriteSize - borderSize * 2)) {
+            int size = spriteSize - borderSize * 2;
+            if (j + size > height - borderSize) {
+                size = height - borderSize - j;
+            }
+
+            image.draw(0, j, borderSize, j + size, 0, borderSize, borderSize, borderSize + size, filter);
+            image.draw(width - borderSize, j, width, j + size, spriteSize - borderSize, borderSize, spriteSize, borderSize + size, filter);
+        }
+
+        image.draw(0, 0, borderSize, borderSize, 0, 0, borderSize, borderSize, filter);
+        image.draw(0, 0 + height - borderSize, borderSize, height, 0, spriteSize - borderSize, borderSize, spriteSize, filter);
+        image.draw(width - borderSize, 0, width, borderSize, spriteSize - borderSize, 0, spriteSize, borderSize, filter);
+        image.draw(width - borderSize, height - borderSize, width, height, spriteSize - borderSize, spriteSize - borderSize, spriteSize,
+                spriteSize, filter);
     }
 }

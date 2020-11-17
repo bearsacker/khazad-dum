@@ -2,12 +2,12 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.engine.configs.GUIConfig.OVERLAY_COLOR;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_I;
 
 import java.util.Collections;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.Button;
@@ -23,8 +23,6 @@ import com.guillot.moria.item.Usable;
 import com.guillot.moria.views.GameView;
 
 public class InventoryDialog extends SubView {
-
-    private final static Color OVERLAY_COLOR = new Color(0f, 0f, 0f, .75f);
 
     private GameView parent;
 
@@ -62,7 +60,7 @@ public class InventoryDialog extends SubView {
         this.parent = parent;
         this.player = player;
 
-        buttonAction = new Button("Use", WIDTH - 336, 72, 224, 32);
+        buttonAction = new Button("Use", WIDTH - 336, 72, 224, 48);
         buttonAction.setEvent(new Event() {
 
             @Override
@@ -72,7 +70,7 @@ public class InventoryDialog extends SubView {
         });
         buttonAction.setVisible(false);
 
-        buttonDrop = new Button("Drop", WIDTH - 336, 120, 224, 32);
+        buttonDrop = new Button("Drop", WIDTH - 336, 136, 224, 48);
         buttonDrop.setEvent(new Event() {
 
             @Override

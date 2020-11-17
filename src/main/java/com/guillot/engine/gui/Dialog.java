@@ -2,12 +2,13 @@ package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.engine.configs.GUIConfig.OVERLAY_COLOR;
+
+import org.newdawn.slick.Graphics;
 
 public class Dialog extends SubView {
 
-    public final static String DEFAULT_DIALOG_BUTTON_TEXT = "Close";
-
-    protected Image background;
+    private final static String DEFAULT_DIALOG_BUTTON_TEXT = "Close";
 
     protected TextBox textBox;
 
@@ -15,10 +16,6 @@ public class Dialog extends SubView {
 
     public Dialog(View parent, int width, String text, String buttonText) throws Exception {
         super(parent);
-
-        background = new Image("gui/default_filter.png", 0, 0);
-        background.coverZone(WIDTH, HEIGHT, false);
-        background.setOpacity(0.5f);
 
         textBox = new TextBox(WIDTH / 2 - width / 2, y, width, text);
         textBox.setHeight(textBox.getHeight() + 60);
@@ -32,9 +29,7 @@ public class Dialog extends SubView {
             }
         });
 
-        add(background);
-        add(textBox);
-        add(buttonClose);
+        add(textBox, buttonClose);
     }
 
     public Dialog(View parent, int width, String text) throws Exception {
@@ -51,6 +46,14 @@ public class Dialog extends SubView {
 
         textBox.setY(HEIGHT / 2 - textBox.getHeight() / 2);
         buttonClose.setY(textBox.getY() + textBox.getHeight() - 50);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        g.setColor(OVERLAY_COLOR);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        super.paint(g);
     }
 
     @Override

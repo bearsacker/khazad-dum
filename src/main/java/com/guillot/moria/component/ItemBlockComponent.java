@@ -82,8 +82,7 @@ public class ItemBlockComponent extends Component {
                 player.unequipItem(item);
             }
 
-            inventory.showCursorTextBox(x - (GUI.get().getFont().getWidth(block.toString()) + 16 - BLOCK_SIZE) / 2, y + BLOCK_SIZE + 8,
-                    block.toString());
+            inventory.showCursorTextBox(x - 16, y + BLOCK_SIZE + 16, block.toString());
         }
     }
 

@@ -1,5 +1,11 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.TEXTBOX_BORDER;
+import static com.guillot.engine.configs.GUIConfig.TEXTBOX_PADDING;
+import static com.guillot.engine.configs.GUIConfig.TEXTBOX_SPRITE;
+import static com.guillot.engine.configs.GUIConfig.TEXTBOX_SPRITE_SIZE;
+import static com.guillot.engine.configs.GUIConfig.TEXTBOX_TEXT_COLOR;
+
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
@@ -8,10 +14,6 @@ import org.newdawn.slick.Image;
 
 
 public class TextBox extends Component {
-
-    public final static String DEFAULT_TEXTBOX_SPRITE = "gui/default_textbox.png";
-
-    public final static Color DEFAULT_TEXT_COLOR = Color.black;
 
     private Image image;
 
@@ -26,55 +28,48 @@ public class TextBox extends Component {
     private boolean autoWidth;
 
     public TextBox() throws Exception {
-        super();
+        this(0, 0, 0, "");
 
-        this.image = new Image(DEFAULT_TEXTBOX_SPRITE);
-        this.textColor = new Color(DEFAULT_TEXT_COLOR);
-        this.drawBox = true;
-        this.text = "";
-        this.autoWidth = true;
+        drawBox = true;
+        autoWidth = true;
 
-        this.resizeWidth();
-        this.resizeHeight();
+        resizeWidth();
+        resizeHeight();
     }
 
     public TextBox(int x, int y, int width, String text) throws Exception {
         super();
 
-        this.image = new Image(DEFAULT_TEXTBOX_SPRITE);
+        image = new Image(TEXTBOX_SPRITE);
+        textColor = new Color(TEXTBOX_TEXT_COLOR);
         this.x = x;
         this.y = y;
         this.width = width;
         this.text = text;
-        this.textColor = new Color(DEFAULT_TEXT_COLOR);
-        this.resizeHeight();
-        this.drawBox = true;
+        resizeHeight();
+        drawBox = true;
     }
 
     @Override
     public void paint(Graphics g) {
         if (drawBox) {
-            image.draw(x, y, x + 2, y + 2, 0, 0, 2, 2, filter);
-            image.draw(x, y + 2, x + 2, y + height, 0, 2, 2, 30, filter);
-            image.draw(x, y + height - 2, x + 2, y + height, 0, 30, 2, 32, filter);
+            g.pushTransform();
+            g.translate(x, y);
 
-            image.draw(x + 2, y, x + width - 2, y + 2, 2, 0, 30, 2, filter);
-            image.draw(x + 2, y + 2, x + width - 2, y + height - 2, 3, 3, 29, 29, filter);
-            image.draw(x + 2, y + height - 2, x + width - 2, y + height, 2, 30, 30, 32, filter);
+            GUI.drawTiledImage(image, filter, width, height, TEXTBOX_SPRITE_SIZE, TEXTBOX_BORDER);
 
-            image.draw(x + width - 2, y, x + width, y + 2, 30, 0, 32, 2, filter);
-            image.draw(x + width - 2, y + 2, x + width, y + height - 2, 30, 2, 32, 30, filter);
-            image.draw(x + width - 2, y + height - 2, x + width, y + height, 30, 30, 32, 32, filter);
+            g.popTransform();
         }
 
         for (String line : lines) {
-            GUI.get().getFont().drawString(x + 10, y + lines.indexOf(line) * GUI.get().getFont().getHeight() + 10, line,
+            GUI.get().getFont().drawString(x + TEXTBOX_PADDING, y + lines.indexOf(line) * GUI.get().getFont().getHeight() + TEXTBOX_PADDING,
+                    line,
                     textColor);
         }
     }
 
     private void resizeWidth() {
-        width = GUI.get().getFont().getWidth(text) + 20;
+        width = GUI.get().getFont().getWidth(text) + TEXTBOX_PADDING * 2;
     }
 
     private void resizeHeight() {
@@ -94,7 +89,7 @@ public class TextBox extends Component {
         }
 
         lines.add(new String(line));
-        height = lines.size() * GUI.get().getFont().getHeight() + 20;
+        height = lines.size() * GUI.get().getFont().getHeight() + TEXTBOX_PADDING * 2;
     }
 
     public String getText() {
@@ -105,13 +100,13 @@ public class TextBox extends Component {
         this.text = text;
 
         if (autoWidth) {
-            this.resizeWidth();
+            resizeWidth();
         }
-        this.resizeHeight();
+        resizeHeight();
     }
 
     public void clear() {
-        this.setText("");
+        setText("");
     }
 
     @Override
