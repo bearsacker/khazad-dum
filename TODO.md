@@ -2,6 +2,6 @@ Monsters
 Leveling system   
 IA
 Escape dialog / Save / Load
-GUI
+UI
 
 Traps  

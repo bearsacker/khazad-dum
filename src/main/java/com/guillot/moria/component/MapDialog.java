@@ -2,7 +2,7 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.OVERLAY_COLOR;
+import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 import static com.guillot.moria.ressources.Images.PARCHMENT;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_M;
@@ -66,7 +66,7 @@ public class MapDialog extends SubView {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(OVERLAY_COLOR);
+        g.setColor(DIALOG_OVERLAY_COLOR);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         int width = PARCHMENT.getImage().getWidth() * HEIGHT / PARCHMENT.getImage().getHeight();

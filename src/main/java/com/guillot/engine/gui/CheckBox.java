@@ -1,5 +1,9 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.CHECKBOX_SPRITE;
+import static com.guillot.engine.configs.GUIConfig.CHECKBOX_SPRITE_SIZE;
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_FILTER_COLOR;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Color;
@@ -8,17 +12,11 @@ import org.newdawn.slick.Image;
 
 public class CheckBox extends Component {
 
-    public final static String DEFAULT_CHECKBOX_SPRITE = "gui/default_checkbox.png";
-
-    public final static Color DEFAULT_CHECKBOX_DISABLED_COLOR = new Color(0.5f, 0.5f, 0.5f);
-
     private Image image;
 
     private boolean enabled;
 
     private boolean value;
-
-    private int offset;
 
     public CheckBox(int x, int y, int width, int height, boolean value) throws Exception {
         super();
@@ -27,40 +25,23 @@ public class CheckBox extends Component {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.image = new Image(DEFAULT_CHECKBOX_SPRITE);
-        this.enabled = true;
+        image = new Image(CHECKBOX_SPRITE);
+        image.setFilter(Image.FILTER_NEAREST);
+        enabled = true;
         this.value = value;
     }
 
     @Override
     public void paint(Graphics g) {
-        offset = mouseOn ? 32 : 0;
+        int frame = value ? 1 : 0;
 
-        if (!value) {
-            image.draw(x, y, x + 2, y + 2, 0 + offset, 0, 2 + offset, 2, filter);
-            image.draw(x, y + 2, x + 2, y + height, 0 + offset, 2, 2 + offset, 30, filter);
-            image.draw(x, y + height - 2, x + 2, y + height, 0 + offset, 30, 2 + offset, 32, filter);
+        g.pushTransform();
+        g.translate(x, y);
 
-            image.draw(x + 2, y, x + width - 2, y + 2, 2 + offset, 0, 30 + offset, 2, filter);
-            image.draw(x + 2, y + 2, x + width - 2, y + height - 2, 2 + offset, 2, 30 + offset, 30, filter);
-            image.draw(x + 2, y + height - 2, x + width - 2, y + height, 2 + offset, 30, 30 + offset, 32, filter);
+        Image image = this.image.getSubImage(0, frame * CHECKBOX_SPRITE_SIZE, CHECKBOX_SPRITE_SIZE, CHECKBOX_SPRITE_SIZE);
+        image.draw(0, 0, width, height);
 
-            image.draw(x + width - 2, y, x + width, y + 2, 30 + offset, 0, 32 + offset, 2, filter);
-            image.draw(x + width - 2, y + 2, x + width, y + height - 2, 30 + offset, 2, 32 + offset, 30, filter);
-            image.draw(x + width - 2, y + height - 2, x + width, y + height, 30 + offset, 30, 32 + offset, 32, filter);
-        } else {
-            image.draw(x, y, x + 2, y + 2, 0 + offset, 32, 2 + offset, 34, filter);
-            image.draw(x, y + 2, x + 2, y + height, 0 + offset, 34, 2 + offset, 62, filter);
-            image.draw(x, y + height - 2, x + 2, y + height, 0 + offset, 62, 2 + offset, 64, filter);
-
-            image.draw(x + 2, y, x + width - 2, y + 2, 2 + offset, 32, 30 + offset, 34, filter);
-            image.draw(x + 2, y + 2, x + width - 2, y + height - 2, 2 + offset, 34, 30 + offset, 62, filter);
-            image.draw(x + 2, y + height - 2, x + width - 2, y + height, 2 + offset, 62, 30 + offset, 64, filter);
-
-            image.draw(x + width - 2, y, x + width, y + 2, 30 + offset, 32, 32 + offset, 34, filter);
-            image.draw(x + width - 2, y + 2, x + width, y + height - 2, 30 + offset, 34, 32 + offset, 62, filter);
-            image.draw(x + width - 2, y + height - 2, x + width, y + height, 30 + offset, 62, 32 + offset, 64, filter);
-        }
+        g.popTransform();
     }
 
     @Override
@@ -79,7 +60,7 @@ public class CheckBox extends Component {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         float opacity = this.filter.a;
-        this.filter = enabled ? new Color(DEFAULT_FILTER_COLOR) : new Color(DEFAULT_CHECKBOX_DISABLED_COLOR);
+        this.filter = enabled ? new Color(COMPONENT_FILTER_COLOR) : new Color(COMPONENT_DISABLED_FILTER);
         this.filter.a = opacity;
     }
 

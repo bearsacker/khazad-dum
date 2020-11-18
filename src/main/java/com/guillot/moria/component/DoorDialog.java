@@ -2,7 +2,7 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.BUTTON_DISABLED_FILTER;
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import org.newdawn.slick.Color;
@@ -34,13 +34,12 @@ public class DoorDialog extends Window {
     private Button buttonPickingLock;
 
     public DoorDialog(GameView parent, AbstractCharacter player) throws Exception {
-        super(parent, 256, 128, WIDTH - 512, HEIGHT - 256);
+        super(parent, 256, 224, WIDTH - 512, HEIGHT - 448, "The door is locked!");
 
-        showHeader = false;
         this.parent = parent;
         this.player = player;
 
-        buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, y + 288, 288, 48);
+        buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, y + 96, 288, 48);
         buttonUseKey.setEvent(new Event() {
 
             @Override
@@ -49,7 +48,7 @@ public class DoorDialog extends Window {
             }
         });
 
-        buttonPickingLock = new Button("Pick the lock", WIDTH / 2 - 144, y + 352, 288, 48);
+        buttonPickingLock = new Button("Pick the lock", WIDTH / 2 - 144, y + 160, 288, 48);
         buttonPickingLock.setEvent(new Event() {
 
             @Override
@@ -89,28 +88,13 @@ public class DoorDialog extends Window {
     public void paint(Graphics g) {
         super.paint(g);
 
-        String title = "The door is locked!";
-        int titleWidth = GUI.get().getFont(1).getWidth(title);
-
-        g.pushTransform();
-        g.translate(0, y);
-
-        g.setColor(Color.white);
-        GUI.get().getFont(1).drawString(WIDTH / 2 - titleWidth / 2, 64, title);
-
-        int x = WIDTH / 2 - 92;
-        int y = 32;
-        g.drawImage(Images.DOOR.getSubImage(0, 0), x, y, x + 384, y + 384, 0, 0, 64, 96);
-
-        g.popTransform();
-
         parent.getConsole().paint(g);
 
         g.drawImage(Images.ITEMS.getSubImage(11, 3), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
-                buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? Color.white : BUTTON_DISABLED_FILTER);
+                buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? Color.white : COMPONENT_DISABLED_FILTER);
         g.drawImage(Images.ITEMS.getSubImage(12, 11), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 6,
                 buttonPickingLock.getX() + 40, buttonPickingLock.getY() + 38, 0, 0, 16, 16,
-                buttonPickingLock.isEnabled() ? Color.white : BUTTON_DISABLED_FILTER);
+                buttonPickingLock.isEnabled() ? Color.white : COMPONENT_DISABLED_FILTER);
     }
 
     public void setDoor(Door door) {

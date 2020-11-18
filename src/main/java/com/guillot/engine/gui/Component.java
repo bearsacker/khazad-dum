@@ -1,11 +1,11 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_FILTER_COLOR;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 public abstract class Component {
-
-    public final static Color DEFAULT_FILTER_COLOR = new Color(Color.white);
 
     protected Color filter;
 
@@ -22,7 +22,7 @@ public abstract class Component {
     protected boolean visible;
 
     public Component() {
-        this.filter = new Color(DEFAULT_FILTER_COLOR);
+        this.filter = new Color(COMPONENT_FILTER_COLOR);
         this.x = 0;
         this.y = 0;
         this.width = 0;
@@ -30,6 +30,8 @@ public abstract class Component {
         this.mouseOn = false;
         this.visible = true;
     }
+
+    public void destroy() {}
 
     public abstract void paint(Graphics g);
 

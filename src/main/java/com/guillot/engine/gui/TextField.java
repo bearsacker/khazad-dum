@@ -1,19 +1,21 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.TEXTFIELD_BORDER;
+import static com.guillot.engine.configs.GUIConfig.TEXTFIELD_PADDING;
+import static com.guillot.engine.configs.GUIConfig.TEXTFIELD_SPRITE;
+import static com.guillot.engine.configs.GUIConfig.TEXTFIELD_SPRITE_SIZE;
+import static com.guillot.engine.configs.GUIConfig.TEXTFIELD_TEXT_COLOR;
 import static org.newdawn.slick.Input.KEY_BACK;
-import static org.newdawn.slick.Input.KEY_DELETE;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.KeyListener;
 
 
-public class TextField extends Component {
-
-    public final static String DEFAULT_TEXTFIELD_SPRITE = "gui/default_textfield.png";
-
-    public final static Color DEFAULT_TEXT_COLOR = Color.white;
+public class TextField extends Component implements KeyListener {
 
     private Image image;
 
@@ -25,18 +27,27 @@ public class TextField extends Component {
 
     private String invalidChars;
 
+    private boolean added;
+
+    private Position alignement;
+
+    private boolean enabled;
+
     public TextField(int x, int y, int width, int height) throws Exception {
         super();
 
-        this.image = new Image(DEFAULT_TEXTFIELD_SPRITE);
+        image = new Image(TEXTFIELD_SPRITE);
+        image.setFilter(Image.FILTER_NEAREST);
         this.x = x;
         this.y = y;
         this.value = "";
         this.width = width;
         this.height = height;
-        this.focus = false;
-        this.textColor = new Color(DEFAULT_TEXT_COLOR);
-        this.invalidChars = "";
+        focus = false;
+        textColor = new Color(TEXTFIELD_TEXT_COLOR);
+        invalidChars = "";
+        alignement = Position.LEFT;
+        enabled = true;
     }
 
     public TextField(int x, int y, int width, int height, String value) throws Exception {
@@ -56,61 +67,53 @@ public class TextField extends Component {
     }
 
     @Override
+    public void destroy() {
+        GUI.get().getInput().removeKeyListener(this);
+    }
+
+    @Override
     public void update() throws Exception {
         super.update();
 
-        if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-            focus = mouseOn;
-        }
-
-        if (focus) {
-            if (GUI.get().isKeyPressed(KEY_BACK) && value.length() > 0) {
-                value = value.substring(0, value.length() - 1);
+        if (enabled) {
+            if (GUI.get().getInput() != null && !added) {
+                GUI.get().getInput().addKeyListener(this);
+                added = true;
             }
 
-            if (GUI.get().isKeyPressed(KEY_DELETE) && value.length() > 0) {
-                value = "";
-            }
-
-            // char c = GUI.get().getInput().;
-            char c = '\0';
-            if (c != '\0' && GUI.get().getFont().getWidth(value + "      ") < width && !invalidChars.contains("" + c)) {
-                value += c;
+            if (GUI.get().isMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+                focus = mouseOn;
             }
         }
     }
 
     @Override
     public void paint(Graphics g) {
-        if (!focus && !mouseOn) {
-            image.draw(x, y, x + 2, y + 2, 0, 0, 2, 2, filter);
-            image.draw(x, y + 2, x + 2, y + height, 0, 2, 2, 30, filter);
-            image.draw(x, y + height - 2, x + 2, y + height, 0, 30, 2, 32, filter);
+        g.pushTransform();
+        g.translate(x, y);
 
-            image.draw(x + 2, y, x + width - 2, y + 2, 2, 0, 30, 2, filter);
-            image.draw(x + 2, y + 2, x + width - 2, y + height - 2, 3, 3, 29, 29, filter);
-            image.draw(x + 2, y + height - 2, x + width - 2, y + height, 2, 30, 30, 32, filter);
-
-            image.draw(x + width - 2, y, x + width, y + 2, 30, 0, 32, 2, filter);
-            image.draw(x + width - 2, y + 2, x + width, y + height - 2, 30, 2, 32, 30, filter);
-            image.draw(x + width - 2, y + height - 2, x + width, y + height, 30, 30, 32, 32, filter);
-        } else {
-            image.draw(x, y, x + 2, y + 2, 0, 32, 2, 34, filter);
-            image.draw(x, y + 2, x + 2, y + height, 0, 34, 2, 62, filter);
-            image.draw(x, y + height - 2, x + 2, y + height, 0, 62, 2, 64, filter);
-
-            image.draw(x + 2, y, x + width - 2, y + 2, 2, 32, 30, 34, filter);
-            image.draw(x + 2, y + 2, x + width - 2, y + height - 2, 3, 35, 29, 61, filter);
-            image.draw(x + 2, y + height - 2, x + width - 2, y + height, 2, 62, 30, 64, filter);
-
-            image.draw(x + width - 2, y, x + width, y + 2, 30, 32, 32, 34, filter);
-            image.draw(x + width - 2, y + 2, x + width, y + height - 2, 30, 34, 32, 62, filter);
-            image.draw(x + width - 2, y + height - 2, x + width, y + height, 30, 62, 32, 64, filter);
-        }
+        int frame = !focus && !mouseOn ? 0 : 1;
+        Image image = this.image.getSubImage(0, frame * TEXTFIELD_SPRITE_SIZE, TEXTFIELD_SPRITE_SIZE, TEXTFIELD_SPRITE_SIZE);
+        GUI.drawTiledImage(image, filter, width, height, TEXTFIELD_SPRITE_SIZE, TEXTFIELD_SPRITE_SIZE, TEXTFIELD_BORDER);
 
         int lineHeight = GUI.get().getFont().getLineHeight();
         int lineWidth = GUI.get().getFont().getWidth(value);
-        GUI.get().getFont().drawString(x + (width / 2) - (lineWidth / 2), y + (height / 2) - (lineHeight / 2), value, textColor);
+
+        switch (alignement) {
+        case CENTER:
+            GUI.get().getFont().drawString(width / 2 - lineWidth / 2, height / 2 - lineHeight / 2, value, textColor);
+            break;
+        case RIGHT:
+            GUI.get().getFont().drawString(width - lineWidth - TEXTFIELD_PADDING, height / 2 - lineHeight / 2, value, textColor);
+            break;
+        case LEFT:
+        case BOTTOM:
+        case TOP:
+            GUI.get().getFont().drawString(TEXTFIELD_PADDING, height / 2 - lineHeight / 2, value, textColor);
+            break;
+        }
+
+        g.popTransform();
     }
 
     public String getValue() {
@@ -140,4 +143,48 @@ public class TextField extends Component {
     public void setInvalidChars(String invalidChars) {
         this.invalidChars = invalidChars;
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Position getAlignement() {
+        return alignement;
+    }
+
+    public void setAlignement(Position alignement) {
+        this.alignement = alignement;
+    }
+
+    @Override
+    public void keyPressed(int key, char c) {
+        if (key == KEY_BACK) {
+            if (value.length() > 0) {
+                value = value.substring(0, value.length() - 1);
+            }
+        } else if (c != '\0' && GUI.get().getFont().getWidth(value) + TEXTFIELD_PADDING * 2 < width && !invalidChars.contains("" + c)) {
+            value += c;
+        }
+    }
+
+    @Override
+    public void keyReleased(int key, char c) {}
+
+    @Override
+    public void setInput(Input input) {}
+
+    @Override
+    public boolean isAcceptingInput() {
+        return focus;
+    }
+
+    @Override
+    public void inputEnded() {}
+
+    @Override
+    public void inputStarted() {}
 }

@@ -96,7 +96,7 @@ public class GUI {
     public void switchView(View v) {
         try {
             if (currentView != null) {
-                currentView.stop();
+                currentView.stop(false);
             }
 
             currentView = v;
@@ -154,13 +154,11 @@ public class GUI {
             e.printStackTrace();
             switchView(new ViewException(e));
         }
-
-        Controller.get().update();
     }
 
     public void close() {
         try {
-            this.currentView.stop();
+            currentView.stop(true);
         } catch (Exception e) {
             e.printStackTrace();
             switchView(new ViewException(e));
@@ -205,41 +203,43 @@ public class GUI {
         return input;
     }
 
-    public static void drawTiledImage(Image image, Color filter, int width, int height, int spriteSize, int borderSize) {
-        for (int i = borderSize; i < width - borderSize; i += (spriteSize - borderSize * 2)) {
-            int sizeW = spriteSize - borderSize * 2;
+    public static void drawTiledImage(Image image, Color filter, int width, int height, int spriteWidth, int spriteHeight, int borderSize) {
+        for (int i = borderSize; i < width - borderSize; i += (spriteWidth - borderSize * 2)) {
+            int sizeW = spriteWidth - borderSize * 2;
             if (i + sizeW > width - borderSize) {
                 sizeW = width - borderSize - i;
             }
 
-            for (int j = borderSize; j < height - borderSize; j += (spriteSize - borderSize * 2)) {
-                int sizeH = spriteSize - borderSize * 2;
+            for (int j = borderSize; j < height - borderSize; j += (spriteHeight - borderSize * 2)) {
+                int sizeH = spriteHeight - borderSize * 2;
                 if (j + sizeH > height - borderSize) {
                     sizeH = height - borderSize - j;
                 }
+
 
                 image.draw(i, j, i + sizeW, j + sizeH, borderSize, borderSize, borderSize + sizeW, borderSize + sizeH, filter);
             }
 
             image.draw(i, 0, i + sizeW, borderSize, borderSize, 0, borderSize + sizeW, borderSize, filter);
-            image.draw(i, height - borderSize, i + sizeW, height, borderSize, spriteSize - borderSize, borderSize + sizeW, spriteSize,
+            image.draw(i, height - borderSize, i + sizeW, height, borderSize, spriteHeight - borderSize, borderSize + sizeW, spriteHeight,
                     filter);
         }
 
-        for (int j = borderSize; j < height - borderSize; j += (spriteSize - borderSize * 2)) {
-            int size = spriteSize - borderSize * 2;
+        for (int j = borderSize; j < height - borderSize; j += (spriteHeight - borderSize * 2)) {
+            int size = spriteHeight - borderSize * 2;
             if (j + size > height - borderSize) {
                 size = height - borderSize - j;
             }
 
             image.draw(0, j, borderSize, j + size, 0, borderSize, borderSize, borderSize + size, filter);
-            image.draw(width - borderSize, j, width, j + size, spriteSize - borderSize, borderSize, spriteSize, borderSize + size, filter);
+            image.draw(width - borderSize, j, width, j + size, spriteWidth - borderSize, borderSize, spriteWidth, borderSize + size,
+                    filter);
         }
 
         image.draw(0, 0, borderSize, borderSize, 0, 0, borderSize, borderSize, filter);
-        image.draw(0, 0 + height - borderSize, borderSize, height, 0, spriteSize - borderSize, borderSize, spriteSize, filter);
-        image.draw(width - borderSize, 0, width, borderSize, spriteSize - borderSize, 0, spriteSize, borderSize, filter);
-        image.draw(width - borderSize, height - borderSize, width, height, spriteSize - borderSize, spriteSize - borderSize, spriteSize,
-                spriteSize, filter);
+        image.draw(width - borderSize, 0, width, borderSize, spriteWidth - borderSize, 0, spriteWidth, borderSize, filter);
+        image.draw(0, height - borderSize, borderSize, height, 0, spriteHeight - borderSize, borderSize, spriteHeight, filter);
+        image.draw(width - borderSize, height - borderSize, width, height, spriteWidth - borderSize, spriteHeight - borderSize, spriteWidth,
+                spriteHeight, filter);
     }
 }

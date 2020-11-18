@@ -1,12 +1,13 @@
 package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.GUIConfig.BUTTON_BORDER;
-import static com.guillot.engine.configs.GUIConfig.BUTTON_DISABLED_FILTER;
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_PADDING;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE_SIZE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_TEXT_COLOR;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_TEXT_HOVER_COLOR;
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_FILTER_COLOR;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Color;
@@ -141,7 +142,7 @@ public class Button extends Component {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         float opacity = filter.a;
-        filter = enabled ? new Color(DEFAULT_FILTER_COLOR) : new Color(BUTTON_DISABLED_FILTER);
+        filter = enabled ? new Color(COMPONENT_FILTER_COLOR) : new Color(COMPONENT_DISABLED_FILTER);
         filter.a = opacity;
     }
 
@@ -158,7 +159,7 @@ public class Button extends Component {
             }
 
             Image image = this.image.getSubImage(0, frame * BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE);
-            GUI.drawTiledImage(image, filter, width, height, BUTTON_SPRITE_SIZE, BUTTON_BORDER);
+            GUI.drawTiledImage(image, filter, width, height, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_BORDER);
         }
 
         int lineHeight = font.getLineHeight();

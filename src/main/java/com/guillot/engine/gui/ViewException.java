@@ -2,15 +2,15 @@ package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-
-import org.newdawn.slick.Color;
+import static com.guillot.engine.configs.GUIConfig.DIALOG_BUTTON_TEXT;
+import static com.guillot.engine.configs.GUIConfig.EXCEPTION_TEXT_COLOR;
 
 public class ViewException extends View {
 
     private Exception exception;
 
-    public ViewException(Exception e) {
-        this.exception = e;
+    public ViewException(Exception exception) {
+        this.exception = exception;
     }
 
     @Override
@@ -18,28 +18,19 @@ public class ViewException extends View {
         exception.printStackTrace();
 
         String text = "";
-        StackTraceElement[] trace = exception.getStackTrace();
-        for (StackTraceElement e : trace) {
-            text += "\n" + e.toString();
+        StackTraceElement[] traces = exception.getStackTrace();
+        for (StackTraceElement trace : traces) {
+            text += "\n" + trace.toString();
         }
 
-        add(new Text("Exception: " + exception.getMessage(), 30, 30, Color.red));
-        add(new Text(text, 30, 50));
-
-        Button b = new Button("Close", WIDTH - 220, HEIGHT - 50, 200, 30);
-
-        b.setEvent(new Event() {
+        Button button = new Button(DIALOG_BUTTON_TEXT, WIDTH - 256, HEIGHT - 64, 240, 48);
+        button.setEvent(new Event() {
 
             public void perform() {
                 GUI.get().getContainer().exit();
             }
         });
 
-        add(b);
-    }
-
-    @Override
-    public void stop() throws Exception {
-
+        add(new Text("Exception: " + exception.getMessage(), 30, 30, EXCEPTION_TEXT_COLOR), new Text(text, 30, 50), button);
     }
 }

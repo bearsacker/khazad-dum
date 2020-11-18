@@ -2,7 +2,8 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.OVERLAY_COLOR;
+import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
+import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_I;
 
@@ -15,6 +16,7 @@ import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.SubView;
 import com.guillot.engine.gui.TextBox;
+import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
@@ -35,6 +37,8 @@ public class InventoryDialog extends SubView {
     private AbstractItem selectedItem;
 
     private AbstractItem hoveredItem;
+
+    private Window itemWindow;
 
     private TextBox itemTextBox;
 
@@ -84,39 +88,45 @@ public class InventoryDialog extends SubView {
         inventoryGrid.setX(128);
         inventoryGrid.setY(64);
 
+        itemWindow = new Window(parent, 0, HEIGHT, WIDTH, 0);
+        itemWindow.setShowOverlay(false);
+        itemWindow.setVisible(false);
+
         itemTextBox = new TextBox();
+        itemTextBox.setX(16);
         itemTextBox.setAutoWidth(false);
         itemTextBox.setWidth(WIDTH);
+        itemTextBox.setDrawBox(false);
         itemTextBox.setVisible(false);
 
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
         itemBlockNeck = new ItemBlockComponent(this, player, ItemBlock.NECK);
-        itemBlockNeck.setX(WIDTH - 336);
-        itemBlockNeck.setY(HEIGHT / 2 - 80);
+        itemBlockNeck.setX(WIDTH - 360);
+        itemBlockNeck.setY(68);
 
         itemBlockHead = new ItemBlockComponent(this, player, ItemBlock.HEAD);
-        itemBlockHead.setX(WIDTH - 256);
-        itemBlockHead.setY(HEIGHT / 2 - 80);
+        itemBlockHead.setX(WIDTH - 280);
+        itemBlockHead.setY(68);
 
         itemBlockBody = new ItemBlockComponent(this, player, ItemBlock.BODY);
-        itemBlockBody.setX(WIDTH - 256);
-        itemBlockBody.setY(HEIGHT / 2);
+        itemBlockBody.setX(WIDTH - 280);
+        itemBlockBody.setY(148);
 
         itemBlockLeftHand = new ItemBlockComponent(this, player, ItemBlock.LEFT_HAND);
-        itemBlockLeftHand.setX(WIDTH - 176);
-        itemBlockLeftHand.setY(HEIGHT / 2);
+        itemBlockLeftHand.setX(WIDTH - 200);
+        itemBlockLeftHand.setY(148);
 
         itemBlockRightHand = new ItemBlockComponent(this, player, ItemBlock.RIGHT_HAND);
-        itemBlockRightHand.setX(WIDTH - 336);
-        itemBlockRightHand.setY(HEIGHT / 2);
+        itemBlockRightHand.setX(WIDTH - 360);
+        itemBlockRightHand.setY(148);
 
         itemBlockFinger = new ItemBlockComponent(this, player, ItemBlock.FINGER);
-        itemBlockFinger.setX(WIDTH - 176);
-        itemBlockFinger.setY(HEIGHT / 2 + 80);
+        itemBlockFinger.setX(WIDTH - 200);
+        itemBlockFinger.setY(228);
 
-        add(buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
+        add(itemWindow, buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
                 itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, itemTextBox, cursorTextBox);
     }
 
@@ -141,24 +151,48 @@ public class InventoryDialog extends SubView {
 
         if (hoveredItem != null) {
             itemTextBox.setText(hoveredItem.toString());
+            itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight());
             itemTextBox.setVisible(true);
+
+            itemWindow.setHeight(itemTextBox.getHeight() + 48);
+            itemWindow.setY(HEIGHT - itemWindow.getHeight());
+            itemWindow.setVisible(true);
         } else if (selectedItem != null) {
             itemTextBox.setText(selectedItem.toString());
+            itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight());
             itemTextBox.setVisible(true);
+
+            itemWindow.setHeight(itemTextBox.getHeight() + 48);
+            itemWindow.setY(HEIGHT - itemWindow.getHeight());
+            itemWindow.setVisible(true);
         } else {
             itemTextBox.setVisible(false);
+            itemWindow.setVisible(false);
         }
 
-        buttonAction.setVisible(selectedItem instanceof Usable || selectedItem instanceof Equipable);
-        buttonAction.setText(selectedItem instanceof Usable ? "Use" : (player.isEquipedByItem(selectedItem) ? "Unequip" : "Equip"));
-        buttonDrop.setVisible(selectedItem != null);
+        if (selectedItem != null) {
+            buttonAction.setY(itemTextBox.getY() + 24);
+            buttonDrop.setY(itemTextBox.getY() + 88);
+
+            buttonAction.setVisible(selectedItem instanceof Usable || selectedItem instanceof Equipable);
+            buttonAction.setText(selectedItem instanceof Usable ? "Use" : (player.isEquipedByItem(selectedItem) ? "Unequip" : "Equip"));
+            if (selectedItem instanceof Equipable) {
+                buttonAction.setEnabled(((Equipable) selectedItem).isEquipable(player));
+            } else {
+                buttonAction.setEnabled(true);
+            }
+            buttonDrop.setVisible(selectedItem != null);
+        } else {
+            buttonAction.setVisible(false);
+            buttonDrop.setVisible(false);
+        }
     }
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(OVERLAY_COLOR);
+        g.setColor(DIALOG_OVERLAY_COLOR);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         super.paint(g);

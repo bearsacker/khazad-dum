@@ -114,7 +114,7 @@ public class InventoryGridComponent extends Component {
 
             if (item instanceof Equipable && !((Equipable) item).isEquipable(player)) {
                 g.setColor(NOT_EQUIPABLE_COLOR);
-                g.fillRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
+                g.drawRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
                         BLOCK_SIZE - BORDER_BLOCK_SIZE * 2);
             }
 

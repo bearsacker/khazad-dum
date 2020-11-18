@@ -2,13 +2,12 @@ package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.OVERLAY_COLOR;
+import static com.guillot.engine.configs.GUIConfig.DIALOG_BUTTON_TEXT;
+import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 
 import org.newdawn.slick.Graphics;
 
 public class Dialog extends SubView {
-
-    private final static String DEFAULT_DIALOG_BUTTON_TEXT = "Close";
 
     protected TextBox textBox;
 
@@ -33,7 +32,7 @@ public class Dialog extends SubView {
     }
 
     public Dialog(View parent, int width, String text) throws Exception {
-        this(parent, width, text, DEFAULT_DIALOG_BUTTON_TEXT);
+        this(parent, width, text, DIALOG_BUTTON_TEXT);
     }
 
     public String getText() {
@@ -50,7 +49,7 @@ public class Dialog extends SubView {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(OVERLAY_COLOR);
+        g.setColor(DIALOG_OVERLAY_COLOR);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         super.paint(g);

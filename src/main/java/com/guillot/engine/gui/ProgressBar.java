@@ -1,50 +1,70 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.PROGRESSBAR_BORDER;
+import static com.guillot.engine.configs.GUIConfig.PROGRESSBAR_COLOR;
+import static com.guillot.engine.configs.GUIConfig.PROGRESSBAR_SPRITE;
+import static com.guillot.engine.configs.GUIConfig.PROGRESSBAR_SPRITE_SIZE;
 import static org.apache.commons.math3.util.FastMath.max;
 import static org.apache.commons.math3.util.FastMath.min;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 public class ProgressBar extends Component {
 
-    public final static String DEFAULT_PROGRESSBAR_SPRITE = "gui/default_progressbar.png";
-
     private Image image;
 
-    private int state;
+    private int value;
 
-    public ProgressBar(int x, int y, int width, int height, int state) throws Exception {
+    private Color valueColor;
+
+    public ProgressBar(int x, int y, int width, int height, int value) throws Exception {
         super();
 
-        this.image = new Image(DEFAULT_PROGRESSBAR_SPRITE);
+        image = new Image(PROGRESSBAR_SPRITE);
+        image.setFilter(Image.FILTER_NEAREST);
         this.x = x;
         this.y = y;
-        this.setState(state);
         this.width = width;
         this.height = height;
+        valueColor = new Color(PROGRESSBAR_COLOR);
+        setValue(value);
     }
 
     @Override
     public void paint(Graphics g) {
-        image.draw(x, y, x + 2, y + height, 0, 0, 2, 32, filter);
-        image.draw(x + 2, y, x + width - 2, y + height, 2, 0, 30, 32, filter);
-        image.draw(x + width - 2, y, x + width, y + height, 30, 0, 32, 32, filter);
+        g.pushTransform();
+        g.translate(x, y);
 
-        double ratio = state / 100.0;
+        GUI.drawTiledImage(image, filter, width, height, PROGRESSBAR_SPRITE_SIZE, PROGRESSBAR_SPRITE_SIZE, PROGRESSBAR_BORDER);
 
-        image.draw(x + 2, y, x + 2 + (int) (ratio * (width - 4)), y + height, 4, 32, 4, 64, filter);
+        int valueWidth = (int) (value / 100f * (width - PROGRESSBAR_BORDER * 2));
+
+        g.setColor(valueColor);
+        g.fillRect(PROGRESSBAR_BORDER, PROGRESSBAR_BORDER, valueWidth, height - PROGRESSBAR_BORDER * 2);
+
+        g.popTransform();
     }
 
-    public int getState() {
-        return state;
+    public int getValue() {
+        return value;
     }
 
-    public void setState(int state) {
-        this.state = max(0, min(100, state));
+    public void setValue(int value) {
+        this.value = max(0, min(100, value));
     }
 
-    public void setState(float state) {
-        this.state = (int) (max(0.0f, min(1.0f, state)) * 100);
+    public void setValue(float value) {
+        this.value = (int) (max(0.0f, min(1.0f, value)) * 100);
     }
+
+    public Color getValueColor() {
+        return valueColor;
+    }
+
+    public void setValueColor(Color valueColor) {
+        this.valueColor = valueColor;
+    }
+
 }

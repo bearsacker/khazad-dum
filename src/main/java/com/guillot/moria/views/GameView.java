@@ -21,6 +21,7 @@ import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
+import com.guillot.engine.gui.ProgressBar;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.ai.Path;
@@ -70,6 +71,8 @@ public class GameView extends View {
 
     private Console console;
 
+    private ProgressBar lifeProgressBar;
+
     @Override
     public void start() throws Exception {
         game = new GameState();
@@ -90,7 +93,9 @@ public class GameView extends View {
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        add(console, cursorTextBox, inventoryDialog, characterDialog, doorDialog, mapDialog);
+        lifeProgressBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 32, 256, 32, 100);
+
+        add(console, cursorTextBox, lifeProgressBar, inventoryDialog, characterDialog, doorDialog, mapDialog);
     }
 
     @Override

@@ -41,6 +41,7 @@ public class TextBox extends Component {
         super();
 
         image = new Image(TEXTBOX_SPRITE);
+        image.setFilter(Image.FILTER_NEAREST);
         textColor = new Color(TEXTBOX_TEXT_COLOR);
         this.x = x;
         this.y = y;
@@ -56,7 +57,7 @@ public class TextBox extends Component {
             g.pushTransform();
             g.translate(x, y);
 
-            GUI.drawTiledImage(image, filter, width, height, TEXTBOX_SPRITE_SIZE, TEXTBOX_BORDER);
+            GUI.drawTiledImage(image, filter, width, height, TEXTBOX_SPRITE_SIZE, TEXTBOX_SPRITE_SIZE, TEXTBOX_BORDER);
 
             g.popTransform();
         }

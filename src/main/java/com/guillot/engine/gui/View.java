@@ -1,13 +1,13 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.VIEW_BACKGROUND_COLOR;
+
 import java.util.LinkedList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 public abstract class View {
-
-    public final static Color DEFAULT_BACKGROUND_COLOR = Color.black;
 
     protected Color backgroundColor;
 
@@ -16,14 +16,17 @@ public abstract class View {
     private LinkedList<Component> components;
 
     public View() {
-        this.components = new LinkedList<Component>();
-        this.backgroundColor = DEFAULT_BACKGROUND_COLOR;
-        this.focused = true;
+        components = new LinkedList<Component>();
+        backgroundColor = VIEW_BACKGROUND_COLOR;
+        focused = true;
     }
 
     public abstract void start() throws Exception;
 
-    public void stop() throws Exception {}
+    public void stop(boolean closingWindow) throws Exception {
+        components.forEach(Component::destroy);
+        components.clear();
+    }
 
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = new Color(backgroundColor);
@@ -36,9 +39,9 @@ public abstract class View {
     }
 
     public void update() throws Exception {
-        for (Component c : components) {
-            if ((c.isVisible() && focused) || (!focused && c instanceof SubView && c.isVisible())) {
-                c.update();
+        for (Component component : components) {
+            if ((component.isVisible() && focused) || (!focused && component instanceof SubView && component.isVisible())) {
+                component.update();
             }
         }
     }
@@ -46,11 +49,7 @@ public abstract class View {
     public void paintComponents(Graphics g) throws Exception {
         g.setBackground(backgroundColor);
 
-        for (Component c : components) {
-            if (c.isVisible()) {
-                c.paint(g);
-            }
-        }
+        components.stream().filter(x -> x.isVisible()).forEach(x -> x.paint(g));
     }
 
     public boolean isFocused() {
