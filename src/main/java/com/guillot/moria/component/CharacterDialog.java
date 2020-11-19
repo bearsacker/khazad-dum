@@ -1,7 +1,6 @@
 package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import com.guillot.engine.gui.GUI;
@@ -43,7 +42,7 @@ public class CharacterDialog extends Window {
 
         height = characterTextBox.getHeight() + 64;
 
-        if (GUI.get().isKeyPressed(KEY_ESCAPE) || GUI.get().isKeyPressed(KEY_C)) {
+        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }

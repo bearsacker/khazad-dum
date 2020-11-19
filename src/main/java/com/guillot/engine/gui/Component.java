@@ -75,6 +75,11 @@ public abstract class Component {
         this.visible = visible;
     }
 
+    public boolean toggleVisible() {
+        setVisible(!isVisible());
+        return isVisible();
+    }
+
     public boolean mouseOn() {
         return this.mouseOn;
     }

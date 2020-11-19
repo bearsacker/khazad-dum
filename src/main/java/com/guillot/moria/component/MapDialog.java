@@ -3,9 +3,9 @@ package com.guillot.moria.component;
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
+import static com.guillot.moria.ressources.Images.MAP_CURSOR;
 import static com.guillot.moria.ressources.Images.PARCHMENT;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
-import static org.newdawn.slick.Input.KEY_M;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -34,18 +34,10 @@ public class MapDialog extends SubView {
 
     private GameState game;
 
-    private float[][] alphas;
-
     public MapDialog(GameView parent, GameState game) throws Exception {
         super(parent);
 
         this.game = game;
-        alphas = new float[game.getDungeon().getHeight() / PIXEL_SIZE + 1][game.getDungeon().getWidth() / PIXEL_SIZE + 1];
-        for (int i = 0; i < game.getDungeon().getHeight() / PIXEL_SIZE; i++) {
-            for (int j = 0; j < game.getDungeon().getWidth() / PIXEL_SIZE; j++) {
-                alphas[i][j] = Math.min(1f, (float) (Math.random() + .9f)) - .4f;
-            }
-        }
     }
 
     @Override
@@ -58,7 +50,7 @@ public class MapDialog extends SubView {
     public void update() throws Exception {
         super.update();
 
-        if (GUI.get().isKeyPressed(KEY_ESCAPE) || GUI.get().isKeyPressed(KEY_M)) {
+        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }
@@ -89,7 +81,7 @@ public class MapDialog extends SubView {
             for (int j = 0; j < game.getDungeon().getWidth(); j++) {
                 Tile tile = game.getDungeon().getDiscoveredTiles()[i][j];
 
-                float alpha = alphas[i / PIXEL_SIZE][j / PIXEL_SIZE];
+                float alpha = .5f;
                 g.setColor(TRANSPARENT_COLOR);
 
                 if (tile != null) {
@@ -138,6 +130,9 @@ public class MapDialog extends SubView {
                 g.fillRect(j * PIXEL_SIZE, mapHeight - i * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
             }
         }
+
+        Point playerPosition = game.getPlayer().getPosition();
+        g.drawImage(MAP_CURSOR.getImage(), playerPosition.x * PIXEL_SIZE - 4, mapHeight - playerPosition.y * PIXEL_SIZE - 4);
 
         g.popTransform();
 

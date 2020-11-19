@@ -5,7 +5,6 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
-import static org.newdawn.slick.Input.KEY_I;
 
 import java.util.Collections;
 
@@ -144,7 +143,7 @@ public class InventoryDialog extends SubView {
 
         super.update();
 
-        if (GUI.get().isKeyPressed(KEY_ESCAPE) || GUI.get().isKeyPressed(KEY_I)) {
+        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }

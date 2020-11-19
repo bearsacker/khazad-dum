@@ -21,7 +21,8 @@ public enum Images {
     ITEMS("sprites/items.png", 16, 16), //
     BAG("sprites/bag.png"), //
     RUBBLE("sprites/rubble.png", 64, 96), //
-    PARCHMENT("sprites/parchment.png");
+    PARCHMENT("sprites/parchment.png"), //
+    MAP_CURSOR("sprites/map_cursor.png");
 
     private Image image;
 

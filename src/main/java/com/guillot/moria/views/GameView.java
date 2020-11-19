@@ -159,22 +159,36 @@ public class GameView extends View {
             if (cursor != null) {
                 if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
                     Door door = getDungeon().getDoorAt(cursor.inverseXY());
-                    if (door != null && getPlayer().getPosition().inverseXY().distanceFrom(cursor) == 1) {
-                        switch (door.getState()) {
-                        case LOCKED:
-                            GUI.get().getInput().clearMousePressedRecord();
-                            GUI.get().getInput().clearKeyPressedRecord();
-                            doorDialog.setDoor(door);
-                            doorDialog.setVisible(true);
-                            break;
-                        case SECRET:
-                            door.setState(DoorState.OPEN);
-                            console.addMessage(getPlayer().getName() + " discover a secret door !");
-                        case OPEN:
-                            getPlayer().setPosition(door.getDirectionPosition(getPlayer().getPosition()));
-                            break;
-                        case STUCK:
-                            break;
+                    Monster monster = getDungeon().getMonsterAt(cursor.inverseXY());
+
+                    if (door != null) {
+                        if (getPlayer().getPosition().inverseXY().distanceFrom(cursor) == 1) {
+                            switch (door.getState()) {
+                            case LOCKED:
+                                GUI.get().getInput().clearMousePressedRecord();
+                                GUI.get().getInput().clearKeyPressedRecord();
+                                doorDialog.setDoor(door);
+                                doorDialog.setVisible(true);
+                                break;
+                            case SECRET:
+                                door.setState(DoorState.OPEN);
+                                console.addMessage(getPlayer().getName() + " discover a secret door !");
+                            case OPEN:
+                                getPlayer().setPosition(door.getDirectionPosition(getPlayer().getPosition()));
+                                break;
+                            case STUCK:
+                                break;
+                            }
+                        } else {
+                            path = getDungeon().findPathNear(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
+                            currentStep = 0;
+                        }
+                    } else if (monster != null) {
+                        if (getPlayer().getPosition().inverseXY().distanceFrom(cursor) == 1) {
+                            // TODO attack
+                        } else {
+                            path = getDungeon().findPathNear(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
+                            currentStep = 0;
                         }
                     } else {
                         path = getDungeon().findPath(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
@@ -187,18 +201,24 @@ public class GameView extends View {
                     showTextBox(item.getName());
                 }
             }
+        }
 
-            if (GUI.get().isKeyPressed(KEY_I)) {
-                inventoryDialog.setVisible(true);
-            }
+        if (GUI.get().isKeyPressed(KEY_I)) {
+            characterDialog.setVisible(false);
+            mapDialog.setVisible(false);
+            inventoryDialog.toggleVisible();
+        }
 
-            if (GUI.get().isKeyPressed(KEY_C)) {
-                characterDialog.setVisible(true);
-            }
+        if (GUI.get().isKeyPressed(KEY_C)) {
+            inventoryDialog.setVisible(false);
+            mapDialog.setVisible(false);
+            characterDialog.toggleVisible();
+        }
 
-            if (GUI.get().isKeyPressed(KEY_M)) {
-                mapDialog.setVisible(true);
-            }
+        if (GUI.get().isKeyPressed(KEY_M)) {
+            inventoryDialog.setVisible(false);
+            characterDialog.setVisible(false);
+            mapDialog.toggleVisible();
         }
     }
 

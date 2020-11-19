@@ -144,7 +144,7 @@ public class Dungeon {
                     location.y = (row * (SCREEN_HEIGHT >> 1) + QUART_HEIGHT);
                     location.x = (col * (SCREEN_WIDTH >> 1) + QUART_WIDTH);
 
-                    if (level > RNG.get().randomNumber(DUN_UNUSUAL_ROOMS)) {
+                    if (level + RNG.get().randomNumberNormalDistribution(1, 2) > RNG.get().randomNumber(DUN_UNUSUAL_ROOMS)) {
                         int room_type = RNG.get().randomNumber(3);
 
                         if (room_type == 1) {
@@ -345,7 +345,7 @@ public class Dungeon {
         switch (InnerRoom.random()) {
         case PLAIN:
             System.out.println("Building room with inner rooms (plain) at " + coord + "...");
-            placeRandomSecretDoor(coord, depth, height, left, right);
+            eraseInnerRoom(depth, height, left, right);
             placeVaultMonster(coord, 1);
             break;
         case TREASURE_VAULT:
@@ -360,7 +360,7 @@ public class Dungeon {
             break;
         case PILLARS:
             System.out.println("Building room with inner rooms (pillars) at " + coord + "...");
-            placeRandomSecretDoor(coord, depth, height, left, right);
+            eraseInnerRoom(depth, height, left, right);
 
             placeInnerPillars(coord);
 
@@ -392,7 +392,7 @@ public class Dungeon {
             break;
         case MAZE:
             System.out.println("Building room with inner rooms (maze) at " + coord + "...");
-            placeRandomSecretDoor(coord, depth, height, left, right);
+            eraseInnerRoom(depth, height, left, right);
 
             placeMazeInsideRoom(depth, height, left, right);
 
@@ -706,7 +706,7 @@ public class Dungeon {
         System.out.println("\t-> Placing inner pillars at " + coord + "...");
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 1; x <= coord.x + 1; x++) {
-                this.floor[y][x] = PILLAR;
+                this.floor[y][x] = GRANITE_WALL;
             }
         }
 
@@ -718,13 +718,13 @@ public class Dungeon {
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 5 - offset; x <= coord.x - 3 - offset; x++) {
-                this.floor[y][x] = PILLAR;
+                this.floor[y][x] = RNG.get().randomNumber(4) == 1 ? Tile.RUBBLE : PILLAR;
             }
         }
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x + 3 + offset; x <= coord.x + 5 + offset; x++) {
-                this.floor[y][x] = PILLAR;
+                this.floor[y][x] = RNG.get().randomNumber(4) == 1 ? Tile.RUBBLE : PILLAR;
             }
         }
     }
@@ -734,7 +734,7 @@ public class Dungeon {
 
         this.floor[coord.y - 1][coord.x] = PILLAR;
         this.floor[coord.y + 1][coord.x] = PILLAR;
-        this.floor[coord.y][coord.x] = PILLAR;
+        this.floor[coord.y][coord.x] = MAGMA_WALL;
         this.floor[coord.y][coord.x + 1] = PILLAR;
         this.floor[coord.y][coord.x - 1] = PILLAR;
     }
@@ -809,11 +809,23 @@ public class Dungeon {
         }
     }
 
+    private void eraseInnerRoom(int depth, int height, int left, int right) {
+        for (int i = (height - 1); i <= (depth + 1); i++) {
+            this.floor[i][left - 1] = ROOM_FLOOR;
+            this.floor[i][right + 1] = ROOM_FLOOR;
+        }
+
+        for (int i = left; i <= right; i++) {
+            this.floor[height - 1][i] = ROOM_FLOOR;
+            this.floor[depth + 1][i] = ROOM_FLOOR;
+        }
+    }
+
     private void placeMazeInsideRoom(int depth, int height, int left, int right) {
         for (int y = height; y <= depth; y += 2) {
             for (int x = left; x <= right; x += 2) {
                 if ((0x1 & (x + y)) != 0) {
-                    this.floor[y][x] = PILLAR;
+                    this.floor[y][x] = RNG.get().randomNumber(4) == 1 ? Tile.RUBBLE : PILLAR;
                 }
             }
         }
@@ -1406,36 +1418,20 @@ public class Dungeon {
     }
 
     private boolean isVisibleFromFloor(int x, int y) {
-        if (x - 1 >= 0 && (this.floor[x - 1][y].isFloor || getDoorAt(new Point(y, x - 1)) != null)) {
-            return true;
-        }
+        List<Point> coords = asList(
+                new Point(y, x - 1), //
+                new Point(y, x + 1), //
+                new Point(y - 1, x), //
+                new Point(y + 1, x), //
+                new Point(y - 1, x - 1), //
+                new Point(y + 1, x + 1), //
+                new Point(y - 1, x + 1), //
+                new Point(y + 1, x - 1));
 
-        if (x + 1 < height && (this.floor[x + 1][y].isFloor || getDoorAt(new Point(y, x + 1)) != null)) {
-            return true;
-        }
-
-        if (y - 1 >= 0 && (this.floor[x][y - 1].isFloor || getDoorAt(new Point(y - 1, x)) != null)) {
-            return true;
-        }
-
-        if (y + 1 < width && (this.floor[x][y + 1].isFloor || getDoorAt(new Point(y + 1, x)) != null)) {
-            return true;
-        }
-
-        if (x - 1 >= 0 && y - 1 >= 0 && (this.floor[x - 1][y - 1].isFloor || getDoorAt(new Point(y - 1, x - 1)) != null)) {
-            return true;
-        }
-
-        if (x + 1 < height && y + 1 < width && (this.floor[x + 1][y + 1].isFloor || getDoorAt(new Point(y + 1, x + 1)) != null)) {
-            return true;
-        }
-
-        if (x + 1 < height && y - 1 >= 0 && (this.floor[x + 1][y - 1].isFloor || getDoorAt(new Point(y - 1, x + 1)) != null)) {
-            return true;
-        }
-
-        if (x - 1 >= 0 && y + 1 < width && (this.floor[x - 1][y + 1].isFloor || getDoorAt(new Point(y + 1, x - 1)) != null)) {
-            return true;
+        for (Point coord : coords) {
+            if (coordInBounds(coord) && (this.floor[coord.y][coord.x].isFloor || getDoorAt(coord) != null)) {
+                return true;
+            }
         }
 
         return false;
@@ -1503,6 +1499,24 @@ public class Dungeon {
 
     public Path findPath(Point start, Point end, int maxSearchDistance) {
         return astar.findPath(start, end, maxSearchDistance, false, false);
+    }
+
+    public Path findPathNear(Point start, Point end, int maxSearchDistance) {
+        List<Point> points = asList(
+                new Point(end.x - 1, end.y), //
+                new Point(end.x + 1, end.y), //
+                new Point(end.x, end.y - 1), //
+                new Point(end.x, end.y + 1));
+
+        Path minPath = null;
+        for (Point point : points) {
+            Path path = astar.findPath(start, point, maxSearchDistance, false, false);
+            if (path != null && (minPath == null || path.getLength() < minPath.getLength())) {
+                minPath = path;
+            }
+        }
+
+        return minPath;
     }
 
     public Tile[][] getDiscoveredTiles() {
