@@ -32,6 +32,7 @@ import com.guillot.moria.component.Console;
 import com.guillot.moria.component.DoorDialog;
 import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.component.MapDialog;
+import com.guillot.moria.component.SmallCharacterDialog;
 import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.DoorState;
@@ -64,6 +65,8 @@ public class GameView extends View {
 
     private CharacterDialog characterDialog;
 
+    private SmallCharacterDialog smallCharacterDialog;
+
     private MapDialog mapDialog;
 
     private DoorDialog doorDialog;
@@ -83,6 +86,7 @@ public class GameView extends View {
 
         inventoryDialog = new InventoryDialog(this, getPlayer());
         characterDialog = new CharacterDialog(this, getPlayer());
+        smallCharacterDialog = new SmallCharacterDialog(this);
 
         doorDialog = new DoorDialog(this, getPlayer());
 
@@ -96,13 +100,14 @@ public class GameView extends View {
 
         lifeProgressBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 32, 256, 32, 100);
 
-        add(console, cursorTextBox, lifeProgressBar, inventoryDialog, characterDialog, doorDialog, mapDialog);
+        add(console, cursorTextBox, lifeProgressBar, inventoryDialog, characterDialog, doorDialog, mapDialog, smallCharacterDialog);
     }
 
     @Override
     public void update() throws Exception {
         super.update();
 
+        smallCharacterDialog.setVisible(false);
         cursorTextBox.setVisible(false);
         cursor = null;
 
@@ -151,7 +156,8 @@ public class GameView extends View {
                 if (cursorObject instanceof Point) {
                     cursor = (Point) cursorObject;
                 } else if (cursorObject instanceof AbstractCharacter) {
-                    showTextBox(((AbstractCharacter) cursorObject).toString());
+                    smallCharacterDialog.setCharacter((AbstractCharacter) cursorObject);
+                    smallCharacterDialog.setVisible(true);
                     cursor = ((AbstractCharacter) cursorObject).getPosition().inverseXY();
                 }
             }
@@ -240,16 +246,13 @@ public class GameView extends View {
                     Door door = getDungeon().getDoorAt(new Point(j, i));
                     if (grid[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
                         if (i + 1 < getDungeon().getHeight() && grid[i + 1][j] != null
-                                && (grid[i + 1][j].isFloor || grid[i + 1][j].isStairs
-                                        || getDungeon().getDoorAt(new Point(j, i + 1)) != null)) {
+                                && (grid[i + 1][j].isFloor || grid[i + 1][j].isStairs || isDoor(new Point(j, i + 1)))) {
                             alternate = true;
                         } else if (j - 1 >= 0 && grid[i][j - 1] != null
-                                && (grid[i][j - 1].isFloor || grid[i][j - 1].isStairs
-                                        || getDungeon().getDoorAt(new Point(j - 1, i)) != null)) {
+                                && (grid[i][j - 1].isFloor || grid[i][j - 1].isStairs || isDoor(new Point(j - 1, i)))) {
                             alternate = true;
                         } else if (i + 1 < getDungeon().getHeight() && j - 1 >= 0 && grid[i + 1][j - 1] != null
-                                && (grid[i + 1][j - 1].isFloor || grid[i + 1][j - 1].isStairs
-                                        || getDungeon().getDoorAt(new Point(j - 1, i + 1)) != null)) {
+                                && (grid[i + 1][j - 1].isFloor || grid[i + 1][j - 1].isStairs || isDoor(new Point(j - 1, i + 1)))) {
                             alternate = true;
                         }
                     }
@@ -277,18 +280,15 @@ public class GameView extends View {
                     if (getDungeon().getDiscoveredTiles()[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
                         if (i + 1 < getDungeon().getHeight() && getDungeon().getDiscoveredTiles()[i + 1][j] != null
                                 && (getDungeon().getDiscoveredTiles()[i + 1][j].isFloor
-                                        || getDungeon().getDiscoveredTiles()[i + 1][j].isStairs
-                                        || getDungeon().getDoorAt(new Point(j, i + 1)) != null)) {
+                                        || getDungeon().getDiscoveredTiles()[i + 1][j].isStairs || isDoor(new Point(j, i + 1)))) {
                             alternate = true;
                         } else if (j - 1 >= 0 && getDungeon().getDiscoveredTiles()[i][j - 1] != null
                                 && (getDungeon().getDiscoveredTiles()[i][j - 1].isFloor
-                                        || getDungeon().getDiscoveredTiles()[i][j - 1].isStairs
-                                        || getDungeon().getDoorAt(new Point(j - 1, i)) != null)) {
+                                        || getDungeon().getDiscoveredTiles()[i][j - 1].isStairs || isDoor(new Point(j - 1, i)))) {
                             alternate = true;
                         } else if (i + 1 < getDungeon().getHeight() && j - 1 >= 0 && getDungeon().getDiscoveredTiles()[i + 1][j - 1] != null
                                 && (getDungeon().getDiscoveredTiles()[i + 1][j - 1].isFloor
-                                        || getDungeon().getDiscoveredTiles()[i + 1][j - 1].isStairs
-                                        || getDungeon().getDoorAt(new Point(j - 1, i + 1)) != null)) {
+                                        || getDungeon().getDiscoveredTiles()[i + 1][j - 1].isStairs || isDoor(new Point(j - 1, i + 1)))) {
                             alternate = true;
                         }
                     }
@@ -405,6 +405,11 @@ public class GameView extends View {
         cursorTextBox.setX(GUI.get().getMouseX() + 16);
         cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight() - 16);
         cursorTextBox.setVisible(true);
+    }
+
+    private boolean isDoor(Point point) {
+        Door door = getDungeon().getDoorAt(point);
+        return door != null && door.getState() != DoorState.SECRET;
     }
 
     public Console getConsole() {

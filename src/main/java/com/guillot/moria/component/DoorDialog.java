@@ -5,7 +5,6 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.Button;
@@ -91,10 +90,10 @@ public class DoorDialog extends Window {
         parent.getConsole().paint(g);
 
         g.drawImage(Images.ITEMS.getSubImage(11, 3), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
-                buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? Color.white : COMPONENT_DISABLED_FILTER);
+                buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);
         g.drawImage(Images.ITEMS.getSubImage(12, 11), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 6,
                 buttonPickingLock.getX() + 40, buttonPickingLock.getY() + 38, 0, 0, 16, 16,
-                buttonPickingLock.isEnabled() ? Color.white : COMPONENT_DISABLED_FILTER);
+                buttonPickingLock.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);
     }
 
     public void setDoor(Door door) {

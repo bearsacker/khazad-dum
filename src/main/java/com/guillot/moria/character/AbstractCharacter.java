@@ -547,6 +547,14 @@ public abstract class AbstractCharacter {
         return neck;
     }
 
+    public int computeMinDamages() {
+        return damages;
+    }
+
+    public int computeMaxDamages() {
+        return (int) (damages + (physicalDamage / 100f) * damages);
+    }
+
     @Override
     public String toString() {
         String text = getName() + " - " + getClassName() + " - Level " + level + "\n\n";
