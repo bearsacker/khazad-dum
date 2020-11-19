@@ -29,9 +29,6 @@ public class AStar {
     /** The map being searched */
     private Dungeon map;
 
-    /** The maximum depth of search we're willing to accept before giving up */
-    private int maxSearchDistance;
-
     /** The complete set of nodes across the map */
     private Node[][] nodes;
 
@@ -41,9 +38,8 @@ public class AStar {
      * @param map The map to be searched
      * @param maxSearchDistance The maximum depth we'll search before giving up
      */
-    public AStar(Dungeon map, int maxSearchDistance) {
+    public AStar(Dungeon map) {
         this.map = map;
-        this.maxSearchDistance = maxSearchDistance;
 
         this.nodes = new Node[map.getHeight()][map.getWidth()];
         for (int y = 0; y < map.getHeight(); y++) {
@@ -58,11 +54,12 @@ public class AStar {
      * 
      * @param start The starting point
      * @param end The ending point
-     * @param allowDoor
+     * @param allowDiag
+     * @param allowObstacle
      * 
      * @return the path or null
      */
-    public Path findPath(Point start, Point end, boolean allowDoor) {
+    public Path findPath(Point start, Point end, int maxSearchDistance, boolean allowDiag, boolean allowObstacle) {
         // eastart.y first check, if the destination is blocked, we can't get there
         if (map.getFloor()[end.x][end.y] == null || !(map.getFloor()[end.x][end.y].isFloor || map.getFloor()[end.x][end.y].isStairs)) {
             return null;
@@ -100,11 +97,19 @@ public class AStar {
                         continue;
                     }
 
+                    // if we're not allowing diaganol movement then only
+                    // one of x or y can be set
+                    if (!allowDiag) {
+                        if ((x != 0) && (y != 0)) {
+                            continue;
+                        }
+                    }
+
                     // determine the location of the neighbour and evaluate it
                     int xp = x + current.getX();
                     int yp = y + current.getY();
 
-                    if (isValidLocation(start.x, start.y, current.getX(), current.getY(), xp, yp) || (allowDoor && isOpenDoor(xp, yp))) {
+                    if (isValidLocation(start.x, start.y, current.getX(), current.getY(), xp, yp, allowObstacle)) {
                         // the cost to get to this node is cost the current plus
                         // the movement
                         // cost to reach this node. Note that the heursitic
@@ -242,11 +247,18 @@ public class AStar {
      * @param y The y coordinate of the location to check
      * @return True if the location is valid for the given mover
      */
-    protected boolean isValidLocation(int sx, int sy, int cx, int cy, int x, int y) {
+    protected boolean isValidLocation(int sx, int sy, int cx, int cy, int x, int y, boolean allowObstacle) {
         boolean invalid = (x < 0) || (y < 0) || (x >= map.getHeight()) || (y >= map.getWidth());
 
         if ((!invalid) && ((sx != x) || (sy != y))) {
-            invalid = map.getFloor()[x][y] == NULL || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs);
+            if (allowObstacle) {
+                invalid = map.getFloor()[x][y] == NULL
+                        || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs || isOpenDoor(x, y));
+            } else {
+                invalid = map.getFloor()[x][y] == NULL || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs)
+                        || map.getMonsterAt(new Point(x, y).inverseXY()) != null;
+            }
+
         }
 
         return !invalid;

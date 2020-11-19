@@ -11,7 +11,7 @@ import com.guillot.moria.item.ItemType;
 import com.guillot.moria.utils.RNG;
 
 
-public abstract class AbstractAffixe {
+public abstract class AbstractAffixe implements Cloneable {
 
     public final static List<AbstractAffixe> AFFIXES = asList(
             new AffixeStrength(), //
@@ -58,21 +58,27 @@ public abstract class AbstractAffixe {
 
     public void init(int qualityLevel) {
         int[][] values = getValuesPerLevel();
-        int i = values.length;
         int min = 0;
         int max = 0;
 
-        do {
-            i--;
+        for (int i = 0; i < values.length && qualityLevel >= values[i][0]; i++) {
             min = values[i][1];
             max = values[i][2];
-        } while (qualityLevel < values[i][0]);
+        }
 
         value = RNG.get().randomNumberBetween(min, max);
     }
 
     public int[][] getValuesPerLevel() {
         return new int[][] {{1, 1, 5}};
+    }
+
+    public AbstractAffixe clone() {
+        try {
+            return (AbstractAffixe) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 
     public abstract void setPassiveEffect(AbstractCharacter character);

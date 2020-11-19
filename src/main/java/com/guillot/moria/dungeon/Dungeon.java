@@ -15,6 +15,9 @@ import static com.guillot.moria.configs.DungeonConfig.DUN_STREAMER_WIDTH;
 import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNELING;
 import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNEL_DOORS;
 import static com.guillot.moria.configs.DungeonConfig.DUN_UNUSUAL_ROOMS;
+import static com.guillot.moria.configs.MonstersConfig.MON_CHANCE_OF_NASTY;
+import static com.guillot.moria.configs.MonstersConfig.MON_MIN_PER_LEVEL;
+import static com.guillot.moria.configs.MonstersConfig.MON_SUMMONED_LEVEL_ADJUST;
 import static com.guillot.moria.configs.ObjectsConfig.LEVEL_OBJECTS_PER_CORRIDOR;
 import static com.guillot.moria.configs.ObjectsConfig.LEVEL_OBJECTS_PER_ROOM;
 import static com.guillot.moria.configs.ObjectsConfig.LEVEL_TOTAL_GOLD_AND_GEMS;
@@ -33,11 +36,11 @@ import static com.guillot.moria.dungeon.PlacedObject.TRAP;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.GRANITE_WALL;
-import static com.guillot.moria.dungeon.Tile.ROOM_FLOOR;
 import static com.guillot.moria.dungeon.Tile.MAGMA_WALL;
 import static com.guillot.moria.dungeon.Tile.NULL;
 import static com.guillot.moria.dungeon.Tile.PILLAR;
 import static com.guillot.moria.dungeon.Tile.QUARTZ_WALL;
+import static com.guillot.moria.dungeon.Tile.ROOM_FLOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
 import static com.guillot.moria.dungeon.Tile.TMP2_WALL;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
@@ -48,10 +51,11 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
+import com.guillot.moria.character.Monster;
+import com.guillot.moria.character.MonsterRace;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
 import com.guillot.moria.item.ItemGenerator;
@@ -74,6 +78,8 @@ public class Dungeon {
 
     private ArrayList<AbstractItem> items;
 
+    private ArrayList<Monster> monsters;
+
     private AStar astar;
 
     private Point spawnUpStairs;
@@ -95,7 +101,8 @@ public class Dungeon {
 
         doors = new ArrayList<>();
         items = new ArrayList<>();
-        astar = new AStar(this, 300);
+        monsters = new ArrayList<>();
+        astar = new AStar(this);
     }
 
     // Cave logic flow for generation of new dungeon
@@ -112,7 +119,8 @@ public class Dungeon {
 
         doors.clear();
         items.clear();
-        astar = new AStar(this, 300);
+        monsters.clear();
+        astar = new AStar(this);
 
         // Room initialization
         int row_rooms = 2 * (height / SCREEN_HEIGHT);
@@ -207,8 +215,7 @@ public class Dungeon {
             allocLevel = 10;
         }
 
-        // TODO
-        // monsterPlaceNewWithinDistance((RNG.get().randomNumber(8) + MonstersConfig.MON_MIN_PER_LEVEL + allocLevel), 0, true);
+        monsterPlaceNewWithinDistance(spawnUpStairs, (RNG.get().randomNumber(8) + MON_MIN_PER_LEVEL + allocLevel), 0, true);
         allocateAndPlaceObject(asList(CORRIDOR_FLOOR), RUBBLE, RNG.get().randomNumber(allocLevel));
         allocateAndPlaceObject(asList(ROOM_FLOOR), RANDOM,
                 RNG.get().randomNumberNormalDistribution(LEVEL_OBJECTS_PER_ROOM, 3));
@@ -223,12 +230,12 @@ public class Dungeon {
             return false;
         }
 
-        Path path = astar.findPath(spawnUpStairs.inverseXY(), downStairs.inverseXY(), true);
+        Path path = astar.findPath(spawnUpStairs.inverseXY(), downStairs.inverseXY(), 300, false, true);
         if (path == null) {
             return false;
         }
 
-        path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), true);
+        path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), 300, false, true);
         if (path == null) {
             return false;
         }
@@ -970,8 +977,7 @@ public class Dungeon {
         for (int i = 0; i < number; i++) {
             spot.y = coord.y;
             spot.x = coord.x;
-            // TODO
-            // (void) monsterSummon(spot, true);
+            monsterSummon(spot, true);
         }
     }
 
@@ -1218,7 +1224,7 @@ public class Dungeon {
     // Places an object at given row, column co-ordinate
     private void placeRandomObjectAt(Point coord) {
         System.out.println("\t-> Placing random object at " + coord + "...");
-        int qualityLevel = level + RNG.get().randomNumber(5);
+        int qualityLevel = level + RNG.get().randomNumberNormalDistribution(1, 1);
 
         AbstractItem item = ItemGenerator.generateItem(level, qualityLevel);
         item.setPosition(coord);
@@ -1282,7 +1288,7 @@ public class Dungeon {
 
     // Allocates an object for tunnels and rooms
     private void allocateAndPlaceObject(List<Tile> types, PlacedObject type, int number) {
-        System.out.println("Allocation and placing " + number + " objects of type " + type + "...");
+        System.out.println("Placing " + number + " objects of type " + type + "...");
         Point coord = new Point();
 
         for (int i = 0; i < number; i++) {
@@ -1310,6 +1316,78 @@ public class Dungeon {
                 break;
             }
         }
+    }
+
+    // Allocates a random monster
+    private void monsterPlaceNewWithinDistance(Point playerPosition, int number, int distanceFromSource, boolean sleeping) {
+        System.out.println("Placing " + number + " monsters...");
+
+        Point position = new Point();
+
+        for (int i = 0; i < number; i++) {
+            do {
+                position.y = RNG.get().randomNumber(height - 2);
+                position.x = RNG.get().randomNumber(width - 2);
+            } while (!floor[position.y][position.x].isFloor || getMonsterAt(position) != null
+                    || position.distanceFrom(playerPosition) <= distanceFromSource);
+
+            MonsterRace race = monsterGetOneSuitableForLevel(level);
+            monsterPlaceNew(position, race, sleeping);
+        }
+    }
+
+    // Places creature adjacent to given location
+    private boolean monsterSummon(Point coord, boolean sleeping) {
+        MonsterRace race = monsterGetOneSuitableForLevel(level + MON_SUMMONED_LEVEL_ADJUST);
+        return placeMonsterAdjacentTo(race, coord, sleeping);
+    }
+
+    private boolean placeMonsterAdjacentTo(MonsterRace race, Point coord, boolean sleeping) {
+        boolean placed = false;
+
+        Point position = new Point();
+
+        for (int i = 0; i <= 9; i++) {
+            position.y = coord.y - 2 + RNG.get().randomNumber(3);
+            position.x = coord.x - 2 + RNG.get().randomNumber(3);
+
+            if (coordInBounds(position)) {
+                if (floor[position.y][position.x].isFloor && getMonsterAt(coord) == null) {
+                    monsterPlaceNew(position, race, sleeping);
+
+                    coord.y = position.y;
+                    coord.x = position.x;
+
+                    placed = true;
+                    i = 9;
+                }
+            }
+        }
+
+        return placed;
+    }
+
+    // Return a monster suitable to be placed at a given level. This
+    // makes high level monsters (up to the given level) slightly more
+    // common than low level monsters at any given level.
+    private MonsterRace monsterGetOneSuitableForLevel(int level) {
+        if (RNG.get().randomNumber(MON_CHANCE_OF_NASTY) == 1) {
+            int absDistribution = RNG.get().randomNumberNormalDistribution(0, 4);
+            level += absDistribution + 1;
+        }
+
+        return Monster.pickMonsterRace(level);
+    }
+
+    // Places a monster at given location
+    private void monsterPlaceNew(Point coord, MonsterRace race, boolean sleeping) {
+        System.out.println("\t-> Placing monster at " + coord + "...");
+
+        Monster monster = new Monster(race);
+        monster.setSleeping(sleeping);
+        monster.setPosition(coord);
+
+        monsters.add(monster);
     }
 
     private Point newSpotNear(Point coord) {
@@ -1404,21 +1482,15 @@ public class Dungeon {
     }
 
     public AbstractItem getItemAt(Point coord) {
-        Optional<AbstractItem> item = items.stream().filter(x -> x.getPosition().is(coord)).findFirst();
-        if (item.isPresent()) {
-            return item.get();
-        }
-
-        return null;
+        return items.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
     }
 
     public void removeItem(AbstractItem item) {
         items.remove(item);
     }
 
-    public Object getMonsterAt(Point coord) {
-        // TODO
-        return null;
+    public Monster getMonsterAt(Point coord) {
+        return monsters.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
     }
 
     public ArrayList<AbstractItem> getItems() {
@@ -1426,16 +1498,11 @@ public class Dungeon {
     }
 
     public Door getDoorAt(Point coord) {
-        Optional<Door> door = doors.stream().filter(x -> x.getPosition().is(coord)).findFirst();
-        if (door.isPresent()) {
-            return door.get();
-        }
-
-        return null;
+        return doors.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
     }
 
-    public Path findPath(Point start, Point end) {
-        return astar.findPath(start, end, false);
+    public Path findPath(Point start, Point end, int maxSearchDistance) {
+        return astar.findPath(start, end, maxSearchDistance, false, false);
     }
 
     public Tile[][] getDiscoveredTiles() {

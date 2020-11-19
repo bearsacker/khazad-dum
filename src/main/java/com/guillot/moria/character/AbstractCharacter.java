@@ -114,6 +114,7 @@ public abstract class AbstractCharacter {
 
         level = 1;
         xp = 0;
+
         direction = Direction.SOUTH;
 
         inventory = new ArrayList<>();
@@ -123,12 +124,9 @@ public abstract class AbstractCharacter {
         rightHand = null;
         finger = null;
         neck = null;
+    }
 
-        strengthBase = getStrengthMin();
-        agilityBase = getAgilityMin();
-        spiritBase = getSpiritMin();
-        destinyBase = getDestinyMin();
-
+    public void init() {
         computeStatistics();
         currentLife = life;
     }
@@ -138,6 +136,11 @@ public abstract class AbstractCharacter {
     }
 
     public void computeStatistics() {
+        strengthBase = getStrengthMin();
+        agilityBase = getAgilityMin();
+        spiritBase = getSpiritMin();
+        destinyBase = getDestinyMin();
+
         strength = 0;
         agility = 0;
         spirit = 0;
@@ -190,7 +193,7 @@ public abstract class AbstractCharacter {
         chanceDodge += agility / 2;
         movement += agility / 3;
 
-        life += getLifeMin() + spirit * getLifePerSpirit();
+        life += getLifeMin() + spirit * 2;
         lightRadius += getLightRadiusMin() + spirit / 4;
 
         chanceMagicFind += getChanceMagicFindMin() + destiny;
@@ -305,9 +308,11 @@ public abstract class AbstractCharacter {
         return inventory.stream().filter(x -> x.getType() == type).findAny().orElse(null);
     }
 
-    public void draw(DepthBufferedImage image) {
-        image.drawImage(this.image.getSubImage(direction.getValue(), 0), image.getCenterOfRotationX() - 32,
-                image.getCenterOfRotationY() - 48);
+    public void draw(DepthBufferedImage image, Point playerPosition) {
+        int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + (int) image.getCenterOfRotationX() - 32;
+        int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + (int) image.getCenterOfRotationY() - 48;
+
+        image.drawImage(this, this.image.getSubImage(direction.getValue(), 0), x, y);
     }
 
     public int getLevel() {
@@ -585,8 +590,6 @@ public abstract class AbstractCharacter {
     public abstract int getChanceHitMin();
 
     public abstract int getLifeMin();
-
-    public abstract int getLifePerSpirit();
 
     public abstract int getLightRadiusMin();
 

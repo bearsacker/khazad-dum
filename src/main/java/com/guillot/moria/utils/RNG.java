@@ -1,5 +1,8 @@
 package com.guillot.moria.utils;
 
+import static java.lang.Math.max;
+
+import java.util.HashMap;
 import java.util.Random;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -11,6 +14,8 @@ public class RNG {
     private Random random;
 
     private long seed;
+
+    private HashMap<Point, NormalDistribution> normals;
 
     public long getSeed() {
         return seed;
@@ -41,14 +46,21 @@ public class RNG {
 
     // Generates a random integer number of NORMAL distribution
     public int randomNumberNormalDistribution(int mean, int standard) {
-        NormalDistribution distribution = new NormalDistribution(mean, standard);
-        distribution.reseedRandomGenerator(seed);
+        Point key = new Point(mean, standard);
+        NormalDistribution distribution = normals.get(key);
+        if (distribution == null) {
+            distribution = new NormalDistribution(mean, standard);
+            distribution.reseedRandomGenerator(seed);
+            normals.put(key, distribution);
+        }
 
-        return (int) distribution.sample();
+        return max((int) distribution.sample(), 0);
     }
 
     private RNG() {
         seed = System.currentTimeMillis();
+
+        normals = new HashMap<>();
 
         random = new Random();
         random.setSeed(seed);

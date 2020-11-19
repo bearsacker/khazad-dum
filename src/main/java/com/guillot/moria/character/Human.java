@@ -8,7 +8,6 @@ import static com.guillot.moria.configs.HumanConfig.CHANCE_TO_HIT;
 import static com.guillot.moria.configs.HumanConfig.DESITINY;
 import static com.guillot.moria.configs.HumanConfig.INVENTORY_LIMIT;
 import static com.guillot.moria.configs.HumanConfig.LIFE;
-import static com.guillot.moria.configs.HumanConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HumanConfig.SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.STRENGTH;
@@ -18,6 +17,8 @@ public class Human extends AbstractCharacter {
 
     public Human(String name) {
         super(name, HUMAN);
+
+        init();
     }
 
     @Override
@@ -53,11 +54,6 @@ public class Human extends AbstractCharacter {
     @Override
     public int getLifeMin() {
         return LIFE;
-    }
-
-    @Override
-    public int getLifePerSpirit() {
-        return LIFE_PER_SPIRIT;
     }
 
     @Override

@@ -11,17 +11,17 @@ public class DepthBufferedImage {
 
     private Graphics graphics;
 
-    private Point[][] depthBuffer;
+    private Object[][] depthBuffer;
 
     public DepthBufferedImage(int width, int height) throws SlickException {
         image = new Image(width, height);
         graphics = image.getGraphics();
-        depthBuffer = new Point[width][height];
+        depthBuffer = new Object[width][height];
     }
 
     public void clear() {
         graphics.clear();
-        depthBuffer = new Point[getWidth()][getHeight()];
+        depthBuffer = new Object[getWidth()][getHeight()];
     }
 
     public void drawImage(Image image, float x, float y) {
@@ -32,7 +32,7 @@ public class DepthBufferedImage {
         graphics.drawImage(image, x, y, filter);
     }
 
-    public void drawImage(Point point, Image image, float x, float y) {
+    public void drawImage(Object object, Image image, float x, float y) {
         graphics.drawImage(image, x, y);
 
         for (int i = 0; i < image.getWidth(); i++) {
@@ -42,14 +42,14 @@ public class DepthBufferedImage {
                     int bufferY = (int) (y + j);
 
                     if (bufferX >= 0 && bufferY >= 0 && bufferX < getWidth() && bufferY < getHeight()) {
-                        depthBuffer[bufferX][bufferY] = point;
+                        depthBuffer[bufferX][bufferY] = object;
                     }
                 }
             }
         }
     }
 
-    public void drawImage(Point point, Image image, float x, float y, float x2, float y2, float srcx, float srcy, float srcx2,
+    public void drawImage(Object object, Image image, float x, float y, float x2, float y2, float srcx, float srcy, float srcx2,
             float srcy2) {
         graphics.drawImage(image, x, y, x2, y2, srcx, srcy, srcx2, srcy2);
 
@@ -60,7 +60,7 @@ public class DepthBufferedImage {
                     int bufferY = (int) (y + j);
 
                     if (bufferX >= 0 && bufferY >= 0 && bufferX < getWidth() && bufferY < getHeight()) {
-                        depthBuffer[bufferX][bufferY] = point;
+                        depthBuffer[bufferX][bufferY] = object;
                     }
                 }
             }
@@ -84,7 +84,7 @@ public class DepthBufferedImage {
         return image.getHeight();
     }
 
-    public Point getDepth(int x, int y) {
+    public Object getDepth(int x, int y) {
         if (x >= 0 && x < getWidth() && y >= 0 && y < getHeight()) {
             return depthBuffer[x][y];
         }

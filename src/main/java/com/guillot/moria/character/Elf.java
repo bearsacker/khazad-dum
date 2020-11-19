@@ -8,7 +8,6 @@ import static com.guillot.moria.configs.ElfConfig.CHANCE_TO_HIT;
 import static com.guillot.moria.configs.ElfConfig.DESITINY;
 import static com.guillot.moria.configs.ElfConfig.INVENTORY_LIMIT;
 import static com.guillot.moria.configs.ElfConfig.LIFE;
-import static com.guillot.moria.configs.ElfConfig.LIFE_PER_SPIRIT;
 import static com.guillot.moria.configs.ElfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.ElfConfig.SPIRIT;
 import static com.guillot.moria.configs.ElfConfig.STRENGTH;
@@ -18,6 +17,8 @@ public class Elf extends AbstractCharacter {
 
     public Elf(String name) {
         super(name, ELF);
+
+        init();
     }
 
     @Override
@@ -53,11 +54,6 @@ public class Elf extends AbstractCharacter {
     @Override
     public int getLifeMin() {
         return LIFE;
-    }
-
-    @Override
-    public int getLifePerSpirit() {
-        return LIFE_PER_SPIRIT;
     }
 
     @Override

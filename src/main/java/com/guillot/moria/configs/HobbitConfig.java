@@ -28,8 +28,6 @@ public class HobbitConfig extends Config {
 
     public static final int LIFE = get().getInt("life");
 
-    public static final int LIFE_PER_SPIRIT = get().getInt("life-per-spririt");
-
     public static final int CHANCE_TO_HIT = get().getInt("chance-hit");
 
     public static final int CHANCE_MAGIC_FIND = get().getInt("chance-magic-find");

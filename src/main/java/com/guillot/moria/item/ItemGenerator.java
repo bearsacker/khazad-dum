@@ -7,6 +7,8 @@ import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.item.affixe.AbstractAffixe.AFFIXES;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.guillot.engine.utils.RandomCollection;
 import com.guillot.moria.item.affixe.AbstractAffixe;
@@ -48,21 +50,21 @@ public class ItemGenerator {
 
         while (points > 0 && tries < 100) {
             if (rarity.equals(LEGENDARY) && !isLegendary) {
-                Object[] affixes =
-                        AFFIXES.stream().filter(x -> x.getType().equals(AffixeRarity.LEGENDARY) && filterAffixes(x, type)).toArray();
+                List<AbstractAffixe> affixes = AFFIXES.stream()
+                        .filter(x -> x.getType().equals(AffixeRarity.LEGENDARY) && filterAffixes(x, type)).collect(Collectors.toList());
 
-                AbstractAffixe affixe = (AbstractAffixe) affixes[RNG.get().randomNumberBetween(0, affixes.length - 1)];
-                if (!attributes.contains(affixe) && affixe.allowItemType(type)) {
+                AbstractAffixe affixe = affixes.get(RNG.get().randomNumberBetween(0, affixes.size() - 1)).clone();
+                if (affixe != null && !attributes.contains(affixe) && affixe.allowItemType(type)) {
                     isLegendary = true;
                     affixe.init(qualityLevel);
                     attributes.add(affixe);
                     points -= affixe.getCost();
                 }
             } else {
-                Object[] affixes = AFFIXES.stream().filter(x -> filterAffixes(x, type)).toArray();
+                List<AbstractAffixe> affixes = AFFIXES.stream().filter(x -> filterAffixes(x, type)).collect(Collectors.toList());
 
-                AbstractAffixe affixe = (AbstractAffixe) affixes[RNG.get().randomNumberBetween(0, affixes.length - 1)];
-                if (points - affixe.getCost() >= 0 && !attributes.contains(affixe) && affixe.allowItemType(type)) {
+                AbstractAffixe affixe = affixes.get(RNG.get().randomNumberBetween(0, affixes.size() - 1)).clone();
+                if (affixe != null && points - affixe.getCost() >= 0 && !attributes.contains(affixe) && affixe.allowItemType(type)) {
                     affixe.init(qualityLevel);
                     attributes.add(affixe);
                     points -= affixe.getCost();

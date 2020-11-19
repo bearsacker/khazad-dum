@@ -7,11 +7,11 @@ import java.util.List;
 
 import org.newdawn.slick.Image;
 
+import com.guillot.engine.utils.RandomCollection;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
-import com.guillot.moria.utils.RNG;
 
 public abstract class AbstractItem implements Comparable<AbstractItem> {
 
@@ -37,9 +37,11 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
 
     public void generateBase(int qualityLevel) {
         List<ItemRepresentation> representations = getValuesPerLevel().stream().filter(x -> x.getLevel() <= qualityLevel).collect(toList());
-
         if (!representations.isEmpty()) {
-            ItemRepresentation representation = representations.get(RNG.get().randomNumberBetween(1, representations.size()) - 1);
+            RandomCollection<ItemRepresentation> random = new RandomCollection<>();
+            representations.forEach(x -> random.add(x.getLevel(), x));
+
+            ItemRepresentation representation = random.next();
 
             value = representation.getRandomValue();
             requirement = representation.getRequirement();

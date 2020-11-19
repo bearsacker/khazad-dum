@@ -26,6 +26,7 @@ import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.DoorDialog;
@@ -145,7 +146,15 @@ public class GameView extends View {
             lastStep = time;
         }
         if (isFocused()) {
-            cursor = image.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
+            Object cursorObject = image.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
+            if (cursorObject != null) {
+                if (cursorObject instanceof Point) {
+                    cursor = (Point) cursorObject;
+                } else if (cursorObject instanceof AbstractCharacter) {
+                    showTextBox(((AbstractCharacter) cursorObject).toString());
+                    cursor = ((AbstractCharacter) cursorObject).getPosition().inverseXY();
+                }
+            }
 
             if (cursor != null) {
                 if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
@@ -168,18 +177,14 @@ public class GameView extends View {
                             break;
                         }
                     } else {
-                        path = getDungeon().findPath(getPlayer().getPosition().inverseXY(), cursor);
+                        path = getDungeon().findPath(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
                         currentStep = 0;
                     }
                 }
 
-                if (getPlayer().getPosition().is(cursor.inverseXY())) {
-                    showTextBox(getPlayer().getName() + " - Level " + getPlayer().getLevel());
-                } else {
-                    AbstractItem item = getDungeon().getItemAt(cursor.inverseXY());
-                    if (item != null) {
-                        showTextBox(item.getName());
-                    }
+                AbstractItem item = getDungeon().getItemAt(cursor.inverseXY());
+                if (item != null) {
+                    showTextBox(item.getName());
                 }
             }
 
@@ -237,7 +242,13 @@ public class GameView extends View {
                     }
 
                     if (getPlayer().getPosition().is(j, i)) {
-                        getPlayer().draw(image);
+                        getPlayer().draw(image, getPlayer().getPosition());
+                    }
+
+                    Monster monster = getDungeon().getMonsterAt(new Point(j, i));
+                    if (monster != null) {
+                        monster.draw(image, getPlayer().getPosition());
+
                     }
                 } else if (getDungeon().getDiscoveredTiles()[i][j] != null) {
                     boolean alternate = false;

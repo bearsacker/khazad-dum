@@ -152,19 +152,19 @@ public class InventoryDialog extends SubView {
         if (hoveredItem != null) {
             itemTextBox.setText(hoveredItem.toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
-            itemTextBox.setY(HEIGHT - itemTextBox.getHeight());
+            itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
 
-            itemWindow.setHeight(itemTextBox.getHeight() + 48);
+            itemWindow.setHeight(itemTextBox.getHeight() + 64);
             itemWindow.setY(HEIGHT - itemWindow.getHeight());
             itemWindow.setVisible(true);
         } else if (selectedItem != null) {
             itemTextBox.setText(selectedItem.toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
-            itemTextBox.setY(HEIGHT - itemTextBox.getHeight());
+            itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
 
-            itemWindow.setHeight(itemTextBox.getHeight() + 48);
+            itemWindow.setHeight(itemTextBox.getHeight() + 64);
             itemWindow.setY(HEIGHT - itemWindow.getHeight());
             itemWindow.setVisible(true);
         } else {
@@ -173,8 +173,8 @@ public class InventoryDialog extends SubView {
         }
 
         if (selectedItem != null) {
-            buttonAction.setY(itemTextBox.getY() + 24);
-            buttonDrop.setY(itemTextBox.getY() + 88);
+            buttonAction.setY(itemTextBox.getY() + 40);
+            buttonDrop.setY(itemTextBox.getY() + 104);
 
             buttonAction.setVisible(selectedItem instanceof Usable || selectedItem instanceof Equipable);
             buttonAction.setText(selectedItem instanceof Usable ? "Use" : (player.isEquipedByItem(selectedItem) ? "Unequip" : "Equip"));
