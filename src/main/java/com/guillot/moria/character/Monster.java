@@ -1,5 +1,15 @@
 package com.guillot.moria.character;
 
+import static com.guillot.moria.item.ItemGenerator.generateItem;
+import static com.guillot.moria.item.ItemType.AMULET;
+import static com.guillot.moria.item.ItemType.ARMOR;
+import static com.guillot.moria.item.ItemType.BOW;
+import static com.guillot.moria.item.ItemType.HELMET;
+import static com.guillot.moria.item.ItemType.ONE_HANDED_WEAPON;
+import static com.guillot.moria.item.ItemType.RING;
+import static com.guillot.moria.item.ItemType.SHIELD;
+import static com.guillot.moria.item.ItemType.STAFF;
+import static com.guillot.moria.item.ItemType.TWO_HANDED_WEAPON;
 import static com.guillot.moria.ressources.Images.MONSTER;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -7,6 +17,8 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 
 import com.guillot.engine.utils.RandomCollection;
+import com.guillot.moria.item.Equipable;
+import com.guillot.moria.item.ItemType;
 
 public class Monster extends AbstractCharacter {
 
@@ -16,17 +28,17 @@ public class Monster extends AbstractCharacter {
 
     public static List<MonsterRace> getValuesPerLevel() {
         return asList(
-                new MonsterRace("Goblin", 1, 10, 20, 20, 5, 50, 1), //
-                new MonsterRace("Orc", 4, 20, 20, 40, 5, 60, 2), //
-                new MonsterRace("Hill orc", 5, 20, 30, 40, 5, 60, 3), //
-                new MonsterRace("Mordor orc", 6, 25, 20, 40, 7, 50, 4), //
-                new MonsterRace("Uruk-hai", 7, 30, 20, 60, 5, 60, 5), //
-                new MonsterRace("Orc captain", 8, 35, 20, 50, 7, 50, 5), //
-                new MonsterRace("War orc", 9, 40, 30, 75, 8, 60, 5), //
-                new MonsterRace("Great orc", 10, 45, 20, 100, 5, 40, 10), //
-                new MonsterRace("Troll", 13, 50, 20, 200, 5, 20, 20), //
-                new MonsterRace("Goblin King", 15, 40, 0, 150, 10, 100, 10), //
-                new MonsterRace("Balrog", 20, 100, 0, 500, 100, 50, 5));
+                new MonsterRace("Goblin", 1, 10, 20, 20, 5, 50, 1, asList(ONE_HANDED_WEAPON)), //
+                new MonsterRace("Orc", 3, 20, 20, 40, 5, 60, 2, asList(ONE_HANDED_WEAPON)), //
+                new MonsterRace("Hill orc", 3, 20, 30, 40, 5, 60, 3, asList(BOW, HELMET)), //
+                new MonsterRace("Mordor orc", 5, 25, 20, 40, 7, 50, 4, asList(ONE_HANDED_WEAPON, SHIELD)), //
+                new MonsterRace("Uruk-hai", 7, 30, 20, 60, 5, 60, 5, asList(ONE_HANDED_WEAPON, ARMOR)), //
+                new MonsterRace("Orc captain", 8, 35, 20, 50, 7, 50, 5, asList(ONE_HANDED_WEAPON, ARMOR, HELMET)), //
+                new MonsterRace("War orc", 9, 40, 30, 75, 8, 60, 5, asList(TWO_HANDED_WEAPON, ARMOR)), //
+                new MonsterRace("Great orc", 10, 45, 20, 100, 5, 40, 10, asList(BOW, ARMOR)), //
+                new MonsterRace("Troll", 13, 50, 20, 200, 5, 20, 20, asList(TWO_HANDED_WEAPON)), //
+                new MonsterRace("Goblin King", 15, 40, 0, 150, 10, 100, 10, asList(STAFF, RING, AMULET)), //
+                new MonsterRace("Balrog", 20, 100, 0, 500, 100, 50, 5, asList()));
     }
 
     public static MonsterRace pickMonsterRace(int level) {
@@ -45,9 +57,18 @@ public class Monster extends AbstractCharacter {
         super(race.getName(), MONSTER);
 
         this.race = race;
-        this.level = race.getLevel();
+        level = race.getLevel();
 
         init();
+
+        for (ItemType type : race.getEquipedItemsType()) {
+            Equipable item = null;
+            do {
+                item = (Equipable) generateItem(type, 0, level);
+            } while (!item.isEquipable(this));
+
+            equipItem(item);
+        }
     }
 
     @Override

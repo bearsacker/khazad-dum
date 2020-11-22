@@ -47,6 +47,7 @@ import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -231,12 +232,12 @@ public class Dungeon {
         }
 
         Path path = astar.findPath(spawnUpStairs.inverseXY(), downStairs.inverseXY(), 300, false, true);
-        if (path == null) {
+        if (path == null || path.getLength() < 30) {
             return false;
         }
 
         path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), 300, false, true);
-        if (path == null) {
+        if (path == null || path.getLength() < 30) {
             return false;
         }
 
@@ -524,12 +525,6 @@ public class Dungeon {
                 this.floor[coord.y - 2][coord.x + 1] = PILLAR;
                 this.floor[coord.y + 2][coord.x - 1] = PILLAR;
                 this.floor[coord.y + 2][coord.x + 1] = PILLAR;
-                if (RNG.get().randomNumber(3) == 1) {
-                    placeSecretDoor(new Point(coord.x - 2, coord.y));
-                    placeSecretDoor(new Point(coord.x + 2, coord.y));
-                    placeSecretDoor(new Point(coord.x, coord.y - 2));
-                    placeSecretDoor(new Point(coord.x, coord.y + 2));
-                }
             } else if (RNG.get().randomNumber(3) == 1) {
                 this.floor[coord.y][coord.x] = TMP1_WALL;
                 this.floor[coord.y - 1][coord.x] = TMP1_WALL;
@@ -975,9 +970,9 @@ public class Dungeon {
         int offset = RNG.get().randomNumber(4);
         if (offset < 3) {
             // 1 -> y-1; 2 -> y+1
-            placeLockedDoor(new Point(coord.x, coord.y - 3 + (offset << 1)), NORTH);
+            placeLockedDoor(new Point(coord.x, coord.y - 3 + (offset << 1)), WEST);
         } else {
-            placeLockedDoor(new Point(coord.x - 7 + (offset << 1), coord.y), WEST);
+            placeLockedDoor(new Point(coord.x - 7 + (offset << 1), coord.y), NORTH);
         }
     }
 
@@ -1005,7 +1000,7 @@ public class Dungeon {
                 spot.y = coord.y - displacement.y - 1 + RNG.get().randomNumber(2 * displacement.y + 1);
                 spot.x = coord.x - displacement.x - 1 + RNG.get().randomNumber(2 * displacement.x + 1);
 
-                if (this.floor[spot.y][spot.x] != NULL && this.floor[spot.y][spot.x].isFloor && getItemAt(spot) == null) {
+                if (this.floor[spot.y][spot.x] != NULL && this.floor[spot.y][spot.x].isFloor && !isItemAt(spot)) {
                     // TODO
                     // setTrap(spot, RNG.get().randomNumber(MAX_TRAPS) - 1);
                     placed = true;
@@ -1250,7 +1245,7 @@ public class Dungeon {
             for (int i = 0; i <= 10; i++) {
                 Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
 
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && this.getItemAt(at) == null) {
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && !isItemAt(at)) {
                     if (RNG.get().randomNumber(100) < 75) {
                         placeRandomObjectAt(at);
                     } else {
@@ -1270,7 +1265,7 @@ public class Dungeon {
             for (int i = 0; i <= 10; i++) {
                 Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
 
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && getItemAt(at) == null) {
+                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && !isItemAt(at)) {
                     placeGold(at);
                     i = 9;
                 }
@@ -1310,7 +1305,7 @@ public class Dungeon {
                 coord.y = RNG.get().randomNumber(height) - 1;
                 coord.x = RNG.get().randomNumber(width) - 1;
             } while (!types.contains(this.floor[coord.y][coord.x]) || spawnUpStairs.is(coord) || spawnDownStairs.is(coord)
-                    || getItemAt(coord) != null);
+                    || isItemAt(coord));
 
             switch (type) {
             case TRAP:
@@ -1477,8 +1472,12 @@ public class Dungeon {
         return spawnDownStairs;
     }
 
-    public AbstractItem getItemAt(Point coord) {
-        return items.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
+    public List<AbstractItem> getItemsAt(Point coord) {
+        return items.stream().filter(x -> x.getPosition().is(coord)).collect(toList());
+    }
+
+    public boolean isItemAt(Point coord) {
+        return !getItemsAt(coord).isEmpty();
     }
 
     public void removeItem(AbstractItem item) {
@@ -1521,6 +1520,10 @@ public class Dungeon {
 
     public Tile[][] getDiscoveredTiles() {
         return discoveredTiles;
+    }
+
+    public ArrayList<Monster> getMonsters() {
+        return monsters;
     }
 
 }

@@ -1,8 +1,11 @@
 package com.guillot.moria.character;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.guillot.moria.dungeon.Direction;
@@ -13,6 +16,7 @@ import com.guillot.moria.item.ItemType;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
+import com.guillot.moria.utils.RNG;
 
 public abstract class AbstractCharacter {
 
@@ -224,7 +228,7 @@ public abstract class AbstractCharacter {
                 new Point(position.x + 1, position.y));
 
         for (Point coord : coords) {
-            if (dungeon.getFloor()[coord.y][coord.x].isFloor && dungeon.getItemAt(coord) == null) {
+            if (dungeon.getFloor()[coord.y][coord.x].isFloor && !dungeon.isItemAt(coord)) {
                 item.setPosition(coord);
                 dungeon.getItems().add(item);
                 return inventory.remove(item);
@@ -232,6 +236,26 @@ public abstract class AbstractCharacter {
         }
 
         return false;
+    }
+
+    public void dropEquipment(Dungeon dungeon) {
+        HashSet<AbstractItem> items = new HashSet<>();
+        items.add((AbstractItem) leftHand);
+        if (leftHand != rightHand) {
+            items.add((AbstractItem) rightHand);
+        }
+        items.add((AbstractItem) body);
+        items.add((AbstractItem) head);
+        items.add((AbstractItem) neck);
+        items.add((AbstractItem) finger);
+        items.remove(null);
+
+        for (AbstractItem item : items) {
+            unequipItem(item);
+            item.setPosition(position);
+
+            dungeon.getItems().add(item);
+        }
     }
 
     public void equipItem(Equipable item) {
@@ -336,11 +360,7 @@ public abstract class AbstractCharacter {
     }
 
     public void setCurrentLife(int currentLife) {
-        if (currentLife > life) {
-            currentLife = life;
-        }
-
-        this.currentLife = currentLife;
+        this.currentLife = max(0, min(currentLife, life));
     }
 
     public int getAgility() {
@@ -420,7 +440,7 @@ public abstract class AbstractCharacter {
     }
 
     public void setChanceHit(int chanceHit) {
-        this.chanceHit = chanceHit;
+        this.chanceHit = max(0, min(chanceHit, 100));
     }
 
     public int getChanceDodge() {
@@ -428,7 +448,7 @@ public abstract class AbstractCharacter {
     }
 
     public void setChanceDodge(int chanceDodge) {
-        this.chanceDodge = chanceDodge;
+        this.chanceDodge = max(0, min(chanceDodge, 100));
     }
 
     public int getChanceMagicFind() {
@@ -436,7 +456,7 @@ public abstract class AbstractCharacter {
     }
 
     public void setChanceMagicFind(int chanceMagicFind) {
-        this.chanceMagicFind = chanceMagicFind;
+        this.chanceMagicFind = max(0, min(chanceMagicFind, 100));
     }
 
     public int getChanceLockPicking() {
@@ -444,7 +464,7 @@ public abstract class AbstractCharacter {
     }
 
     public void setChanceLockPicking(int chanceLockPicking) {
-        this.chanceLockPicking = chanceLockPicking;
+        this.chanceLockPicking = max(0, min(chanceLockPicking, 100));
     }
 
     public int getChanceCriticalHit() {
@@ -452,7 +472,7 @@ public abstract class AbstractCharacter {
     }
 
     public void setChanceCriticalHit(int chanceCriticalHit) {
-        this.chanceCriticalHit = chanceCriticalHit;
+        this.chanceCriticalHit = max(0, min(chanceCriticalHit, 100));
     }
 
     public int getInventoryLimit() {
@@ -548,11 +568,37 @@ public abstract class AbstractCharacter {
     }
 
     public int computeMinDamages() {
-        return damages;
+        return damages + fireDamage + frostDamage + lightningDamage;
     }
 
     public int computeMaxDamages() {
-        return (int) (damages + (physicalDamage / 100f) * damages);
+        return (int) (damages + (physicalDamage / 100f) * damages) + fireDamage + frostDamage + lightningDamage;
+    }
+
+    public Attack doAttack() {
+        if (RNG.get().randomNumber(100) > chanceHit) {
+            return null;
+        }
+
+        boolean critical = RNG.get().randomNumber(100) < chanceCriticalHit;
+        int damages = (critical ? 2 : 1) * RNG.get().randomNumberBetween(computeMinDamages(), computeMaxDamages());
+
+        return new Attack(damages, fireDamage, frostDamage, lightningDamage, critical);
+    }
+
+    public int takeAHit(Attack attack) {
+        if (RNG.get().randomNumber(100) < chanceDodge) {
+            return -1;
+        }
+
+        int damagesReceived = max(0, attack.getDamages() - armor);
+        setCurrentLife(getCurrentLife() - damagesReceived);
+
+        return damagesReceived;
+    }
+
+    public boolean isDead() {
+        return currentLife == 0;
     }
 
     @Override

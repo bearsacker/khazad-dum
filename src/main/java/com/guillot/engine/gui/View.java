@@ -46,7 +46,7 @@ public abstract class View {
         }
     }
 
-    public void paintComponents(Graphics g) throws Exception {
+    public void paint(Graphics g) throws Exception {
         g.setBackground(backgroundColor);
 
         components.stream().filter(x -> x.isVisible()).forEach(x -> x.paint(g));

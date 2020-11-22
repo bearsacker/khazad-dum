@@ -137,7 +137,7 @@ public class MapDialog extends SubView {
         g.popTransform();
 
         String text = "Level " + game.getDungeon().getLevel();
-        int widthText = GUI.get().getFont(1).getWidth(text);
+        int widthText = GUI.get().getFont(2).getWidth(text);
 
         GUI.get().getFont(1).drawString(WIDTH / 2 - widthText / 2, HEIGHT - 80, text, Color.black);
 

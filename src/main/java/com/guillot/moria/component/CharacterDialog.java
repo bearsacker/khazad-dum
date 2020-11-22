@@ -22,9 +22,9 @@ public class CharacterDialog extends Window {
 
         characterTextBox = new TextBox();
         characterTextBox.setDrawBox(false);
-        characterTextBox.setWidth(WIDTH - 128);
-        characterTextBox.setX(x + 16);
-        characterTextBox.setY(y + 48);
+        characterTextBox.setWidth(width);
+        characterTextBox.setX(16);
+        characterTextBox.setY(48);
         characterTextBox.setText(player.toString());
         height = characterTextBox.getHeight() + 64;
 

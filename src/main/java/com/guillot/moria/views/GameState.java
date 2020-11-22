@@ -8,6 +8,7 @@ import com.guillot.engine.Game;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
 import com.guillot.moria.dungeon.Dungeon;
+import com.guillot.moria.utils.RNG;
 
 public class GameState {
 
@@ -60,7 +61,7 @@ public class GameState {
     }
 
     public static void main(String[] args) throws SlickException {
-        // RNG.get().setSeed(1605796012050L);
+        RNG.get().setSeed(1605970573341L);
 
         new Game("Khazad-dûm", new GameView());
     }

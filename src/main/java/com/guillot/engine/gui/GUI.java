@@ -110,7 +110,7 @@ public class GUI {
     public void paint(Graphics g) {
         try {
             if (currentView != null) {
-                currentView.paintComponents(g);
+                currentView.paint(g);
             }
         } catch (Exception e) {
             switchView(new ViewException(e));

@@ -1,5 +1,8 @@
 package com.guillot.moria.character;
 
+import java.util.List;
+
+import com.guillot.moria.item.ItemType;
 
 public class MonsterRace {
 
@@ -19,8 +22,10 @@ public class MonsterRace {
 
     private int chanceCriticalHit;
 
+    private List<ItemType> equipedItemsType;
+
     public MonsterRace(String name, int level, int strength, int agility, int life, int lightRadius, int chanceHit,
-            int chanceCriticalHit) {
+            int chanceCriticalHit, List<ItemType> equipedItemsType) {
         this.name = name;
         this.level = level;
         this.strength = strength;
@@ -29,6 +34,7 @@ public class MonsterRace {
         this.lightRadius = lightRadius;
         this.chanceHit = chanceHit;
         this.chanceCriticalHit = chanceCriticalHit;
+        this.equipedItemsType = equipedItemsType;
     }
 
     public String getName() {
@@ -93,6 +99,14 @@ public class MonsterRace {
 
     public void setChanceCriticalHit(int chanceCriticalHit) {
         this.chanceCriticalHit = chanceCriticalHit;
+    }
+
+    public List<ItemType> getEquipedItemsType() {
+        return equipedItemsType;
+    }
+
+    public void setEquipedItemsType(List<ItemType> equipedItemsType) {
+        this.equipedItemsType = equipedItemsType;
     }
 
 }

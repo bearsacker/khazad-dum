@@ -55,8 +55,6 @@ public class DoorDialog extends Window {
                 pickingLock();
             }
         });
-
-        add(buttonUseKey, buttonPickingLock);
     }
 
     @Override
@@ -77,8 +75,10 @@ public class DoorDialog extends Window {
             GUI.get().clearKeysPressed();
         }
 
+        buttonUseKey.update();
         buttonUseKey.setEnabled(player.hasItemType(ItemType.KEY));
 
+        buttonPickingLock.update();
         buttonPickingLock.setText("Pick the lock (" + player.getChanceLockPicking() + "%)");
         buttonPickingLock.setEnabled(!door.isPicked());
     }
@@ -88,6 +88,9 @@ public class DoorDialog extends Window {
         super.paint(g);
 
         parent.getConsole().paint(g);
+
+        buttonUseKey.paint(g);
+        buttonPickingLock.paint(g);
 
         g.drawImage(Images.ITEMS.getSubImage(11, 3), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
                 buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);

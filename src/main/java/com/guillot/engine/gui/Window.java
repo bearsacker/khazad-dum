@@ -70,9 +70,9 @@ public class Window extends SubView {
             }
         }
 
-        g.popTransform();
-
         super.paint(g);
+
+        g.popTransform();
     }
 
     @Override

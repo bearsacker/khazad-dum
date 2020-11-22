@@ -51,6 +51,11 @@ public abstract class Component {
         return this.y;
     }
 
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void setWidth(int width) {
         this.width = width;
     }

@@ -77,10 +77,8 @@ public class ItemGenerator {
         return attributes;
     }
 
-    public static AbstractItem generateItem(int magicBonus, int qualityLevel) {
+    private static AbstractItem generateItemOfType(ItemType type, int magicBonus, int qualityLevel) {
         ItemRarity rarity = pickRarity(magicBonus);
-        ItemType type = pickType();
-
         ArrayList<AbstractAffixe> affixes = generateAffixes(type, rarity, qualityLevel);
         AbstractItem item = null;
 
@@ -133,6 +131,24 @@ public class ItemGenerator {
             item.generateBase(qualityLevel);
         }
 
-        return item != null && item.isEligible() ? item : generateItem(magicBonus, qualityLevel);
+        return item;
+    }
+
+    public static AbstractItem generateItem(ItemType type, int magicBonus, int qualityLevel) {
+        AbstractItem item = null;
+        do {
+            item = generateItemOfType(type, magicBonus, qualityLevel);
+        } while (item == null || !item.isEligible());
+
+        return item;
+    }
+
+    public static AbstractItem generateItem(int magicBonus, int qualityLevel) {
+        AbstractItem item = null;
+        do {
+            item = generateItemOfType(pickType(), magicBonus, qualityLevel);
+        } while (item == null || !item.isEligible());
+
+        return item;
     }
 }
