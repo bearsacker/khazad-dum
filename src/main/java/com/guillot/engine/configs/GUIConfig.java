@@ -13,7 +13,7 @@ public final class GUIConfig extends Config {
 
     public final static String FONT = get().getString("gui.font", "fonts/roboto.ttf");
 
-    public final static String[] FONT_SIZES = toArray(get().getString("gui.font-sizes", "24"));
+    public final static String[] FONT_SIZES = toStringArray(get().getString("gui.font-sizes", "24"));
 
     public final static Color EXCEPTION_TEXT_COLOR = toColor(get().getString("gui.exception.text-color", "255,0,0,255"));
 
@@ -112,10 +112,6 @@ public final class GUIConfig extends Config {
 
     public static Configuration get() {
         return INSTANCE.configuration;
-    }
-
-    private static String[] toArray(String array) {
-        return array.split(",");
     }
 
     private static Color toColor(String value) {

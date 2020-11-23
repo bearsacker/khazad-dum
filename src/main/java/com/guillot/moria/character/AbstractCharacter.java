@@ -1,5 +1,7 @@
 package com.guillot.moria.character;
 
+import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
+import static com.guillot.moria.configs.LevelingConfig.LEVELING_POINTS_PER_LEVEL;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
@@ -25,6 +27,8 @@ public abstract class AbstractCharacter {
     protected int level;
 
     protected int xp;
+
+    protected int attributesPoints;
 
     protected int currentLife;
 
@@ -118,19 +122,19 @@ public abstract class AbstractCharacter {
 
         level = 1;
         xp = 0;
+        attributesPoints = 0;
 
         direction = Direction.SOUTH;
 
         inventory = new ArrayList<>();
-        head = null;
-        body = null;
-        leftHand = null;
-        rightHand = null;
-        finger = null;
-        neck = null;
     }
 
     public void init() {
+        strengthBase = getStrengthMin();
+        agilityBase = getAgilityMin();
+        spiritBase = getSpiritMin();
+        destinyBase = getDestinyMin();
+
         computeStatistics();
         currentLife = life;
     }
@@ -140,17 +144,15 @@ public abstract class AbstractCharacter {
     }
 
     public void computeStatistics() {
-        strengthBase = getStrengthMin();
-        agilityBase = getAgilityMin();
-        spiritBase = getSpiritMin();
-        destinyBase = getDestinyMin();
-
         strength = 0;
         agility = 0;
         spirit = 0;
         destiny = 0;
 
         damages = 1;
+        fireDamage = 0;
+        frostDamage = 0;
+        lightningDamage = 0;
 
         physicalDamage = 0;
         inventoryLimit = 0;
@@ -190,7 +192,7 @@ public abstract class AbstractCharacter {
         spirit += spiritBase;
         destiny += destinyBase;
 
-        physicalDamage += strength / 3;
+        physicalDamage += strength;
         inventoryLimit += getInventoryLimitMin() + strength / 2;
 
         chanceHit += getChanceHitMin() + agility / 2;
@@ -567,6 +569,38 @@ public abstract class AbstractCharacter {
         return neck;
     }
 
+    public void increaseStrength() {
+        if (attributesPoints > 0) {
+            strengthBase++;
+            attributesPoints--;
+            computeStatistics();
+        }
+    }
+
+    public void increaseAgility() {
+        if (attributesPoints > 0) {
+            agilityBase++;
+            attributesPoints--;
+            computeStatistics();
+        }
+    }
+
+    public void increaseSpirit() {
+        if (attributesPoints > 0) {
+            spiritBase++;
+            attributesPoints--;
+            computeStatistics();
+        }
+    }
+
+    public void increaseDestiny() {
+        if (attributesPoints > 0) {
+            destinyBase++;
+            attributesPoints--;
+            computeStatistics();
+        }
+    }
+
     public int computeMinDamages() {
         return damages + fireDamage + frostDamage + lightningDamage;
     }
@@ -601,6 +635,30 @@ public abstract class AbstractCharacter {
         return currentLife == 0;
     }
 
+    public int getXPValue() {
+        return level * (strength + agility + destiny + spirit + damages + armor);
+    }
+
+    public int getAttributesPoints() {
+        return attributesPoints;
+    }
+
+    public int earnXP(int gain) {
+        xp += gain;
+        int max = LEVELING_LEVELS[level - 1];
+
+        if (xp >= max) {
+            int remainder = xp - max;
+            xp = 0;
+            level++;
+            attributesPoints += LEVELING_POINTS_PER_LEVEL;
+
+            return 1 + earnXP(remainder);
+        }
+
+        return 0;
+    }
+
     @Override
     public String toString() {
         String text = getName() + " - " + getClassName() + " - Level " + level + "\n\n";
@@ -624,9 +682,9 @@ public abstract class AbstractCharacter {
 
         text += "Damages: " + damages + "\n";
         text += "Armor: " + armor + "\n";
-        text += "Fire damage: + " + fireDamage + "%\n";
-        text += "Frost damage: + " + frostDamage + "%\n";
-        text += "Lightning damage: + " + lightningDamage + "%";
+        text += "Fire damage: + " + fireDamage + "\n";
+        text += "Frost damage: + " + frostDamage + "\n";
+        text += "Lightning damage: + " + lightningDamage;
 
         return text;
     }

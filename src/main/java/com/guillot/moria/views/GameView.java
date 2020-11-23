@@ -1,5 +1,6 @@
 package com.guillot.moria.views;
 
+import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Direction.EAST;
 import static com.guillot.moria.dungeon.Direction.NORTH;
 import static com.guillot.moria.dungeon.Direction.SOUTH;
@@ -80,6 +81,8 @@ public class GameView extends View {
 
     private ProgressBar lifeBar;
 
+    private ProgressBar xpBar;
+
     @Override
     public void start() throws Exception {
         game = new GameState();
@@ -101,9 +104,11 @@ public class GameView extends View {
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        lifeBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 32, 256, 32, 100);
+        lifeBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 44, 256, 32, 100);
+        xpBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
+        xpBar.setValueColor(new Color(223, 207, 134));
 
-        add(console, cursorTextBox, lifeBar, inventoryDialog, characterDialog, doorDialog, mapDialog, smallCharacterDialog);
+        add(console, cursorTextBox, lifeBar, xpBar, inventoryDialog, characterDialog, doorDialog, mapDialog, smallCharacterDialog);
     }
 
     @Override
@@ -115,6 +120,7 @@ public class GameView extends View {
         cursor = null;
 
         lifeBar.setValue(getPlayer().getCurrentLife() / (float) getPlayer().getLife());
+        xpBar.setValue(getPlayer().getXp() / (float) LEVELING_LEVELS[getPlayer().getLevel() - 1]);
 
         ArrayList<Monster> deadMonsters = new ArrayList<>();
         getDungeon().getMonsters().stream()
@@ -123,6 +129,13 @@ public class GameView extends View {
                     console.addMessage(x.getName() + " is dead!");
                     x.dropEquipment(getDungeon());
                     deadMonsters.add(x);
+
+                    int xp = x.getXPValue();
+                    console.addMessage(getPlayer().getName() + " earns " + x.getXPValue() + " xp.");
+                    int levelsGained = getPlayer().earnXP(xp);
+                    if (levelsGained > 0) {
+                        console.addMessage(getPlayer().getName() + " gains " + levelsGained + " levels!");
+                    }
                 });
         getDungeon().getMonsters().removeAll(deadMonsters);
 

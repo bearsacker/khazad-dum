@@ -12,7 +12,7 @@ import com.guillot.moria.utils.RNG;
 
 public class GameState {
 
-    private final static int NUMBER_LEVELS = 10;
+    private final static int NUMBER_LEVELS = 9;
 
     private ArrayList<Dungeon> levels;
 

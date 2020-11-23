@@ -1,5 +1,7 @@
 package com.guillot.engine.configs;
 
+import java.util.ArrayList;
+
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -22,5 +24,19 @@ public abstract class Config {
         } catch (ConfigurationException e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    protected static String[] toStringArray(String array) {
+        return array.split(",");
+    }
+
+    protected static Integer[] toIntegerArray(String array) {
+        String[] values = array.split(",");
+        ArrayList<Integer> intValues = new ArrayList<>();
+        for (String value : values) {
+            intValues.add(Integer.parseInt(value));
+        }
+
+        return intValues.toArray(new Integer[intValues.size()]);
     }
 }
