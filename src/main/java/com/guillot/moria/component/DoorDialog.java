@@ -92,9 +92,9 @@ public class DoorDialog extends Window {
         buttonUseKey.paint(g);
         buttonPickingLock.paint(g);
 
-        g.drawImage(Images.ITEMS.getSubImage(11, 3), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
+        g.drawImage(Images.KEY.getImage(), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
                 buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);
-        g.drawImage(Images.ITEMS.getSubImage(12, 11), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 6,
+        g.drawImage(Images.DICE.getImage(), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 6,
                 buttonPickingLock.getX() + 40, buttonPickingLock.getY() + 38, 0, 0, 16, 16,
                 buttonPickingLock.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);
     }

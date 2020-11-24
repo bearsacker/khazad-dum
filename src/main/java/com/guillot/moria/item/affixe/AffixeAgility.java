@@ -6,6 +6,8 @@ import com.guillot.moria.character.AbstractCharacter;
 
 public class AffixeAgility extends AbstractAffixe {
 
+    private static final long serialVersionUID = -7233240430294637766L;
+
     public AffixeAgility() {
         name = "+%d to Agility";
         type = RARE;

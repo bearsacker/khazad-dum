@@ -4,6 +4,7 @@ package com.guillot.moria.item.affixe;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
@@ -11,7 +12,9 @@ import com.guillot.moria.item.ItemType;
 import com.guillot.moria.utils.RNG;
 
 
-public abstract class AbstractAffixe implements Cloneable {
+public abstract class AbstractAffixe implements Cloneable, Serializable {
+
+    private static final long serialVersionUID = -1095080410024129280L;
 
     public final static List<AbstractAffixe> AFFIXES = asList(
             new AffixeStrength(), //

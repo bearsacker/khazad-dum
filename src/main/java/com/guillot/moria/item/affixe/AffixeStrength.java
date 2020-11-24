@@ -6,6 +6,8 @@ import com.guillot.moria.character.AbstractCharacter;
 
 public class AffixeStrength extends AbstractAffixe {
 
+    private static final long serialVersionUID = 2806758303840204814L;
+
     public AffixeStrength() {
         name = "+%d to Strength";
         type = RARE;

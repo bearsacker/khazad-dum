@@ -11,6 +11,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeChanceHit extends AbstractAffixe {
 
+    private static final long serialVersionUID = 6237313089637360419L;
+
     public AffixeChanceHit() {
         name = "+%d%% to Chance to hit";
         type = RARE;

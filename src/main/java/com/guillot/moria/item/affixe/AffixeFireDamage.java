@@ -13,6 +13,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeFireDamage extends AbstractAffixe {
 
+    private static final long serialVersionUID = -1203099419882446709L;
+
     public AffixeFireDamage() {
         name = "+%d to Fire Damage";
         type = NORMAL;

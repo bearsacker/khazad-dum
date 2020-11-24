@@ -15,6 +15,8 @@ import static com.guillot.moria.ressources.Images.HOBBIT;
 
 public class Hobbit extends AbstractCharacter {
 
+    private static final long serialVersionUID = -8888918109708411305L;
+
     public Hobbit(String name) {
         super(name, HOBBIT);
 

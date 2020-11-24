@@ -38,6 +38,18 @@ public class GameState {
         player.setPosition(levels.get(currentLevel).getSpawnUpStairs());
     }
 
+    public void init(String path) {
+        try {
+            SaveManager.loadSaveFile(this, path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
     public Dungeon getDungeon() {
         return levels.get(currentLevel);
     }
@@ -60,9 +72,25 @@ public class GameState {
         }
     }
 
+    public ArrayList<Dungeon> getLevels() {
+        return levels;
+    }
+
+    public void setLevels(ArrayList<Dungeon> levels) {
+        this.levels = levels;
+    }
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
+    public void setPlayer(AbstractCharacter player) {
+        this.player = player;
+    }
+
     public static void main(String[] args) throws SlickException {
         RNG.get().setSeed(1606213583967L);
 
-        new Game("Khazad-dûm", new GameView());
+        new Game("Khazad-dûm", new MenuView());
     }
 }

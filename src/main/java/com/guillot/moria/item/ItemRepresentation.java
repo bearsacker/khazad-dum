@@ -1,7 +1,6 @@
 package com.guillot.moria.item;
 
-import org.newdawn.slick.Image;
-
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.RNG;
 
 public class ItemRepresentation {
@@ -16,13 +15,13 @@ public class ItemRepresentation {
 
     private String name;
 
-    private Image image;
+    private Images image;
 
     public ItemRepresentation(String name, int level, int valueMin, int valueMax, int requirement) {
         this(name, level, valueMin, valueMax, requirement, null);
     }
 
-    public ItemRepresentation(String name, int level, int valueMin, int valueMax, int requirement, Image image) {
+    public ItemRepresentation(String name, int level, int valueMin, int valueMax, int requirement, Images image) {
         this.name = name;
         this.level = level;
         this.valueMin = valueMin;
@@ -75,11 +74,11 @@ public class ItemRepresentation {
         this.name = name;
     }
 
-    public Image getImage() {
+    public Images getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(Images image) {
         this.image = image;
     }
 

@@ -1,7 +1,10 @@
 package com.guillot.moria.utils;
 
+import java.io.Serializable;
 
-public class Point {
+public class Point implements Serializable {
+
+    private static final long serialVersionUID = 6211014805741231532L;
 
     public int x;
 

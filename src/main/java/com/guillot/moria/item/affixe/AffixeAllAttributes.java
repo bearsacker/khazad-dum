@@ -6,6 +6,8 @@ import com.guillot.moria.character.AbstractCharacter;
 
 public class AffixeAllAttributes extends AbstractAffixe {
 
+    private static final long serialVersionUID = -4565320136195088139L;
+
     public AffixeAllAttributes() {
         name = "+%d to All Attributes";
         type = LEGENDARY;

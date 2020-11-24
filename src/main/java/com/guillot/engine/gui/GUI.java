@@ -159,6 +159,7 @@ public class GUI {
     public void close() {
         try {
             currentView.stop(true);
+            System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
             switchView(new ViewException(e));

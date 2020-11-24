@@ -1,14 +1,16 @@
 package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemType.STAFF;
-import static com.guillot.moria.ressources.Images.ITEMS;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.ressources.Images;
 
 public class Staff extends AbstractItem implements Equipable {
+
+    private static final long serialVersionUID = 3076341665961717631L;
 
     public Staff() {
         type = STAFF;
@@ -17,11 +19,11 @@ public class Staff extends AbstractItem implements Equipable {
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
         return Arrays.asList(
-                new ItemRepresentation("Short Staff", 1, 2, 4, 0, ITEMS.getSubImage(0, 11)), //
-                new ItemRepresentation("Long Staff", 4, 4, 8, 0, ITEMS.getSubImage(1, 11)), //
-                new ItemRepresentation("Composite Staff", 6, 5, 10, 15, ITEMS.getSubImage(2, 11)), //
-                new ItemRepresentation("Quarter Staff", 9, 6, 12, 20, ITEMS.getSubImage(3, 11)), //
-                new ItemRepresentation("War Staff", 12, 8, 16, 30, ITEMS.getSubImage(4, 11)));
+                new ItemRepresentation("Short Staff", 1, 2, 4, 0, Images.SHORT_STAFF), //
+                new ItemRepresentation("Long Staff", 4, 4, 8, 0, Images.LONG_STAFF), //
+                new ItemRepresentation("Composite Staff", 6, 5, 10, 15, Images.COMPOSITE_STAFF), //
+                new ItemRepresentation("Quarter Staff", 9, 6, 12, 20, Images.QUARTER_STAFF), //
+                new ItemRepresentation("War Staff", 12, 8, 16, 30, Images.WAR_STAFF));
     }
 
     @Override

@@ -10,6 +10,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeChanceCriticalHit extends AbstractAffixe {
 
+    private static final long serialVersionUID = -387211472651229146L;
+
     public AffixeChanceCriticalHit() {
         name = "+%d%% to Chance to critical hit";
         type = LEGENDARY;

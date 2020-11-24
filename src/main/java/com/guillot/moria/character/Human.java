@@ -15,6 +15,8 @@ import static com.guillot.moria.ressources.Images.HUMAN;
 
 public class Human extends AbstractCharacter {
 
+    private static final long serialVersionUID = 5824346740386902008L;
+
     public Human(String name) {
         super(name, HUMAN);
 

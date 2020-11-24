@@ -13,13 +13,15 @@ import com.guillot.moria.utils.RNG;
 
 public class Bag extends AbstractItem implements Usable {
 
+    private static final long serialVersionUID = 9073072450585182682L;
+
     public Bag() {
         type = BAG;
     }
 
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
-        return asList(new ItemRepresentation("Mysterious bag", 1, 0, 0, 0, Images.BAG.getImage()));
+        return asList(new ItemRepresentation("Mysterious bag", 1, 0, 0, 0, Images.BAG));
     }
 
     @Override

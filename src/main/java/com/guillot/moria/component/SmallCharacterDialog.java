@@ -86,8 +86,8 @@ public class SmallCharacterDialog extends Window {
         g.pushTransform();
         g.translate(x, y);
 
-        g.drawImage(Images.ITEMS.getSubImage(1, 7), 40, 136, 40 + 32, 136 + 32, 0, 0, 16, 16, filter);
-        g.drawImage(Images.ITEMS.getSubImage(5, 11), 224, 136, 224 + 32, 136 + 32, 0, 0, 16, 16, filter);
+        g.drawImage(Images.SWORD.getImage(), 40, 136, 40 + 32, 136 + 32, 0, 0, 16, 16, filter);
+        g.drawImage(Images.LARGE_SHIELD.getImage(), 224, 136, 224 + 32, 136 + 32, 0, 0, 16, 16, filter);
 
         g.popTransform();
     }

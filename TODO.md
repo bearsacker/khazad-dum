@@ -1,7 +1,8 @@
 IA
-Escape dialog / Save / Load
 UI
-Menu
 Class choice
 
+Merchant
+Vault
+Balrog
 Traps  

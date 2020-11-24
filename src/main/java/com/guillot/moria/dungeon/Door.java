@@ -1,8 +1,12 @@
 package com.guillot.moria.dungeon;
 
+import java.io.Serializable;
+
 import com.guillot.moria.utils.Point;
 
-public class Door {
+public class Door implements Serializable {
+
+    private static final long serialVersionUID = -3966871541387982322L;
 
     private Point position;
 

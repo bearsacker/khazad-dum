@@ -1,10 +1,13 @@
 package com.guillot.moria.character;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.guillot.moria.item.ItemType;
 
-public class MonsterRace {
+public class MonsterRace implements Serializable {
+
+    private static final long serialVersionUID = -7167073544202458260L;
 
     private String name;
 

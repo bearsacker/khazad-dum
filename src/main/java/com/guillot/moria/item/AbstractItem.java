@@ -2,6 +2,7 @@ package com.guillot.moria.item;
 
 import static java.util.stream.Collectors.toList;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,13 @@ import org.newdawn.slick.Image;
 import com.guillot.engine.utils.RandomCollection;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
-public abstract class AbstractItem implements Comparable<AbstractItem> {
+public abstract class AbstractItem implements Comparable<AbstractItem>, Serializable {
+
+    private static final long serialVersionUID = -7309545761005359298L;
 
     protected ItemRarity rarity;
 
@@ -31,7 +35,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
 
     protected String name;
 
-    protected Image image;
+    protected Images image;
 
     protected Point position;
 
@@ -56,7 +60,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
         int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
-        image.drawImage(this.image, x + 24, y + 36);
+        image.drawImage(this.image.getImage(), x + 24, y + 36);
     }
 
     public ItemRarity getRarity() {
@@ -124,11 +128,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem> {
     }
 
     public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
+        return image.getImage();
     }
 
     public String getName() {

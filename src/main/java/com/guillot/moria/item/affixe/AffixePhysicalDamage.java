@@ -13,6 +13,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixePhysicalDamage extends AbstractAffixe {
 
+    private static final long serialVersionUID = 1936480382270881871L;
+
     public AffixePhysicalDamage() {
         name = "+%d%% to Physical Damage";
         type = LEGENDARY;

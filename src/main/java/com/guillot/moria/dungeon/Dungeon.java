@@ -1,20 +1,20 @@
 package com.guillot.moria.dungeon;
 
-import static com.guillot.moria.configs.DungeonConfig.DUN_DIR_CHANGE;
-import static com.guillot.moria.configs.DungeonConfig.DUN_MAGMA_STREAMER;
-import static com.guillot.moria.configs.DungeonConfig.DUN_MAGMA_TREASURE;
-import static com.guillot.moria.configs.DungeonConfig.DUN_MAX_HEIGHT;
-import static com.guillot.moria.configs.DungeonConfig.DUN_MAX_WIDTH;
-import static com.guillot.moria.configs.DungeonConfig.DUN_QUARTZ_STREAMER;
-import static com.guillot.moria.configs.DungeonConfig.DUN_QUARTZ_TREASURE;
-import static com.guillot.moria.configs.DungeonConfig.DUN_RANDOM_DIR;
-import static com.guillot.moria.configs.DungeonConfig.DUN_ROOMS_MEAN;
-import static com.guillot.moria.configs.DungeonConfig.DUN_ROOM_DOORS;
-import static com.guillot.moria.configs.DungeonConfig.DUN_STREAMER_DENSITY;
-import static com.guillot.moria.configs.DungeonConfig.DUN_STREAMER_WIDTH;
-import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNELING;
-import static com.guillot.moria.configs.DungeonConfig.DUN_TUNNEL_DOORS;
-import static com.guillot.moria.configs.DungeonConfig.DUN_UNUSUAL_ROOMS;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_DIR_CHANGE;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_MAGMA_STREAMER;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_MAGMA_TREASURE;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_MAX_HEIGHT;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_MAX_WIDTH;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_QUARTZ_STREAMER;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_QUARTZ_TREASURE;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_RANDOM_DIR;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_ROOMS_MEAN;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_ROOM_DOORS;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_STREAMER_DENSITY;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_STREAMER_WIDTH;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_TUNNELING;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_TUNNEL_DOORS;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_UNUSUAL_ROOMS;
 import static com.guillot.moria.configs.MonstersConfig.MON_CHANCE_OF_NASTY;
 import static com.guillot.moria.configs.MonstersConfig.MON_MIN_PER_LEVEL;
 import static com.guillot.moria.configs.MonstersConfig.MON_SUMMONED_LEVEL_ADJUST;
@@ -91,41 +91,40 @@ public class Dungeon {
 
     public Dungeon(int level) {
         this.level = level;
-        height = DUN_MAX_HEIGHT;
-        width = DUN_MAX_WIDTH;
-        floor = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
-        for (int y = 0; y < DUN_MAX_HEIGHT; y++) {
-            for (int x = 0; x < DUN_MAX_WIDTH; x++) {
+        height = DUNGEON_MAX_HEIGHT;
+        width = DUNGEON_MAX_WIDTH;
+        floor = new Tile[DUNGEON_MAX_HEIGHT][DUNGEON_MAX_WIDTH];
+        for (int y = 0; y < DUNGEON_MAX_HEIGHT; y++) {
+            for (int x = 0; x < DUNGEON_MAX_WIDTH; x++) {
                 floor[y][x] = NULL;
             }
         }
 
-        discoveredTiles = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
+        discoveredTiles = new Tile[DUNGEON_MAX_HEIGHT][DUNGEON_MAX_WIDTH];
 
         doors = new ArrayList<>();
         items = new ArrayList<>();
         monsters = new ArrayList<>();
         entities = new HashMap<>();
-        astar = new AStar(this);
     }
 
     // Cave logic flow for generation of new dungeon
     public boolean generate() {
         System.out.println("Generating dungeon of level " + level + " [seed=" + RNG.get().getSeed() + "]...");
 
-        for (int y = 0; y < DUN_MAX_HEIGHT; y++) {
-            for (int x = 0; x < DUN_MAX_WIDTH; x++) {
+        for (int y = 0; y < DUNGEON_MAX_HEIGHT; y++) {
+            for (int x = 0; x < DUNGEON_MAX_WIDTH; x++) {
                 floor[y][x] = NULL;
             }
         }
 
-        discoveredTiles = new Tile[DUN_MAX_HEIGHT][DUN_MAX_WIDTH];
+        discoveredTiles = new Tile[DUNGEON_MAX_HEIGHT][DUNGEON_MAX_WIDTH];
 
         doors.clear();
         items.clear();
         monsters.clear();
         entities.clear();
-        astar = new AStar(this);
+        initAStar();
 
         // Room initialization
         int row_rooms = 2 * (height / SCREEN_HEIGHT);
@@ -133,7 +132,7 @@ public class Dungeon {
 
         boolean[][] room_map = new boolean[20][20];
 
-        int random_room_count = RNG.get().randomNumberNormalDistribution(DUN_ROOMS_MEAN, 2);
+        int random_room_count = RNG.get().randomNumberNormalDistribution(DUNGEON_ROOMS_MEAN, 2);
         for (int i = 0; i < random_room_count; i++) {
             room_map[RNG.get().randomNumber(row_rooms) - 1][RNG.get().randomNumber(col_rooms) - 1] = true;
         }
@@ -149,7 +148,7 @@ public class Dungeon {
                     location.y = (row * (SCREEN_HEIGHT >> 1) + QUART_HEIGHT);
                     location.x = (col * (SCREEN_WIDTH >> 1) + QUART_WIDTH);
 
-                    if (level + RNG.get().randomNumberNormalDistribution(1, 2) > RNG.get().randomNumber(DUN_UNUSUAL_ROOMS)) {
+                    if (level + RNG.get().randomNumberNormalDistribution(1, 2) > RNG.get().randomNumber(DUNGEON_UNUSUAL_ROOMS)) {
                         int room_type = RNG.get().randomNumber(3);
 
                         if (room_type == 1) {
@@ -182,11 +181,11 @@ public class Dungeon {
 
         // Generate walls and streamers
         fillEmptyTilesWith(GRANITE_WALL);
-        for (int i = 0; i < DUN_MAGMA_STREAMER; i++) {
-            placeStreamerRock(MAGMA_WALL, DUN_MAGMA_TREASURE);
+        for (int i = 0; i < DUNGEON_MAGMA_STREAMER; i++) {
+            placeStreamerRock(MAGMA_WALL, DUNGEON_MAGMA_TREASURE);
         }
-        for (int i = 0; i < DUN_QUARTZ_STREAMER; i++) {
-            placeStreamerRock(QUARTZ_WALL, DUN_QUARTZ_TREASURE);
+        for (int i = 0; i < DUNGEON_QUARTZ_STREAMER; i++) {
+            placeStreamerRock(QUARTZ_WALL, DUNGEON_QUARTZ_TREASURE);
         }
 
         placeBoundaryWalls();
@@ -595,8 +594,8 @@ public class Dungeon {
                 stop_flag = true;
             }
 
-            if (RNG.get().randomNumber(100) > DUN_DIR_CHANGE) {
-                if (RNG.get().randomNumber(DUN_RANDOM_DIR) == 1) {
+            if (RNG.get().randomNumber(100) > DUNGEON_DIR_CHANGE) {
+                if (RNG.get().randomNumber(DUNGEON_RANDOM_DIR) == 1) {
                     chanceOfRandomDirection(direction);
                 } else {
                     pickCorrectDirection(direction, start, end);
@@ -607,7 +606,7 @@ public class Dungeon {
             int tmp_col = start.x + direction.x;
 
             while (!coordInBounds(new Point(tmp_col, tmp_row))) {
-                if (RNG.get().randomNumber(DUN_RANDOM_DIR) == 1) {
+                if (RNG.get().randomNumber(DUNGEON_RANDOM_DIR) == 1) {
                     chanceOfRandomDirection(direction);
                 } else {
                     pickCorrectDirection(direction, start, end);
@@ -658,7 +657,7 @@ public class Dungeon {
                     door_flag = true;
                 }
 
-                if (RNG.get().randomNumber(100) > DUN_TUNNELING) {
+                if (RNG.get().randomNumber(100) > DUNGEON_TUNNELING) {
                     // make sure that tunnel has gone a reasonable distance before stopping it, this helps prevent isolated rooms
                     tmp_row = start.y - start_row;
                     if (tmp_row < 0) {
@@ -688,7 +687,7 @@ public class Dungeon {
 
         for (Point wall : walls) {
             if (this.floor[wall.y][wall.x] == TMP2_WALL) {
-                if (RNG.get().randomNumber(100) < DUN_ROOM_DOORS) {
+                if (RNG.get().randomNumber(100) < DUNGEON_ROOM_DOORS) {
                     Direction doorDirection = isNextTo(wall);
                     if (doorDirection != null) {
                         placeDoor(wall, doorDirection);
@@ -868,11 +867,11 @@ public class Dungeon {
         Direction direction = Direction.random();
 
         // Place streamer into dungeon
-        int t1 = 2 * DUN_STREAMER_WIDTH + 1; // Constants
-        int t2 = DUN_STREAMER_WIDTH + 1;
+        int t1 = 2 * DUNGEON_STREAMER_WIDTH + 1; // Constants
+        int t2 = DUNGEON_STREAMER_WIDTH + 1;
 
         do {
-            for (int i = 0; i < DUN_STREAMER_DENSITY; i++) {
+            for (int i = 0; i < DUNGEON_STREAMER_DENSITY; i++) {
                 Point spot = new Point(
                         coord.x + RNG.get().randomNumber(t1) - t2,
                         coord.y + RNG.get().randomNumber(t1) - t2);
@@ -947,7 +946,7 @@ public class Dungeon {
 
     // Places door at y, x position if at least 2 walls found
     private void placeDoorIfNextToTwoWalls(Point coord) {
-        if (this.floor[coord.y][coord.x] == CORRIDOR_FLOOR && RNG.get().randomNumber(100) > DUN_TUNNEL_DOORS) {
+        if (this.floor[coord.y][coord.x] == CORRIDOR_FLOOR && RNG.get().randomNumber(100) > DUNGEON_TUNNEL_DOORS) {
             Direction direction = isNextTo(coord);
             if (direction != null) {
                 placeDoor(coord, direction);
@@ -1436,6 +1435,10 @@ public class Dungeon {
         return false;
     }
 
+    public void initAStar() {
+        astar = new AStar(this);
+    }
+
     public int getLevel() {
         return level;
     }
@@ -1530,8 +1533,44 @@ public class Dungeon {
         return discoveredTiles;
     }
 
+    public void setDiscoveredTiles(Tile[][] discoveredTiles) {
+        this.discoveredTiles = discoveredTiles;
+    }
+
+    public ArrayList<Door> getDoors() {
+        return doors;
+    }
+
+    public void setDoors(ArrayList<Door> doors) {
+        this.doors = doors;
+    }
+
     public ArrayList<Monster> getMonsters() {
         return monsters;
+    }
+
+    public void setMonsters(ArrayList<Monster> monsters) {
+        this.monsters = monsters;
+    }
+
+    public HashMap<Point, Entity> getEntities() {
+        return entities;
+    }
+
+    public void setEntities(HashMap<Point, Entity> entities) {
+        this.entities = entities;
+    }
+
+    public void setItems(ArrayList<AbstractItem> items) {
+        this.items = items;
+    }
+
+    public void setSpawnUpStairs(Point spawnUpStairs) {
+        this.spawnUpStairs = spawnUpStairs;
+    }
+
+    public void setSpawnDownStairs(Point spawnDownStairs) {
+        this.spawnDownStairs = spawnDownStairs;
     }
 
 }

@@ -15,6 +15,8 @@ import static com.guillot.moria.ressources.Images.ELF;
 
 public class Elf extends AbstractCharacter {
 
+    private static final long serialVersionUID = 7444641645182321993L;
+
     public Elf(String name) {
         super(name, ELF);
 

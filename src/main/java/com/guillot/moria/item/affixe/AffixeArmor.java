@@ -14,6 +14,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeArmor extends AbstractAffixe {
 
+    private static final long serialVersionUID = 2237632435463107411L;
+
     public AffixeArmor() {
         name = "+%d to Armor";
         type = NORMAL;

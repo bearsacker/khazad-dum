@@ -22,6 +22,8 @@ import com.guillot.moria.item.ItemType;
 
 public class Monster extends AbstractCharacter {
 
+    private static final long serialVersionUID = 5134782804305371108L;
+
     private MonsterRace race;
 
     private boolean sleeping;

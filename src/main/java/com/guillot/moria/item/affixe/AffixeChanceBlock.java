@@ -18,6 +18,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeChanceBlock extends AbstractAffixe {
 
+    private static final long serialVersionUID = 5245446279633960212L;
+
     public AffixeChanceBlock() {
         name = "+%d%% to Chance to block";
         type = NORMAL;

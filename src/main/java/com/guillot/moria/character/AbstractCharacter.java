@@ -6,6 +6,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,9 @@ import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
-public abstract class AbstractCharacter {
+public abstract class AbstractCharacter implements Serializable {
+
+    private static final long serialVersionUID = 3072634065144460631L;
 
     protected String name;
 
@@ -153,6 +156,7 @@ public abstract class AbstractCharacter {
         fireDamage = 0;
         frostDamage = 0;
         lightningDamage = 0;
+        armor = 0;
 
         physicalDamage = 0;
         inventoryLimit = 0;

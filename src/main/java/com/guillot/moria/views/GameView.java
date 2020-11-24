@@ -9,6 +9,7 @@ import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
+import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.KEY_M;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
@@ -32,6 +33,7 @@ import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.DoorDialog;
+import com.guillot.moria.component.EscapeDialog;
 import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.component.MapDialog;
 import com.guillot.moria.component.SmallCharacterDialog;
@@ -64,6 +66,8 @@ public class GameView extends View {
 
     // Components
 
+    private EscapeDialog escapeDialog;
+
     private InventoryDialog inventoryDialog;
 
     private CharacterDialog characterDialog;
@@ -82,13 +86,15 @@ public class GameView extends View {
 
     private ProgressBar xpBar;
 
+    public GameView(GameState game) {
+        this.game = game;
+    }
+
     @Override
     public void start() throws Exception {
-        game = new GameState();
-        game.init();
-
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
+        escapeDialog = new EscapeDialog(this, game);
         inventoryDialog = new InventoryDialog(this, getPlayer());
         characterDialog = new CharacterDialog(this, getPlayer());
         smallCharacterDialog = new SmallCharacterDialog(this);
@@ -107,7 +113,8 @@ public class GameView extends View {
         xpBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
         xpBar.setValueColor(new Color(223, 207, 134));
 
-        add(console, cursorTextBox, lifeBar, xpBar, inventoryDialog, characterDialog, doorDialog, mapDialog, smallCharacterDialog);
+        add(console, cursorTextBox, lifeBar, xpBar, escapeDialog, inventoryDialog, characterDialog, doorDialog, mapDialog,
+                smallCharacterDialog);
     }
 
     @Override
@@ -261,19 +268,29 @@ public class GameView extends View {
         if (GUI.get().isKeyPressed(KEY_I)) {
             characterDialog.setVisible(false);
             mapDialog.setVisible(false);
+            escapeDialog.setVisible(false);
             inventoryDialog.toggleVisible();
         }
 
         if (GUI.get().isKeyPressed(KEY_C)) {
             inventoryDialog.setVisible(false);
             mapDialog.setVisible(false);
+            escapeDialog.setVisible(false);
             characterDialog.toggleVisible();
         }
 
         if (GUI.get().isKeyPressed(KEY_M)) {
             inventoryDialog.setVisible(false);
             characterDialog.setVisible(false);
+            escapeDialog.setVisible(false);
             mapDialog.toggleVisible();
+        }
+
+        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
+            inventoryDialog.setVisible(false);
+            characterDialog.setVisible(false);
+            mapDialog.setVisible(false);
+            escapeDialog.toggleVisible();
         }
     }
 

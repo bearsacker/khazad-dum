@@ -15,6 +15,8 @@ import static com.guillot.moria.ressources.Images.DWARF;
 
 public class Dwarf extends AbstractCharacter {
 
+    private static final long serialVersionUID = 6304139810858513921L;
+
     public Dwarf(String name) {
         super(name, DWARF);
 

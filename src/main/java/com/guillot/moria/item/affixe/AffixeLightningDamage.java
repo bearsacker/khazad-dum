@@ -14,6 +14,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeLightningDamage extends AbstractAffixe {
 
+    private static final long serialVersionUID = -4240117615749327408L;
+
     public AffixeLightningDamage() {
         name = "+%d to Lightning Damage";
         type = NORMAL;

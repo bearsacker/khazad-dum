@@ -14,6 +14,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeChanceDodge extends AbstractAffixe {
 
+    private static final long serialVersionUID = -554681734521595596L;
+
     public AffixeChanceDodge() {
         name = "+%d%% to Chance to dodge";
         type = RARE;

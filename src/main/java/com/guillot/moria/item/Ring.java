@@ -2,14 +2,16 @@ package com.guillot.moria.item;
 
 import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.item.ItemType.RING;
-import static com.guillot.moria.ressources.Images.ITEMS;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.ressources.Images;
 
 public class Ring extends AbstractItem implements Equipable {
+
+    private static final long serialVersionUID = -6474860957858264849L;
 
     public Ring() {
         type = RING;
@@ -17,7 +19,7 @@ public class Ring extends AbstractItem implements Equipable {
 
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
-        return Arrays.asList(new ItemRepresentation("Ring", 1, 0, 0, 0, ITEMS.getSubImage(2, 2)));
+        return Arrays.asList(new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING));
     }
 
     @Override

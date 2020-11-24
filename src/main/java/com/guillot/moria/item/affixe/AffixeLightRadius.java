@@ -6,6 +6,8 @@ import com.guillot.moria.character.AbstractCharacter;
 
 public class AffixeLightRadius extends AbstractAffixe {
 
+    private static final long serialVersionUID = -1018255241631544465L;
+
     public AffixeLightRadius() {
         name = "+%dm to Light Radius";
         type = RARE;

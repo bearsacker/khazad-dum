@@ -15,6 +15,8 @@ import com.guillot.moria.item.ItemType;
 
 public class AffixeChanceMagicFind extends AbstractAffixe {
 
+    private static final long serialVersionUID = 2815321090989489537L;
+
     public AffixeChanceMagicFind() {
         name = "+%d%% to chance to find a magic object";
         type = RARE;
