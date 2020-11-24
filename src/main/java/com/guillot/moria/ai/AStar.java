@@ -252,10 +252,11 @@ public class AStar {
 
         if ((!invalid) && ((sx != x) || (sy != y))) {
             if (allowObstacle) {
-                invalid = map.getFloor()[x][y] == NULL
+                invalid = map.getFloor()[x][y] == NULL || map.getEntityAt(new Point(x, y).inverseXY()) != null
                         || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs || isOpenDoor(x, y));
             } else {
-                invalid = map.getFloor()[x][y] == NULL || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs)
+                invalid = map.getFloor()[x][y] == NULL || map.getEntityAt(new Point(x, y).inverseXY()) != null
+                        || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs)
                         || map.getMonsterAt(new Point(x, y).inverseXY()) != null;
             }
 
@@ -265,7 +266,7 @@ public class AStar {
     }
 
     protected boolean isOpenDoor(int x, int y) {
-        Door door = map.getDoorAt(new Point(x, y));
+        Door door = map.getDoorAt(new Point(x, y).inverseXY());
         return door != null && door.getState() == DoorState.OPEN;
     }
 }

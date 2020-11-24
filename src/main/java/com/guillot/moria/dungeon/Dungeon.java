@@ -38,7 +38,6 @@ import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.GRANITE_WALL;
 import static com.guillot.moria.dungeon.Tile.MAGMA_WALL;
 import static com.guillot.moria.dungeon.Tile.NULL;
-import static com.guillot.moria.dungeon.Tile.PILLAR;
 import static com.guillot.moria.dungeon.Tile.QUARTZ_WALL;
 import static com.guillot.moria.dungeon.Tile.ROOM_FLOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
@@ -51,6 +50,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import com.guillot.moria.ai.AStar;
@@ -81,6 +81,8 @@ public class Dungeon {
 
     private ArrayList<Monster> monsters;
 
+    private HashMap<Point, Entity> entities;
+
     private AStar astar;
 
     private Point spawnUpStairs;
@@ -103,6 +105,7 @@ public class Dungeon {
         doors = new ArrayList<>();
         items = new ArrayList<>();
         monsters = new ArrayList<>();
+        entities = new HashMap<>();
         astar = new AStar(this);
     }
 
@@ -121,6 +124,7 @@ public class Dungeon {
         doors.clear();
         items.clear();
         monsters.clear();
+        entities.clear();
         astar = new AStar(this);
 
         // Room initialization
@@ -517,14 +521,14 @@ public class Dungeon {
         case 3:
             System.out.println("Building room cross shaped at " + coord + "...");
             if (RNG.get().randomNumber(3) == 1) {
-                this.floor[coord.y - 1][coord.x - 2] = PILLAR;
-                this.floor[coord.y + 1][coord.x - 2] = PILLAR;
-                this.floor[coord.y - 1][coord.x + 2] = PILLAR;
-                this.floor[coord.y + 1][coord.x + 2] = PILLAR;
-                this.floor[coord.y - 2][coord.x - 1] = PILLAR;
-                this.floor[coord.y - 2][coord.x + 1] = PILLAR;
-                this.floor[coord.y + 2][coord.x - 1] = PILLAR;
-                this.floor[coord.y + 2][coord.x + 1] = PILLAR;
+                entities.put(new Point(coord.x - 2, coord.y - 1), Entity.PILLAR);
+                entities.put(new Point(coord.x - 2, coord.y + 1), Entity.PILLAR);
+                entities.put(new Point(coord.x + 2, coord.y - 1), Entity.PILLAR);
+                entities.put(new Point(coord.x + 2, coord.y + 1), Entity.PILLAR);
+                entities.put(new Point(coord.x - 1, coord.y - 2), Entity.PILLAR);
+                entities.put(new Point(coord.x + 1, coord.y - 2), Entity.PILLAR);
+                entities.put(new Point(coord.x - 1, coord.y + 2), Entity.PILLAR);
+                entities.put(new Point(coord.x + 1, coord.y + 2), Entity.PILLAR);
             } else if (RNG.get().randomNumber(3) == 1) {
                 this.floor[coord.y][coord.x] = TMP1_WALL;
                 this.floor[coord.y - 1][coord.x] = TMP1_WALL;
@@ -713,13 +717,13 @@ public class Dungeon {
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 5 - offset; x <= coord.x - 3 - offset; x++) {
-                this.floor[y][x] = RNG.get().randomNumber(4) == 1 ? Tile.RUBBLE : PILLAR;
+                entities.put(new Point(x, y), RNG.get().randomNumber(4) == 1 ? Entity.RUBBLE : Entity.PILLAR);
             }
         }
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x + 3 + offset; x <= coord.x + 5 + offset; x++) {
-                this.floor[y][x] = RNG.get().randomNumber(4) == 1 ? Tile.RUBBLE : PILLAR;
+                entities.put(new Point(x, y), RNG.get().randomNumber(4) == 1 ? Entity.RUBBLE : Entity.PILLAR);
             }
         }
     }
@@ -727,11 +731,11 @@ public class Dungeon {
     private void placeLargeMiddlePillar(Point coord) {
         System.out.println("\t-> Placing large middle pillar at " + coord + "...");
 
-        this.floor[coord.y - 1][coord.x] = PILLAR;
-        this.floor[coord.y + 1][coord.x] = PILLAR;
-        this.floor[coord.y][coord.x] = MAGMA_WALL;
-        this.floor[coord.y][coord.x + 1] = PILLAR;
-        this.floor[coord.y][coord.x - 1] = PILLAR;
+        entities.put(new Point(coord.x, coord.y - 1), Entity.PILLAR);
+        entities.put(new Point(coord.x, coord.y + 1), Entity.PILLAR);
+        floor[coord.y][coord.x] = MAGMA_WALL;
+        entities.put(new Point(coord.x + 1, coord.y), Entity.PILLAR);
+        entities.put(new Point(coord.x - 1, coord.y), Entity.PILLAR);
     }
 
     private void placeDoor(Point coord, Direction direction) {
@@ -754,7 +758,7 @@ public class Dungeon {
 
     private void placeOpenDoor(Point coord, Direction direction) {
         System.out.println("\t-> Placing open door at " + coord + "...");
-        this.floor[coord.y][coord.x] = GRANITE_WALL;
+        floor[coord.y][coord.x] = GRANITE_WALL;
 
         doors.add(new Door(coord, DoorState.OPEN, direction));
     }
@@ -820,7 +824,7 @@ public class Dungeon {
         for (int y = height; y <= depth; y += 2) {
             for (int x = left; x <= right; x += 2) {
                 if ((0x1 & (x + y)) != 0) {
-                    this.floor[y][x] = RNG.get().randomNumber(4) == 1 ? Tile.RUBBLE : PILLAR;
+                    entities.put(new Point(x, y), RNG.get().randomNumber(4) == 1 ? Entity.RUBBLE : Entity.PILLAR);
                 }
             }
         }
@@ -938,7 +942,7 @@ public class Dungeon {
     // Places rubble at location y, x
     private void placeRubble(Point coord) {
         System.out.println("\t-> Placing rubble at " + coord + "...");
-        this.floor[coord.y][coord.x] = Tile.RUBBLE;
+        entities.put(new Point(coord.x, coord.y), Entity.RUBBLE);
     }
 
     // Places door at y, x position if at least 2 walls found
@@ -1494,6 +1498,10 @@ public class Dungeon {
 
     public Door getDoorAt(Point coord) {
         return doors.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
+    }
+
+    public Entity getEntityAt(Point coord) {
+        return entities.get(coord);
     }
 
     public Path findPath(Point start, Point end, int maxSearchDistance) {

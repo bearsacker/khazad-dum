@@ -4,5 +4,4 @@ UI
 Menu
 Class choice
 
-Objects on grounds (rubble)
 Traps  

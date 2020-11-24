@@ -6,8 +6,6 @@ import static com.guillot.moria.dungeon.Direction.NORTH;
 import static com.guillot.moria.dungeon.Direction.SOUTH;
 import static com.guillot.moria.dungeon.Direction.WEST;
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
-import static com.guillot.moria.dungeon.Tile.PILLAR;
-import static com.guillot.moria.dungeon.Tile.RUBBLE;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
@@ -41,6 +39,7 @@ import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
+import com.guillot.moria.dungeon.Entity;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Images;
@@ -306,7 +305,8 @@ public class GameView extends View {
                         }
                     }
 
-                    drawTile(tile, i, j, alternate, door);
+                    Entity entity = getDungeon().getEntityAt(new Point(j, i));
+                    drawTile(tile, i, j, alternate, door, entity);
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(image, getPlayer().getPosition()));
 
@@ -337,7 +337,8 @@ public class GameView extends View {
                         }
                     }
 
-                    drawShadowedTile(getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door);
+                    Entity entity = getDungeon().getEntityAt(new Point(j, i));
+                    drawShadowedTile(getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, entity);
                 }
             }
         }
@@ -367,7 +368,7 @@ public class GameView extends View {
             Tile dungeonTile = getDungeon().getFloor()[position.y][position.x];
             grid[position.y][position.x] = dungeonTile;
 
-            if (dungeonTile.isFloor || dungeonTile == RUBBLE || dungeonTile == PILLAR || dungeonTile.isStairs) {
+            if (dungeonTile.isFloor || dungeonTile.isStairs) {
                 computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1);
                 computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y), length + 1);
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1);
@@ -376,7 +377,7 @@ public class GameView extends View {
         }
     }
 
-    private void drawShadowedTile(Tile tile, int px, int py, boolean alternate, Door door) {
+    private void drawShadowedTile(Tile tile, int px, int py, boolean alternate, Door door, Entity entity) {
         int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
@@ -394,10 +395,14 @@ public class GameView extends View {
                     image.drawImage(Images.DOOR.getSubImage(0, 0), x, y, Color.gray);
                 }
             }
+
+            if (entity != null) {
+                image.drawImage(entity.getImage(), x, y, Color.gray);
+            }
         }
     }
 
-    private void drawTile(Tile tile, int px, int py, boolean alternate, Door door) {
+    private void drawTile(Tile tile, int px, int py, boolean alternate, Door door, Entity entity) {
         int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
@@ -414,6 +419,10 @@ public class GameView extends View {
                 } else if (door.getDirection() == Direction.WEST) {
                     image.drawImage(new Point(px, py), Images.DOOR.getSubImage(0, 0), x, y);
                 }
+            }
+
+            if (entity != null) {
+                image.drawImage(entity.getImage(), x, y);
             }
         }
     }

@@ -10,8 +10,6 @@ public enum Tile {
     TMP2_WALL(null, false, true), //
     ROOM_FLOOR(Images.ROOM_FLOOR.getImage(), true), //
     CORRIDOR_FLOOR(Images.CORRIDOR_FLOOR.getImage(), true), //
-    RUBBLE(Images.RUBBLE.getImage(), false, true), //
-    PILLAR(Images.PILLAR.getImage(), false, true), //
     GRANITE_WALL(Images.GRANITE_WALL.getImage(), false, true), //
     MAGMA_WALL(Images.MAGMA_WALL.getImage(), false, true), //
     QUARTZ_WALL(Images.QUARTZ_WALL.getImage(), false, true), //

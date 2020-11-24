@@ -13,6 +13,7 @@ import org.newdawn.slick.Graphics;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.SubView;
 import com.guillot.moria.dungeon.Door;
+import com.guillot.moria.dungeon.Entity;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.views.GameState;
@@ -86,16 +87,12 @@ public class MapDialog extends SubView {
 
                 if (tile != null) {
                     switch (tile) {
-                    case RUBBLE:
-                        g.setColor(BLOCKED_COLOR);
-                        break;
                     case UP_STAIR:
                     case DOWN_STAIR:
                         g.setColor(STAIRS_COLOR);
                         break;
                     case GRANITE_WALL:
                     case MAGMA_WALL:
-                    case PILLAR:
                     case QUARTZ_WALL:
                     case TMP1_WALL:
                     case TMP2_WALL:
@@ -122,6 +119,16 @@ public class MapDialog extends SubView {
                             g.setColor(BLOCKED_COLOR);
                             break;
                         default:
+                            break;
+                        }
+                    }
+
+                    Entity entity = game.getDungeon().getEntityAt(new Point(j, i));
+                    if (entity != null) {
+                        switch (entity) {
+                        case PILLAR:
+                        case RUBBLE:
+                            g.setColor(BLOCKED_COLOR);
                             break;
                         }
                     }
