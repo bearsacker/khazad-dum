@@ -8,6 +8,7 @@ import com.guillot.engine.Game;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Human;
 import com.guillot.moria.dungeon.Dungeon;
+import com.guillot.moria.save.SaveManager;
 import com.guillot.moria.utils.RNG;
 
 public class GameState {

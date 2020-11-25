@@ -106,6 +106,12 @@ public final class GUIConfig extends Config {
 
     public final static int TEXTFIELD_PADDING = get().getInt("gui.textfield.padding", 10);
 
+    // Link Button
+
+    public final static Color LINK_BUTTON_TEXT_COLOR = toColor(get().getString("gui.link-button.text-color", "128,128,128,255"));
+
+    public final static Color LINK_BUTTON_TEXT_HOVER_COLOR = toColor(get().getString("gui.link-button.text-hover-color", "0,0,0,255"));
+
     private GUIConfig(String file) {
         super(file);
     }

@@ -1,12 +1,12 @@
 package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.GUIConfig.BUTTON_BORDER;
-import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_PADDING;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE_SIZE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_TEXT_COLOR;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_TEXT_HOVER_COLOR;
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
 import static com.guillot.engine.configs.GUIConfig.COMPONENT_FILTER_COLOR;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
@@ -28,8 +28,6 @@ public class Button extends Component {
 
     private Color colorHover;
 
-    private boolean drawSprite;
-
     private TrueTypeFont font;
 
     private boolean enabled;
@@ -47,7 +45,6 @@ public class Button extends Component {
         this.color = new Color(BUTTON_TEXT_COLOR);
         this.colorHover = new Color(BUTTON_TEXT_HOVER_COLOR);
         this.enabled = true;
-        this.drawSprite = true;
         this.font = GUI.get().getFont();
         this.width = width;
         this.height = height;
@@ -119,14 +116,6 @@ public class Button extends Component {
         colorHover.a = opacity;
     }
 
-    public boolean isDrawSprite() {
-        return drawSprite;
-    }
-
-    public void setDrawSprite(boolean drawSprite) {
-        this.drawSprite = drawSprite;
-    }
-
     public TrueTypeFont getFont() {
         return font;
     }
@@ -151,16 +140,14 @@ public class Button extends Component {
         g.pushTransform();
         g.translate(x, y);
 
-        if (drawSprite) {
-            int frame = 0;
+        int frame = 0;
 
-            if (mouseOn && enabled && GUI.get().getInput().isMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-                frame = 1;
-            }
-
-            Image image = this.image.getSubImage(0, frame * BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE);
-            GUI.drawTiledImage(image, filter, width, height, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_BORDER);
+        if (mouseOn && enabled && GUI.get().getInput().isMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            frame = 1;
         }
+
+        Image image = this.image.getSubImage(0, frame * BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE);
+        GUI.drawTiledImage(image, filter, width, height, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_BORDER);
 
         int lineHeight = font.getLineHeight();
         int lineWidth = font.getWidth(text);

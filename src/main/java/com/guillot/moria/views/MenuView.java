@@ -1,26 +1,28 @@
 package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
-import static com.guillot.moria.views.SaveManager.SAVE_PATH;
+import static com.guillot.moria.save.SaveManager.SAVE_PATH;
+import static com.guillot.moria.save.SaveManager.isSaveFilePresent;
 
 import org.newdawn.slick.Graphics;
 
-import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
+import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
 
 public class MenuView extends View {
 
-    private Button newGameButton;
+    private LinkButton newGameButton;
 
-    private Button continueGameButton;
+    private LinkButton continueGameButton;
 
-    private Button quitButton;
+    private LinkButton quitButton;
 
     @Override
     public void start() throws Exception {
-        newGameButton = new Button("New game", 64, HEIGHT - 240, 288, 48);
+        newGameButton = new LinkButton("New game", 64, HEIGHT - 204, 256);
+        newGameButton.setFont(GUI.get().getFont(1));
         newGameButton.setEvent(new Event() {
 
             @Override
@@ -31,7 +33,8 @@ public class MenuView extends View {
             }
         });
 
-        continueGameButton = new Button("Continue game", 64, HEIGHT - 176, 288, 48);
+        continueGameButton = new LinkButton("Continue game", 64, HEIGHT - 164, 256);
+        continueGameButton.setFont(GUI.get().getFont(1));
         continueGameButton.setEvent(new Event() {
 
             @Override
@@ -42,7 +45,8 @@ public class MenuView extends View {
             }
         });
 
-        quitButton = new Button("Quit", 64, HEIGHT - 112, 288, 48);
+        quitButton = new LinkButton("Quit", 64, HEIGHT - 88, 256);
+        quitButton.setFont(GUI.get().getFont(1));
         quitButton.setEvent(new Event() {
 
             @Override
@@ -50,6 +54,8 @@ public class MenuView extends View {
                 GUI.get().close();
             }
         });
+
+        continueGameButton.setEnabled(isSaveFilePresent(SAVE_PATH));
 
         add(newGameButton, continueGameButton, quitButton);
     }
@@ -61,7 +67,6 @@ public class MenuView extends View {
 
     @Override
     public void paint(Graphics g) throws Exception {
-
         super.paint(g);
     }
 }
