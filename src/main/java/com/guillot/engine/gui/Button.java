@@ -1,6 +1,7 @@
 package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.GUIConfig.BUTTON_BORDER;
+import static com.guillot.engine.configs.GUIConfig.BUTTON_ICON_SIZE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_PADDING;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE_SIZE;
@@ -19,6 +20,10 @@ import org.newdawn.slick.TrueTypeFont;
 public class Button extends Component {
 
     private Image image;
+
+    private Image icon;
+
+    private Position iconAlignement;
 
     private String text;
 
@@ -128,6 +133,19 @@ public class Button extends Component {
         }
     }
 
+    public void clearIcon() {
+        icon = null;
+    }
+
+    public void setIcon(Image icon, Position alignement) {
+        this.icon = icon;
+        this.iconAlignement = alignement;
+    }
+
+    public void setIcon(Image icon) {
+        setIcon(icon, Position.LEFT);
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         float opacity = filter.a;
@@ -152,6 +170,27 @@ public class Button extends Component {
         int lineHeight = font.getLineHeight();
         int lineWidth = font.getWidth(text);
         font.drawString((width / 2) - (lineWidth / 2), (height / 2) - (lineHeight / 2), text, (mouseOn && enabled ? colorHover : color));
+
+        if (icon != null) {
+            int iconX = 8;
+            int iconY = (height - BUTTON_ICON_SIZE) / 2;
+
+            switch (iconAlignement) {
+            case CENTER:
+                iconX = width / 2 - icon.getWidth() / 2;
+                break;
+            case RIGHT:
+                iconX = width - 8 - icon.getWidth();
+                break;
+            case LEFT:
+            case BOTTOM:
+            case TOP:
+                break;
+            }
+
+            g.drawImage(icon, iconX, iconY, iconX + BUTTON_ICON_SIZE, iconY + BUTTON_ICON_SIZE, 0, 0, icon.getWidth(), icon.getHeight(),
+                    enabled ? filter : COMPONENT_DISABLED_FILTER);
+        }
 
         g.popTransform();
     }

@@ -2,7 +2,6 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.COMPONENT_DISABLED_FILTER;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import org.newdawn.slick.Graphics;
@@ -39,6 +38,7 @@ public class DoorDialog extends Window {
         this.player = player;
 
         buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, y + 96, 288, 48);
+        buttonUseKey.setIcon(Images.KEY.getImage());
         buttonUseKey.setEvent(new Event() {
 
             @Override
@@ -48,6 +48,7 @@ public class DoorDialog extends Window {
         });
 
         buttonPickingLock = new Button("Pick the lock", WIDTH / 2 - 144, y + 160, 288, 48);
+        buttonPickingLock.setIcon(Images.DICE.getImage());
         buttonPickingLock.setEvent(new Event() {
 
             @Override
@@ -91,12 +92,6 @@ public class DoorDialog extends Window {
 
         buttonUseKey.paint(g);
         buttonPickingLock.paint(g);
-
-        g.drawImage(Images.KEY.getImage(), buttonUseKey.getX() + 8, buttonUseKey.getY() + 6, buttonUseKey.getX() + 40,
-                buttonUseKey.getY() + 38, 0, 0, 16, 16, buttonUseKey.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);
-        g.drawImage(Images.DICE.getImage(), buttonPickingLock.getX() + 8, buttonPickingLock.getY() + 6,
-                buttonPickingLock.getX() + 40, buttonPickingLock.getY() + 38, 0, 0, 16, 16,
-                buttonPickingLock.isEnabled() ? filter : COMPONENT_DISABLED_FILTER);
     }
 
     public void setDoor(Door door) {
