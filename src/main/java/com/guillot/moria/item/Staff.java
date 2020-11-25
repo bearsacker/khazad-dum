@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.item.affixe.AbstractAffixe;
+import com.guillot.moria.item.affixe.AffixeFireDamage;
+import com.guillot.moria.item.affixe.AffixeFrostDamage;
+import com.guillot.moria.item.affixe.AffixeLightningDamage;
 import com.guillot.moria.ressources.Images;
 
 public class Staff extends AbstractItem implements Equipable {
@@ -45,5 +49,17 @@ public class Staff extends AbstractItem implements Equipable {
     public void equip(AbstractCharacter character) {
         character.setDamages(character.getDamages() + value);
         setAffixesPassiveEffects(character);
+    }
+
+    @Override
+    public boolean isEligible() {
+        int numberAffixesDamage = 0;
+        for (AbstractAffixe affixe : affixes) {
+            if (affixe instanceof AffixeFireDamage || affixe instanceof AffixeFrostDamage || affixe instanceof AffixeLightningDamage) {
+                numberAffixesDamage++;
+            }
+        }
+
+        return super.isEligible() && numberAffixesDamage <= 1;
     }
 }

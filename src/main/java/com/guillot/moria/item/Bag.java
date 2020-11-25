@@ -38,8 +38,12 @@ public class Bag extends AbstractItem implements Usable {
 
     @Override
     public boolean use(AbstractCharacter character) {
-        AbstractItem item = ItemGenerator.generateItem(character.getChanceMagicFind(), character.getLevel() + RNG.get().randomNumber(5));
-        if (item != null && character.dropItem(this)) {
+        AbstractItem item = null;
+        do {
+            item = ItemGenerator.generateItem(character.getChanceMagicFind(), character.getLevel() + RNG.get().randomNumber(5));
+        } while (item == null || item instanceof Bag);
+
+        if (character.dropItem(this)) {
             return character.pickUpItem(item);
         }
 
