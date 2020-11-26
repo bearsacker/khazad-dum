@@ -21,11 +21,14 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemBlock;
 import com.guillot.moria.item.Usable;
+import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
 public class InventoryDialog extends SubView {
 
     private GameView parent;
+
+    private GameState game;
 
     private AbstractCharacter player;
 
@@ -57,11 +60,12 @@ public class InventoryDialog extends SubView {
 
     private ItemBlockComponent itemBlockFinger;
 
-    public InventoryDialog(GameView parent, AbstractCharacter player) throws Exception {
+    public InventoryDialog(GameView parent, GameState game) throws Exception {
         super(parent);
 
         this.parent = parent;
-        this.player = player;
+        this.game = game;
+        this.player = game.getPlayer();
 
         buttonAction = new Button("Use", WIDTH - 336, 72, 224, 48);
         buttonAction.setEvent(new Event() {
@@ -202,7 +206,7 @@ public class InventoryDialog extends SubView {
             if (item instanceof Usable) {
                 if (((Usable) item).use(player)) {
                     player.getInventory().remove(item);
-                    parent.getConsole().addMessage(player.getName() + " uses " + item.getName());
+                    game.addMessage(player.getName() + " uses " + item.getName());
                     selectedItem = null;
                     hoveredItem = null;
                 }
@@ -220,7 +224,7 @@ public class InventoryDialog extends SubView {
         if (player.dropItem(parent.getDungeon(), item)) {
             player.unequipItem(item);
 
-            parent.getConsole().addMessage(player.getName() + " drops " + item.getName());
+            game.addMessage(player.getName() + " drops " + item.getName());
             selectedItem = null;
             hoveredItem = null;
         }

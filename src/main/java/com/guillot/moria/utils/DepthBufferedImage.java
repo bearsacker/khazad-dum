@@ -25,24 +25,30 @@ public class DepthBufferedImage {
     }
 
     public void drawImage(Image image, float x, float y) {
-        graphics.drawImage(image, x, y);
+        drawImage(null, image, x, y, Color.white);
     }
 
     public void drawImage(Image image, float x, float y, Color filter) {
-        graphics.drawImage(image, x, y, filter);
+        drawImage(null, image, x, y, filter);
     }
 
     public void drawImage(Object object, Image image, float x, float y) {
-        graphics.drawImage(image, x, y);
+        drawImage(object, image, x, y, Color.white);
+    }
 
-        for (int i = 0; i < image.getWidth(); i++) {
-            for (int j = 0; j < image.getHeight(); j++) {
-                if (image.getColor(i, j).a == 1f) {
-                    int bufferX = (int) (x + i);
-                    int bufferY = (int) (y + j);
+    public void drawImage(Object object, Image image, float x, float y, Color filter) {
+        graphics.drawImage(image, x, y, filter);
 
-                    if (bufferX >= 0 && bufferY >= 0 && bufferX < getWidth() && bufferY < getHeight()) {
-                        depthBuffer[bufferX][bufferY] = object;
+        if (object != null) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                for (int j = 0; j < image.getHeight(); j++) {
+                    if (image.getColor(i, j).a == 1f) {
+                        int bufferX = (int) (x + i);
+                        int bufferY = (int) (y + j);
+
+                        if (bufferX >= 0 && bufferY >= 0 && bufferX < getWidth() && bufferY < getHeight()) {
+                            depthBuffer[bufferX][bufferY] = object;
+                        }
                     }
                 }
             }

@@ -13,6 +13,7 @@ import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
 public class CharacterDialog extends Window {
@@ -31,10 +32,10 @@ public class CharacterDialog extends Window {
 
     private Button increaseDestinyButton;
 
-    public CharacterDialog(GameView parent, AbstractCharacter player) throws Exception {
+    public CharacterDialog(GameView parent, GameState game) throws Exception {
         super(parent, 128, 96, WIDTH - 256, 0);
 
-        this.player = player;
+        this.player = game.getPlayer();
 
         characterTextBox = new TextBox();
         characterTextBox.setDrawBox(false);

@@ -1,6 +1,6 @@
 package com.guillot.moria.save;
 
-import static com.guillot.moria.configs.DungeonConfig.DUNGEON_GENERATOR_VERSION;
+import static com.guillot.moria.configs.DungeonConfig.DUNGEON_VERSION;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,13 +10,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import com.guillot.engine.utils.LinkedNonBlockingQueue;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.views.GameState;
+import com.guillot.moria.views.Turn;
 
 public class SaveManager {
 
-    public final static String SAVE_PATH = "game.sav";
+    public final static String SAVE_PATH = "game.dat";
 
     public static boolean isSaveFilePresent(String path) {
         return new File(path).exists();
@@ -26,9 +28,11 @@ public class SaveManager {
         FileOutputStream fos = new FileOutputStream(path);
         ObjectOutputStream stream = new ObjectOutputStream(fos);
 
-        stream.writeInt(DUNGEON_GENERATOR_VERSION);
+        stream.writeInt(DUNGEON_VERSION);
         stream.writeInt(game.getCurrentLevel());
+        stream.writeObject(game.getTurn());
         stream.writeObject(game.getPlayer());
+        stream.writeObject(game.getMessages());
         stream.writeInt(game.getLevels().size());
         for (Dungeon dungeon : game.getLevels()) {
             DungeonEncoder.encode(stream, dungeon);
@@ -38,15 +42,18 @@ public class SaveManager {
         fos.close();
     }
 
+    @SuppressWarnings("unchecked")
     public static void loadSaveFile(GameState game, String path) throws IOException, ClassNotFoundException {
         File file = new File(path);
         FileInputStream fis = new FileInputStream(file);
         ObjectInputStream stream = new ObjectInputStream(fis);
 
         int version = stream.readInt();
-        if (version == DUNGEON_GENERATOR_VERSION) {
+        if (version == DUNGEON_VERSION) {
             game.setCurrentLevel(stream.readInt());
+            game.setTurn((Turn) stream.readObject());
             game.setPlayer((AbstractCharacter) stream.readObject());
+            game.setMessages((LinkedNonBlockingQueue<String>) stream.readObject());
             game.setLevels(new ArrayList<>());
 
             int dungeonNumber = stream.readInt();

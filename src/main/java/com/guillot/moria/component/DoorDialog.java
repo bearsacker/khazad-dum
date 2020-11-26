@@ -17,13 +17,14 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.ItemType;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.RNG;
+import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
 public class DoorDialog extends Window {
 
-    private GameView parent;
-
     private Door door;
+
+    private GameState game;
 
     private AbstractCharacter player;
 
@@ -31,11 +32,11 @@ public class DoorDialog extends Window {
 
     private Button buttonPickingLock;
 
-    public DoorDialog(GameView parent, AbstractCharacter player) throws Exception {
+    public DoorDialog(GameView parent, GameState game) throws Exception {
         super(parent, 256, 224, WIDTH - 512, HEIGHT - 448, "The door is locked!");
 
-        this.parent = parent;
-        this.player = player;
+        this.game = game;
+        this.player = game.getPlayer();
 
         buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, y + 96, 288, 48);
         buttonUseKey.setIcon(Images.KEY.getImage());
@@ -88,8 +89,6 @@ public class DoorDialog extends Window {
     public void paint(Graphics g) {
         super.paint(g);
 
-        parent.getConsole().paint(g);
-
         buttonUseKey.paint(g);
         buttonPickingLock.paint(g);
     }
@@ -104,7 +103,7 @@ public class DoorDialog extends Window {
 
         door.setState(DoorState.OPEN);
         player.setPosition(door.getDirectionPosition(player.getPosition()));
-        parent.getConsole().addMessage(player.getName() + " uses a key to unlock the door!");
+        game.addMessage(player.getName() + " uses a key to unlock the door!");
         setVisible(false);
     }
 
@@ -113,16 +112,16 @@ public class DoorDialog extends Window {
         if (dice <= player.getChanceLockPicking()) {
             door.setState(DoorState.OPEN);
             player.setPosition(door.getDirectionPosition(player.getPosition()));
-            parent.getConsole().addMessage("The door has been unlocked!");
+            game.addMessage("The door has been unlocked!");
             setVisible(false);
         } else if (dice >= 90) {
             door.setPicked(true);
             door.setState(DoorState.STUCK);
-            parent.getConsole().addMessage("The lockpick failed... The door is now stuck");
+            game.addMessage("The lockpick failed... The door is now stuck");
             setVisible(false);
         } else {
             door.setPicked(true);
-            parent.getConsole().addMessage("The lockpick failed");
+            game.addMessage("The lockpick failed");
         }
     }
 }

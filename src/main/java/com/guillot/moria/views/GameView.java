@@ -1,11 +1,6 @@
 package com.guillot.moria.views;
 
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
-import static com.guillot.moria.dungeon.Direction.EAST;
-import static com.guillot.moria.dungeon.Direction.NORTH;
-import static com.guillot.moria.dungeon.Direction.SOUTH;
-import static com.guillot.moria.dungeon.Direction.WEST;
-import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
@@ -14,7 +9,6 @@ import static org.newdawn.slick.Input.KEY_I;
 import static org.newdawn.slick.Input.KEY_M;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,11 +18,10 @@ import org.newdawn.slick.Graphics;
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.ProgressBar;
+import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
-import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.character.Attack;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
@@ -50,6 +43,8 @@ import com.guillot.moria.utils.Point;
 
 public class GameView extends View {
 
+    private final static Color TURN_COLOR = new Color(223, 207, 134);
+
     public final static int SIZE = 64;
 
     private GameState game;
@@ -58,13 +53,11 @@ public class GameView extends View {
 
     private Point cursor;
 
-    private Path path;
-
-    private int currentStep;
-
     private long lastStep;
 
     // Components
+
+    private Text turnText;
 
     private EscapeDialog escapeDialog;
 
@@ -94,16 +87,16 @@ public class GameView extends View {
     public void start() throws Exception {
         image = new DepthBufferedImage(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
+        turnText = new Text("", 8, 8, GUI.get().getFont(2), TURN_COLOR);
+
         escapeDialog = new EscapeDialog(this, game);
-        inventoryDialog = new InventoryDialog(this, getPlayer());
-        characterDialog = new CharacterDialog(this, getPlayer());
+        inventoryDialog = new InventoryDialog(this, game);
+        characterDialog = new CharacterDialog(this, game);
         smallCharacterDialog = new SmallCharacterDialog(this);
-
-        doorDialog = new DoorDialog(this, getPlayer());
-
+        doorDialog = new DoorDialog(this, game);
         mapDialog = new MapDialog(this, game);
 
-        console = new Console(EngineConfig.WIDTH, 5);
+        console = new Console(EngineConfig.WIDTH, game.getMessages());
         console.setY(EngineConfig.HEIGHT - console.getHeight());
 
         cursorTextBox = new TextBox();
@@ -113,7 +106,7 @@ public class GameView extends View {
         xpBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
         xpBar.setValueColor(new Color(223, 207, 134));
 
-        add(console, cursorTextBox, lifeBar, xpBar, escapeDialog, inventoryDialog, characterDialog, doorDialog, mapDialog,
+        add(turnText, cursorTextBox, lifeBar, xpBar, doorDialog, console, escapeDialog, inventoryDialog, characterDialog, mapDialog,
                 smallCharacterDialog);
     }
 
@@ -128,63 +121,15 @@ public class GameView extends View {
         lifeBar.setValue(getPlayer().getCurrentLife() / (float) getPlayer().getLife());
         xpBar.setValue(getPlayer().getXp() / (float) LEVELING_LEVELS[getPlayer().getLevel() - 1]);
 
-        ArrayList<Monster> deadMonsters = new ArrayList<>();
-        getDungeon().getMonsters().stream()
-                .filter(x -> x.isDead())
-                .forEach(x -> {
-                    console.addMessage(x.getName() + " is dead!");
-                    x.dropEquipment(getDungeon());
-                    deadMonsters.add(x);
-
-                    int xp = x.getXPValue();
-                    console.addMessage(getPlayer().getName() + " earns " + x.getXPValue() + " xp.");
-                    int levelsGained = getPlayer().earnXP(xp);
-                    if (levelsGained > 0) {
-                        console.addMessage(getPlayer().getName() + " gains " + levelsGained + " levels!");
-                    }
-                });
-        getDungeon().getMonsters().removeAll(deadMonsters);
+        turnText.setText(game.getTurn() == Turn.PLAYER ? "Your turn" : "GameMaster's turn");
+        turnText.setX(EngineConfig.WIDTH / 2 - turnText.getWidth() / 2);
 
         long time = System.currentTimeMillis();
         if (time - lastStep > 50) {
-            if (path != null) {
-                Point newPosition = path.getStep(currentStep).inverseXY();
-                currentStep++;
-
-                if (getPlayer().getPosition().x - newPosition.x == 1) {
-                    getPlayer().setDirection(NORTH);
-                } else if (getPlayer().getPosition().x - newPosition.x == -1) {
-                    getPlayer().setDirection(SOUTH);
-                } else if (getPlayer().getPosition().y - newPosition.y == 1) {
-                    getPlayer().setDirection(WEST);
-                } else if (getPlayer().getPosition().y - newPosition.y == -1) {
-                    getPlayer().setDirection(EAST);
-                }
-                getPlayer().setPosition(newPosition);
-
-                if (currentStep > getPlayer().getMovement() || currentStep >= path.getLength()) {
-                    path = null;
-                }
-            } else {
-                Tile tile = getDungeon().getFloor()[getPlayer().getPosition().y][getPlayer().getPosition().x];
-                if (tile == UP_STAIR) {
-                    game.toGoUpstairs();
-                    console.addMessage(getPlayer().getName() + " comes back to level " + getDungeon().getLevel());
-                } else if (tile == DOWN_STAIR) {
-                    game.toGoDownstairs();
-                    console.addMessage(getPlayer().getName() + " goes to level " + getDungeon().getLevel());
-                } else {
-                    getDungeon().getItemsAt(getPlayer().getPosition()).forEach(x -> {
-                        if (getPlayer().pickUpItem(x)) {
-                            getDungeon().removeItem(x);
-                            console.addMessage(getPlayer().getName() + " picked up " + x.getName());
-                        }
-                    });
-                }
-            }
-
+            game.update();
             lastStep = time;
         }
+
         if (isFocused()) {
             Object cursorObject = image.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
             if (cursorObject != null) {
@@ -214,7 +159,7 @@ public class GameView extends View {
                                 break;
                             case SECRET:
                                 door.setState(DoorState.OPEN);
-                                console.addMessage(getPlayer().getName() + " discover a secret door !");
+                                game.addMessage(getPlayer().getName() + " discover a secret door !");
                             case OPEN:
                                 getPlayer().setPosition(door.getDirectionPosition(getPlayer().getPosition()));
                                 break;
@@ -222,31 +167,23 @@ public class GameView extends View {
                                 break;
                             }
                         } else {
-                            path = getDungeon().findPathNear(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
-                            currentStep = 0;
+                            getPlayer().setPath(
+                                    getDungeon().findPathNear(getPlayer().getPosition(), cursor.inverseXY(), getPlayer().getLightRadius()));
                         }
                     } else if (monster != null) {
                         if (getPlayer().getPosition().inverseXY().distanceFrom(cursor) == 1) {
-                            Attack attack = getPlayer().doAttack();
-                            if (attack == null) {
-                                console.addMessage(getPlayer().getName() + " misses his attack!");
-                            } else {
-                                console.addMessage((attack.isCritical() ? "WOW! " : "") + getPlayer().getName() + " inflicts "
-                                        + attack.getDamages() + " damages!");
-                                int damagesReceived = monster.takeAHit(attack);
-                                if (damagesReceived < 0) {
-                                    console.addMessage(monster.getName() + " dodges the attack!");
-                                } else {
-                                    console.addMessage(monster.getName() + " takes " + damagesReceived + " damages!");
-                                }
-                            }
+                            getPlayer().setTarget(monster);
                         } else {
-                            path = getDungeon().findPathNear(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
-                            currentStep = 0;
+                            getPlayer().setPath(
+                                    getDungeon().findPathNear(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius()));
                         }
                     } else {
-                        path = getDungeon().findPath(getPlayer().getPosition().inverseXY(), cursor, getPlayer().getLightRadius());
-                        currentStep = 0;
+                        getPlayer().setPath(
+                                getDungeon().findPath(getPlayer().getPosition(), cursor.inverseXY(), getPlayer().getLightRadius()));
+                    }
+
+                    if (getPlayer().isMoving() || getPlayer().getTarget() != null) {
+                        getPlayer().setActing(true);
                     }
                 }
 
@@ -312,18 +249,18 @@ public class GameView extends View {
                     Door door = getDungeon().getDoorAt(new Point(j, i));
                     if (grid[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
                         if (i + 1 < getDungeon().getHeight() && grid[i + 1][j] != null
-                                && (grid[i + 1][j].isFloor || isDoor(new Point(j, i + 1)))) {
+                                && (grid[i + 1][j].isFloor || getDungeon().isVisibleDoor(new Point(j, i + 1)))) {
                             alternate = true;
                         } else if (j - 1 >= 0 && grid[i][j - 1] != null && grid[i][j - 1].isFloor) {
                             alternate = true;
                         } else if (i + 1 < getDungeon().getHeight() && j - 1 >= 0 && grid[i + 1][j - 1] != null
-                                && (grid[i + 1][j - 1].isFloor || isDoor(new Point(j - 1, i + 1)))) {
+                                && (grid[i + 1][j - 1].isFloor || getDungeon().isVisibleDoor(new Point(j - 1, i + 1)))) {
                             alternate = true;
                         }
                     }
 
                     Entity entity = getDungeon().getEntityAt(new Point(j, i));
-                    drawTile(tile, i, j, alternate, door, entity);
+                    drawTile(tile, i, j, alternate, door, entity, new Point(i, j), Color.white);
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(image, getPlayer().getPosition()));
 
@@ -342,20 +279,20 @@ public class GameView extends View {
                     if (getDungeon().getDiscoveredTiles()[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
                         if (i + 1 < getDungeon().getHeight() && getDungeon().getDiscoveredTiles()[i + 1][j] != null
                                 && (getDungeon().getDiscoveredTiles()[i + 1][j].isFloor
-                                        || isDoor(new Point(j, i + 1)))) {
+                                        || getDungeon().isVisibleDoor(new Point(j, i + 1)))) {
                             alternate = true;
                         } else if (j - 1 >= 0 && getDungeon().getDiscoveredTiles()[i][j - 1] != null
                                 && (getDungeon().getDiscoveredTiles()[i][j - 1].isFloor)) {
                             alternate = true;
                         } else if (i + 1 < getDungeon().getHeight() && j - 1 >= 0 && getDungeon().getDiscoveredTiles()[i + 1][j - 1] != null
                                 && (getDungeon().getDiscoveredTiles()[i + 1][j - 1].isFloor
-                                        || isDoor(new Point(j - 1, i + 1)))) {
+                                        || getDungeon().isVisibleDoor(new Point(j - 1, i + 1)))) {
                             alternate = true;
                         }
                     }
 
                     Entity entity = getDungeon().getEntityAt(new Point(j, i));
-                    drawShadowedTile(getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, entity);
+                    drawTile(getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, entity, null, Color.gray);
                 }
             }
         }
@@ -394,52 +331,27 @@ public class GameView extends View {
         }
     }
 
-    private void drawShadowedTile(Tile tile, int px, int py, boolean alternate, Door door, Entity entity) {
+    private void drawTile(Tile tile, int px, int py, boolean alternate, Door door, Entity entity, Object value, Color filter) {
         int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
         int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
 
         if (tile.image != null) {
             if (alternate) {
-                image.drawImage(tile.image.getSubImage(64, 0, 64, 96), x, y, Color.gray);
+                image.drawImage(value, tile.image.getSubImage(64, 0, 64, 96), x, y, filter);
             } else {
-                image.drawImage(tile.image.getSubImage(0, 0, 64, 96), x, y, Color.gray);
+                image.drawImage(value, tile.image.getSubImage(0, 0, 64, 96), x, y, filter);
             }
 
             if (door != null && door.getState() != DoorState.SECRET) {
                 if (door.getDirection() == Direction.NORTH) {
-                    image.drawImage(Images.DOOR.getSubImage(1, 0), x, y, Color.gray);
+                    image.drawImage(value, Images.DOOR.getSubImage(1, 0), x, y, filter);
                 } else if (door.getDirection() == Direction.WEST) {
-                    image.drawImage(Images.DOOR.getSubImage(0, 0), x, y, Color.gray);
+                    image.drawImage(value, Images.DOOR.getSubImage(0, 0), x, y, filter);
                 }
             }
 
             if (entity != null) {
-                image.drawImage(entity.getImage(), x, y, Color.gray);
-            }
-        }
-    }
-
-    private void drawTile(Tile tile, int px, int py, boolean alternate, Door door, Entity entity) {
-        int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + (int) image.getCenterOfRotationX() - 32;
-        int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + (int) image.getCenterOfRotationY() - 48;
-
-        if (tile.image != null) {
-            if (alternate) {
-                image.drawImage(new Point(px, py), tile.image.getSubImage(64, 0, 64, 96), x, y);
-            } else {
-                image.drawImage(new Point(px, py), tile.image.getSubImage(0, 0, 64, 96), x, y);
-            }
-
-            if (door != null && door.getState() != DoorState.SECRET) {
-                if (door.getDirection() == Direction.NORTH) {
-                    image.drawImage(new Point(px, py), Images.DOOR.getSubImage(1, 0), x, y);
-                } else if (door.getDirection() == Direction.WEST) {
-                    image.drawImage(new Point(px, py), Images.DOOR.getSubImage(0, 0), x, y);
-                }
-            }
-
-            if (entity != null) {
-                image.drawImage(entity.getImage(), x, y);
+                image.drawImage(entity.getImage(), x, y, filter);
             }
         }
     }
@@ -475,15 +387,6 @@ public class GameView extends View {
         cursorTextBox.setX(GUI.get().getMouseX() + 16);
         cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight() - 16);
         cursorTextBox.setVisible(true);
-    }
-
-    private boolean isDoor(Point point) {
-        Door door = getDungeon().getDoorAt(point);
-        return door != null && door.getState() != DoorState.SECRET;
-    }
-
-    public Console getConsole() {
-        return console;
     }
 
     public Dungeon getDungeon() {

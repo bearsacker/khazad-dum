@@ -16,7 +16,7 @@ public class DungeonConfig extends Config {
         return INSTANCE.configuration;
     }
 
-    public static final int DUNGEON_GENERATOR_VERSION = get().getInt("dungeon.generator.version");
+    public static final int DUNGEON_VERSION = get().getInt("dungeon.version");
 
     public static final int DUNGEON_MAX_WIDTH = get().getInt("dungeon.max.width");
 

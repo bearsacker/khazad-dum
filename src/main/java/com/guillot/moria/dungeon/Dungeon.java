@@ -1055,7 +1055,7 @@ public class Dungeon {
         return walls;
     }
 
-    private boolean coordInBounds(Point coord) {
+    public boolean coordInBounds(Point coord) {
         boolean y = coord.y > 0 && coord.y < this.height - 1;
         boolean x = coord.x > 0 && coord.x < this.width - 1;
 
@@ -1508,7 +1508,7 @@ public class Dungeon {
     }
 
     public Path findPath(Point start, Point end, int maxSearchDistance) {
-        return astar.findPath(start, end, maxSearchDistance, false, false);
+        return astar.findPath(start.inverseXY(), end.inverseXY(), maxSearchDistance, false, false);
     }
 
     public Path findPathNear(Point start, Point end, int maxSearchDistance) {
@@ -1520,9 +1520,11 @@ public class Dungeon {
 
         Path minPath = null;
         for (Point point : points) {
-            Path path = astar.findPath(start, point, maxSearchDistance, false, false);
-            if (path != null && (minPath == null || path.getLength() < minPath.getLength())) {
-                minPath = path;
+            if (coordInBounds(point)) {
+                Path path = astar.findPath(start.inverseXY(), point.inverseXY(), maxSearchDistance, false, false);
+                if (path != null && (minPath == null || path.getLength() < minPath.getLength())) {
+                    minPath = path;
+                }
             }
         }
 
@@ -1571,6 +1573,27 @@ public class Dungeon {
 
     public void setSpawnDownStairs(Point spawnDownStairs) {
         this.spawnDownStairs = spawnDownStairs;
+    }
+
+    public boolean isTraversable(Point coord, boolean allowObstacle) {
+        if (allowObstacle) {
+            return floor[coord.y][coord.x] == NULL || getEntityAt(coord) != null
+                    || !(floor[coord.y][coord.x].isFloor || floor[coord.y][coord.x].isStairs || isOpenDoor(coord));
+        }
+
+        return floor[coord.y][coord.x] == NULL || getEntityAt(coord) != null
+                || !(floor[coord.y][coord.x].isFloor || floor[coord.y][coord.x].isStairs)
+                || getMonsterAt(coord) != null;
+    }
+
+    public boolean isOpenDoor(Point coord) {
+        Door door = getDoorAt(coord);
+        return door != null && door.getState() == DoorState.OPEN;
+    }
+
+    public boolean isVisibleDoor(Point point) {
+        Door door = getDoorAt(point);
+        return door != null && door.getState() != DoorState.SECRET;
     }
 
 }

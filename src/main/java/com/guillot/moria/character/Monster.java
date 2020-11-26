@@ -17,14 +17,21 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 
 import com.guillot.engine.utils.RandomCollection;
+import com.guillot.moria.ai.role.Guard;
+import com.guillot.moria.ai.role.Patroller;
+import com.guillot.moria.ai.role.Rolable;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;
+import com.guillot.moria.utils.RNG;
+import com.guillot.moria.views.GameState;
 
 public class Monster extends AbstractCharacter {
 
     private static final long serialVersionUID = 5134782804305371108L;
 
     private MonsterRace race;
+
+    private Rolable role;
 
     private boolean sleeping;
 
@@ -59,6 +66,7 @@ public class Monster extends AbstractCharacter {
         super(race.getName(), MONSTER);
 
         this.race = race;
+        role = RNG.get().randomNumber(2) == 1 ? new Guard(this) : new Patroller(this);
         level = race.getLevel();
 
         init();
@@ -78,12 +86,21 @@ public class Monster extends AbstractCharacter {
         return "Monster";
     }
 
+    public void takeDecision(GameState game) {
+        role.takeDecision(game);
+    }
+
     public boolean isSleeping() {
         return sleeping;
     }
 
     public void setSleeping(boolean sleeping) {
         this.sleeping = sleeping;
+    }
+
+    @Override
+    public boolean isActing() {
+        return isMoving() || target != null;
     }
 
     @Override

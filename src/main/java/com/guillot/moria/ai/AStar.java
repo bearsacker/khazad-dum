@@ -1,12 +1,8 @@
 package com.guillot.moria.ai;
 
-import static com.guillot.moria.dungeon.Tile.NULL;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.guillot.moria.dungeon.Door;
-import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.utils.Point;
 
@@ -251,22 +247,9 @@ public class AStar {
         boolean invalid = (x < 0) || (y < 0) || (x >= map.getHeight()) || (y >= map.getWidth());
 
         if ((!invalid) && ((sx != x) || (sy != y))) {
-            if (allowObstacle) {
-                invalid = map.getFloor()[x][y] == NULL || map.getEntityAt(new Point(x, y).inverseXY()) != null
-                        || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs || isOpenDoor(x, y));
-            } else {
-                invalid = map.getFloor()[x][y] == NULL || map.getEntityAt(new Point(x, y).inverseXY()) != null
-                        || !(map.getFloor()[x][y].isFloor || map.getFloor()[x][y].isStairs)
-                        || map.getMonsterAt(new Point(x, y).inverseXY()) != null;
-            }
-
+            invalid = map.isTraversable(new Point(y, x), allowObstacle);
         }
 
         return !invalid;
-    }
-
-    protected boolean isOpenDoor(int x, int y) {
-        Door door = map.getDoorAt(new Point(x, y).inverseXY());
-        return door != null && door.getState() == DoorState.OPEN;
     }
 }

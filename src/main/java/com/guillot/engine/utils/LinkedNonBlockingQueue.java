@@ -18,6 +18,10 @@ public class LinkedNonBlockingQueue<E> extends LinkedList<E> {
         this.maxSize = maxSize;
     }
 
+    public int getMaxSize() {
+        return maxSize;
+    }
+
     @Override
     public boolean add(E e) {
         if (size() >= maxSize) {

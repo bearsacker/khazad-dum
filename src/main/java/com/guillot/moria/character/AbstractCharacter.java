@@ -2,6 +2,10 @@ package com.guillot.moria.character;
 
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_POINTS_PER_LEVEL;
+import static com.guillot.moria.dungeon.Direction.EAST;
+import static com.guillot.moria.dungeon.Direction.NORTH;
+import static com.guillot.moria.dungeon.Direction.SOUTH;
+import static com.guillot.moria.dungeon.Direction.WEST;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
@@ -11,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.guillot.moria.ai.Path;
 import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.item.AbstractItem;
@@ -20,6 +25,7 @@ import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
+import com.guillot.moria.views.GameState;
 
 public abstract class AbstractCharacter implements Serializable {
 
@@ -35,11 +41,22 @@ public abstract class AbstractCharacter implements Serializable {
 
     protected int currentLife;
 
+    protected Images image;
+
+    // Position
+
     protected Point position;
 
     protected Direction direction;
 
-    protected Images image;
+    // TODO Bug make path variable for monsters
+    protected Path path;
+
+    protected int currentStep;
+
+    protected boolean acting;
+
+    protected AbstractCharacter target;
 
     // Attributes
 
@@ -661,6 +678,69 @@ public abstract class AbstractCharacter implements Serializable {
         }
 
         return 0;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
+        currentStep = 0;
+    }
+
+    public boolean isMoving() {
+        return path != null;
+    }
+
+    public void setActing(boolean acting) {
+        this.acting = acting;
+    }
+
+    public boolean isActing() {
+        return acting;
+    }
+
+    public Object getTarget() {
+        return target;
+    }
+
+    public void setTarget(AbstractCharacter target) {
+        this.target = target;
+    }
+
+    public void update(GameState game) {
+        if (path != null) {
+            Point newPosition = path.getStep(currentStep).inverseXY();
+            currentStep++;
+
+            if (position.x - newPosition.x == 1) {
+                direction = NORTH;
+            } else if (position.x - newPosition.x == -1) {
+                direction = SOUTH;
+            } else if (position.y - newPosition.y == 1) {
+                direction = WEST;
+            } else if (position.y - newPosition.y == -1) {
+                direction = EAST;
+            }
+            setPosition(newPosition);
+
+            if (currentStep > movement || currentStep >= path.getLength()) {
+                path = null;
+            }
+        } else if (target != null) {
+            Attack attack = doAttack();
+            if (attack == null) {
+                game.addMessage(getName() + " misses his attack!");
+            } else {
+                game.addMessage(
+                        (attack.isCritical() ? "WOW! " : "") + getName() + " inflicts " + attack.getDamages() + " damages!");
+                int damagesReceived = target.takeAHit(attack);
+                if (damagesReceived < 0) {
+                    game.addMessage(target.getName() + " dodges the attack!");
+                } else {
+                    game.addMessage(target.getName() + " takes " + damagesReceived + " damages!");
+                }
+            }
+
+            target = null;
+        }
     }
 
     @Override
