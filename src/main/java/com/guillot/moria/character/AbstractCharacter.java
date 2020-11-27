@@ -51,7 +51,6 @@ public abstract class AbstractCharacter implements Serializable {
 
     protected Direction direction;
 
-    // TODO Bug make path variable for monsters
     protected Path path;
 
     protected int currentStep;
@@ -685,6 +684,10 @@ public abstract class AbstractCharacter implements Serializable {
     public void setPath(Path path) {
         this.path = path;
         currentStep = 0;
+    }
+
+    public Point getDestination() {
+        return path != null ? path.getDestination().inverseXY() : position;
     }
 
     public boolean isMoving() {

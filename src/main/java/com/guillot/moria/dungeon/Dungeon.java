@@ -1492,7 +1492,7 @@ public class Dungeon {
     }
 
     public Monster getMonsterAt(Point coord) {
-        return monsters.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
+        return monsters.stream().filter(x -> x.getPosition().is(coord) || x.getDestination().is(coord)).findFirst().orElse(null);
     }
 
     public ArrayList<AbstractItem> getItems() {
@@ -1575,7 +1575,7 @@ public class Dungeon {
         this.spawnDownStairs = spawnDownStairs;
     }
 
-    public boolean isTraversable(Point coord, boolean allowObstacle) {
+    public boolean isNotTraversable(Point coord, boolean allowObstacle) {
         if (allowObstacle) {
             return floor[coord.y][coord.x] == NULL || getEntityAt(coord) != null
                     || !(floor[coord.y][coord.x].isFloor || floor[coord.y][coord.x].isStairs || isOpenDoor(coord));

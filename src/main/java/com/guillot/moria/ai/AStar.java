@@ -57,7 +57,7 @@ public class AStar {
      */
     public Path findPath(Point start, Point end, int maxSearchDistance, boolean allowDiag, boolean allowObstacle) {
         // eastart.y first check, if the destination is blocked, we can't get there
-        if (map.getFloor()[end.x][end.y] == null || !(map.getFloor()[end.x][end.y].isFloor || map.getFloor()[end.x][end.y].isStairs)) {
+        if (map.isNotTraversable(end.inverseXY(), allowObstacle)) {
             return null;
         }
 
@@ -247,7 +247,7 @@ public class AStar {
         boolean invalid = (x < 0) || (y < 0) || (x >= map.getHeight()) || (y >= map.getWidth());
 
         if ((!invalid) && ((sx != x) || (sy != y))) {
-            invalid = map.isTraversable(new Point(y, x), allowObstacle);
+            invalid = map.isNotTraversable(new Point(y, x), allowObstacle);
         }
 
         return !invalid;

@@ -97,6 +97,10 @@ public class Path {
         return this.steps;
     }
 
+    public Point getDestination() {
+        return !steps.isEmpty() ? steps.get(steps.size() - 1) : null;
+    }
+
     public String toString() {
         String text = "";
 
