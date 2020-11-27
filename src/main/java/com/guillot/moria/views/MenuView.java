@@ -1,8 +1,8 @@
 package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
-import static com.guillot.moria.save.SaveManager.SAVE_PATH;
-import static com.guillot.moria.save.SaveManager.isSaveFilePresent;
+import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
+import static com.guillot.moria.save.GameSaveManager.isSaveFilePresent;
 
 import org.newdawn.slick.Graphics;
 
@@ -10,6 +10,7 @@ import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
+import com.guillot.moria.component.VaultDialog;
 
 public class MenuView extends View {
 
@@ -17,11 +18,15 @@ public class MenuView extends View {
 
     private LinkButton continueGameButton;
 
+    private LinkButton viewVaultButton;
+
     private LinkButton quitButton;
+
+    private VaultDialog vaultDialog;
 
     @Override
     public void start() throws Exception {
-        newGameButton = new LinkButton("New game", 64, HEIGHT - 204, 256);
+        newGameButton = new LinkButton("New game", 64, HEIGHT - 244, 256);
         newGameButton.setFont(GUI.get().getFont(1));
         newGameButton.setEvent(new Event() {
 
@@ -33,15 +38,25 @@ public class MenuView extends View {
             }
         });
 
-        continueGameButton = new LinkButton("Continue game", 64, HEIGHT - 164, 256);
+        continueGameButton = new LinkButton("Continue game", 64, HEIGHT - 204, 256);
         continueGameButton.setFont(GUI.get().getFont(1));
         continueGameButton.setEvent(new Event() {
 
             @Override
             public void perform() throws Exception {
                 GameState game = new GameState();
-                game.init(SAVE_PATH);
+                game.init(GAME_SAVE_PATH);
                 GUI.get().switchView(new GameView(game));
+            }
+        });
+
+        viewVaultButton = new LinkButton("Vault", 64, HEIGHT - 164, 256);
+        viewVaultButton.setFont(GUI.get().getFont(1));
+        viewVaultButton.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                vaultDialog.setVisible(true);
             }
         });
 
@@ -55,9 +70,11 @@ public class MenuView extends View {
             }
         });
 
-        continueGameButton.setEnabled(isSaveFilePresent(SAVE_PATH));
+        continueGameButton.setEnabled(isSaveFilePresent(GAME_SAVE_PATH));
 
-        add(newGameButton, continueGameButton, quitButton);
+        vaultDialog = new VaultDialog(this);
+
+        add(newGameButton, continueGameButton, quitButton, viewVaultButton, vaultDialog);
     }
 
     @Override

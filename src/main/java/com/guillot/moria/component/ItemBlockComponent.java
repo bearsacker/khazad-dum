@@ -88,18 +88,21 @@ public class ItemBlockComponent extends Component {
 
     @Override
     public void paint(Graphics g) {
+        g.pushTransform();
+        g.translate(x, y);
+
         g.setColor(BLOCK_COLOR);
-        g.fillRect(x + 2, y + 2, BLOCK_SIZE, BLOCK_SIZE);
+        g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
 
         if (item != null) {
             if (mouseOn() || inventory.getSelectedItem() == item) {
                 g.setColor(SELECTED_COLOR);
-                g.fillRect(x + 2, y + 2, BLOCK_SIZE, BLOCK_SIZE);
+                g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
             }
 
-            g.drawImage(item.getImage(), x + 2, y + 2, x + BLOCK_SIZE + 2, y + BLOCK_SIZE + 2, 0, 0, 16, 16);
+            g.drawImage(item.getImage(), 2, 2, BLOCK_SIZE + 2, BLOCK_SIZE + 2, 0, 0, 16, 16);
 
-            Polygon shape = new Polygon(new float[] {x, y, x + 16f, y, x, y + 16f});
+            Polygon shape = new Polygon(new float[] {0, 0, 16f, 0, 0, 16f});
 
             switch (item.getRarity()) {
             case LEGENDARY:
@@ -114,6 +117,8 @@ public class ItemBlockComponent extends Component {
                 break;
             }
         }
+
+        g.popTransform();
     }
 
 }

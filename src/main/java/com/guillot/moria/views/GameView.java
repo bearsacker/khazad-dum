@@ -124,6 +124,10 @@ public class GameView extends View {
         turnText.setText(game.getTurn() == Turn.PLAYER ? "Your turn" : "GameMaster's turn");
         turnText.setX(EngineConfig.WIDTH / 2 - turnText.getWidth() / 2);
 
+        if (getPlayer().isDead()) {
+            GUI.get().switchView(new DeathView(game));
+        }
+
         long time = System.currentTimeMillis();
         if (time - lastStep > 50) {
             game.update();

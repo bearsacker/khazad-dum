@@ -4,7 +4,9 @@ import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 import static java.lang.Math.max;
+import static org.newdawn.slick.Input.KEY_DELETE;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
+import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 
 import java.util.Collections;
 
@@ -35,10 +37,6 @@ public class InventoryDialog extends SubView {
     private Button buttonAction;
 
     private Button buttonDrop;
-
-    private AbstractItem selectedItem;
-
-    private AbstractItem hoveredItem;
 
     private Window itemWindow;
 
@@ -72,7 +70,7 @@ public class InventoryDialog extends SubView {
 
             @Override
             public void perform() throws Exception {
-                useOrEquipeItem(selectedItem);
+                useOrEquipeItem(inventoryGrid.getSelectedItem());
             }
         });
         buttonAction.setVisible(false);
@@ -82,12 +80,12 @@ public class InventoryDialog extends SubView {
 
             @Override
             public void perform() throws Exception {
-                dropItem(selectedItem);
+                dropItem(inventoryGrid.getSelectedItem());
             }
         });
         buttonDrop.setVisible(false);
 
-        inventoryGrid = new InventoryGridComponent(this, player);
+        inventoryGrid = new InventoryGridComponent(player);
         inventoryGrid.setX(128);
         inventoryGrid.setY(64);
 
@@ -152,8 +150,16 @@ public class InventoryDialog extends SubView {
             GUI.get().clearKeysPressed();
         }
 
-        if (hoveredItem != null) {
-            itemTextBox.setText(hoveredItem.toString());
+        if (GUI.get().getInput().isMousePressed(MOUSE_RIGHT_BUTTON) && inventoryGrid.getHoveredItem() != null) {
+            useOrEquipeItem(getHoveredItem());
+        }
+
+        if (GUI.get().isKeyPressed(KEY_DELETE) && inventoryGrid.getSelectedItem() != null) {
+            dropItem(inventoryGrid.getSelectedItem());
+        }
+
+        if (inventoryGrid.getHoveredItem() != null) {
+            itemTextBox.setText(inventoryGrid.getHoveredItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
@@ -161,8 +167,8 @@ public class InventoryDialog extends SubView {
             itemWindow.setHeight(itemTextBox.getHeight() + 64);
             itemWindow.setY(HEIGHT - itemWindow.getHeight());
             itemWindow.setVisible(true);
-        } else if (selectedItem != null) {
-            itemTextBox.setText(selectedItem.toString());
+        } else if (inventoryGrid.getSelectedItem() != null) {
+            itemTextBox.setText(inventoryGrid.getSelectedItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
@@ -175,18 +181,20 @@ public class InventoryDialog extends SubView {
             itemWindow.setVisible(false);
         }
 
-        if (selectedItem != null) {
+        if (inventoryGrid.getSelectedItem() != null) {
             buttonAction.setY(itemTextBox.getY() + 40);
             buttonDrop.setY(itemTextBox.getY() + 104);
 
-            buttonAction.setVisible(selectedItem instanceof Usable || selectedItem instanceof Equipable);
-            buttonAction.setText(selectedItem instanceof Usable ? "Use" : (player.isEquipedByItem(selectedItem) ? "Unequip" : "Equip"));
-            if (selectedItem instanceof Equipable) {
-                buttonAction.setEnabled(((Equipable) selectedItem).isEquipable(player));
+            buttonAction
+                    .setVisible(inventoryGrid.getSelectedItem() instanceof Usable || inventoryGrid.getSelectedItem() instanceof Equipable);
+            buttonAction.setText(inventoryGrid.getSelectedItem() instanceof Usable ? "Use"
+                    : (player.isEquipedByItem(inventoryGrid.getSelectedItem()) ? "Unequip" : "Equip"));
+            if (inventoryGrid.getSelectedItem() instanceof Equipable) {
+                buttonAction.setEnabled(((Equipable) inventoryGrid.getSelectedItem()).isEquipable(player));
             } else {
                 buttonAction.setEnabled(true);
             }
-            buttonDrop.setVisible(selectedItem != null);
+            buttonDrop.setVisible(inventoryGrid.getSelectedItem() != null);
         } else {
             buttonAction.setVisible(false);
             buttonDrop.setVisible(false);
@@ -207,8 +215,8 @@ public class InventoryDialog extends SubView {
                 if (((Usable) item).use(player)) {
                     player.getInventory().remove(item);
                     game.addMessage(player.getName() + " uses " + item.getName());
-                    selectedItem = null;
-                    hoveredItem = null;
+                    inventoryGrid.setSelectedItem(null);
+                    inventoryGrid.setHoveredItem(null);
                 }
             } else if (item instanceof Equipable) {
                 if (player.isEquipedByItem(item)) {
@@ -225,25 +233,9 @@ public class InventoryDialog extends SubView {
             player.unequipItem(item);
 
             game.addMessage(player.getName() + " drops " + item.getName());
-            selectedItem = null;
-            hoveredItem = null;
+            inventoryGrid.setSelectedItem(null);
+            inventoryGrid.setHoveredItem(null);
         }
-    }
-
-    public void setHoveredItem(AbstractItem hoveredItem) {
-        this.hoveredItem = hoveredItem;
-    }
-
-    public AbstractItem getHoveredItem() {
-        return hoveredItem;
-    }
-
-    public void setSelectedItem(AbstractItem selectedItem) {
-        this.selectedItem = selectedItem;
-    }
-
-    public AbstractItem getSelectedItem() {
-        return selectedItem;
     }
 
     public void showCursorTextBox(int x, int y, String text) {
@@ -251,5 +243,21 @@ public class InventoryDialog extends SubView {
         cursorTextBox.setX(x);
         cursorTextBox.setY(y);
         cursorTextBox.setVisible(true);
+    }
+
+    public AbstractItem getSelectedItem() {
+        return inventoryGrid.getSelectedItem();
+    }
+
+    public void setSelectedItem(AbstractItem selectedItem) {
+        inventoryGrid.setSelectedItem(selectedItem);
+    }
+
+    public AbstractItem getHoveredItem() {
+        return inventoryGrid.getHoveredItem();
+    }
+
+    public void setHoveredItem(AbstractItem hoveredItem) {
+        inventoryGrid.setHoveredItem(hoveredItem);
     }
 }

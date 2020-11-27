@@ -16,12 +16,17 @@ import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.Turn;
 
-public class SaveManager {
+public class GameSaveManager {
 
-    public final static String SAVE_PATH = "game.dat";
+    public final static String GAME_SAVE_PATH = "game.dat";
 
     public static boolean isSaveFilePresent(String path) {
         return new File(path).exists();
+    }
+
+    public static void deleteSaveFile(String path) {
+        File file = new File(path);
+        file.delete();
     }
 
     public static void writeSaveFile(String path, GameState game) throws IOException {

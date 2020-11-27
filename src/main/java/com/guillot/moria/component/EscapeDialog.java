@@ -1,7 +1,7 @@
 package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.save.SaveManager.SAVE_PATH;
+import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import org.newdawn.slick.Graphics;
@@ -10,7 +10,7 @@ import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.Window;
-import com.guillot.moria.save.SaveManager;
+import com.guillot.moria.save.GameSaveManager;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 import com.guillot.moria.views.MenuView;
@@ -31,7 +31,7 @@ public class EscapeDialog extends Window {
 
             @Override
             public void perform() throws Exception {
-                SaveManager.writeSaveFile(SAVE_PATH, game);
+                GameSaveManager.writeSaveFile(GAME_SAVE_PATH, game);
                 GUI.get().switchView(new MenuView());
             }
         });
@@ -41,7 +41,7 @@ public class EscapeDialog extends Window {
 
             @Override
             public void perform() throws Exception {
-                SaveManager.writeSaveFile(SAVE_PATH, game);
+                GameSaveManager.writeSaveFile(GAME_SAVE_PATH, game);
                 GUI.get().close();
             }
         });

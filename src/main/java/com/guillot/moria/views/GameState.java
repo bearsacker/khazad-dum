@@ -14,7 +14,7 @@ import com.guillot.moria.character.Human;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
-import com.guillot.moria.save.SaveManager;
+import com.guillot.moria.save.GameSaveManager;
 import com.guillot.moria.utils.RNG;
 
 public class GameState {
@@ -53,7 +53,7 @@ public class GameState {
 
     public void init(String path) {
         try {
-            SaveManager.loadSaveFile(this, path);
+            GameSaveManager.loadSaveFile(this, path);
         } catch (Exception e) {
             e.printStackTrace();
         }
