@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.newdawn.slick.Graphics;
+
+import com.guillot.engine.configs.EngineConfig;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Dungeon;
@@ -22,7 +25,6 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;
 import com.guillot.moria.ressources.Images;
-import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameState;
@@ -355,11 +357,11 @@ public abstract class AbstractCharacter implements Serializable {
         return inventory.stream().filter(x -> x.getType() == type).findAny().orElse(null);
     }
 
-    public void draw(DepthBufferedImage image, Point playerPosition) {
-        int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + (int) image.getCenterOfRotationX() - 32;
-        int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + (int) image.getCenterOfRotationY() - 48;
+    public void draw(Graphics g, Point playerPosition) {
+        int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
+        int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        image.drawImage(this, this.image.getSubImage(direction.getValue(), 0), x, y);
+        g.drawImage(this.image.getSubImage(direction.getValue(), 0), x, y);
     }
 
     public int getLevel() {

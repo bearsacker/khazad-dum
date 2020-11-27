@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
+import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.utils.RandomCollection;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.ressources.Images;
-import com.guillot.moria.utils.DepthBufferedImage;
 import com.guillot.moria.utils.Point;
 
 public abstract class AbstractItem implements Comparable<AbstractItem>, Serializable {
@@ -56,11 +57,11 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
         }
     }
 
-    public void draw(DepthBufferedImage image, Point playerPosition) {
-        int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + (int) image.getCenterOfRotationX() - 32;
-        int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + (int) image.getCenterOfRotationY() - 48;
+    public void draw(Graphics g, Point playerPosition) {
+        int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
+        int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        image.drawImage(this.image.getImage(), x + 24, y + 36);
+        g.drawImage(this.image.getImage(), x + 24, y + 36);
     }
 
     public ItemRarity getRarity() {

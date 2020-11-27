@@ -3,6 +3,7 @@ package com.guillot.moria.dungeon;
 import org.newdawn.slick.Image;
 
 import com.guillot.moria.ressources.Images;
+import com.guillot.moria.utils.ImageBuffer;
 
 public enum Tile {
     NULL, //
@@ -24,6 +25,10 @@ public enum Tile {
 
     public Image image;
 
+    public ImageBuffer buffer;
+
+    public ImageBuffer bufferAlternate;
+
     private Tile() {
         this(null, false, false, false);
     }
@@ -42,6 +47,10 @@ public enum Tile {
 
     private Tile(Image image, boolean isFloor, boolean isWall, boolean isStairs) {
         this.image = image;
+        if (image != null) {
+            this.buffer = new ImageBuffer(image.getSubImage(0, 0, 64, 96));
+            this.bufferAlternate = new ImageBuffer(image.getSubImage(64, 0, 64, 96));
+        }
         this.isFloor = isFloor;
         this.isWall = isWall;
         this.isStairs = isStairs;
@@ -56,4 +65,5 @@ public enum Tile {
 
         return 0;
     }
+
 }
