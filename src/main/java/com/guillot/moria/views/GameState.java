@@ -196,6 +196,6 @@ public class GameState {
     public static void main(String[] args) throws SlickException {
         RNG.get().setSeed(1606213583967L);
 
-        new Game("Khazad-dûm", new MenuView());
+        new Game(new MenuView());
     }
 }

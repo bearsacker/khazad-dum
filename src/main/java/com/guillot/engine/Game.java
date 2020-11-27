@@ -3,7 +3,9 @@ package com.guillot.engine;
 import static com.guillot.engine.configs.EngineConfig.FPS;
 import static com.guillot.engine.configs.EngineConfig.FULLSCREEN;
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
+import static com.guillot.engine.configs.EngineConfig.ICON;
 import static com.guillot.engine.configs.EngineConfig.SHOW_FPS;
+import static com.guillot.engine.configs.EngineConfig.TITLE;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 
 import org.newdawn.slick.AppGameContainer;
@@ -19,20 +21,16 @@ public class Game extends BasicGame {
 
     private View initialView;
 
-    public Game(String title, View initialView) throws SlickException {
-        this(title, null, initialView);
-    }
-
-    public Game(String title, String icon, View initialView) throws SlickException {
-        super(title);
+    public Game(View initialView) throws SlickException {
+        super(TITLE);
 
         this.initialView = initialView;
 
         AppGameContainer app = new AppGameContainer(this);
         app.setDisplayMode(WIDTH, HEIGHT, FULLSCREEN);
         app.setShowFPS(SHOW_FPS);
-        if (icon != null) {
-            app.setIcon(icon);
+        if (ICON != null) {
+            app.setIcon(ICON);
         }
         if (FPS > 0) {
             app.setTargetFrameRate(FPS);
