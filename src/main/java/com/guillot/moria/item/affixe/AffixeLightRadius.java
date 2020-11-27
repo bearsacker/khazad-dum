@@ -9,7 +9,6 @@ public class AffixeLightRadius extends AbstractAffixe {
     private static final long serialVersionUID = -1018255241631544465L;
 
     public AffixeLightRadius() {
-        name = "+%dm to Light Radius";
         type = RARE;
     }
 
@@ -23,4 +22,8 @@ public class AffixeLightRadius extends AbstractAffixe {
         character.setLightRadius(character.getLightRadius() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%dm to Light Radius";
+    }
 }

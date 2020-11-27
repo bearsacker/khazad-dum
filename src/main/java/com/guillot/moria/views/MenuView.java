@@ -3,11 +3,12 @@ package com.guillot.moria.views;
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.ressources.Colors.LIGHT_GREY;
-import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Images.LOGO;
 import static com.guillot.moria.ressources.Images.LOGO_TEXT;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static com.guillot.moria.save.GameSaveManager.isSaveFilePresent;
+import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
 
 import org.newdawn.slick.Graphics;
 
@@ -16,6 +17,7 @@ import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.component.VaultDialog;
+import com.guillot.moria.save.VaultSaveManager;
 
 public class MenuView extends View {
 
@@ -75,6 +77,7 @@ public class MenuView extends View {
             }
         });
 
+        viewVaultButton.setEnabled(VaultSaveManager.isSaveFilePresent(VAULT_SAVE_PATH));
         continueGameButton.setEnabled(isSaveFilePresent(GAME_SAVE_PATH));
 
         vaultDialog = new VaultDialog(this);
@@ -92,7 +95,7 @@ public class MenuView extends View {
         g.pushTransform();
         g.translate(WIDTH / 2, 96);
 
-        LOGO.getImage().draw(-LOGO.getImage().getWidth(), 0, 2f, YELLOW_PALE.getColor());
+        LOGO.getImage().draw(-LOGO.getImage().getWidth(), 0, 2f, YELLOW.getColor());
         LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, LIGHT_GREY.getColor());
 
         g.popTransform();

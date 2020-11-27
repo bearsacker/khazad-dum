@@ -34,8 +34,6 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
             new AffixeChanceMagicFind(), //
             new AffixeChanceCriticalHit());
 
-    protected String name;
-
     protected AffixeRarity type;
 
     protected List<ItemType> excludedItemType;
@@ -56,7 +54,7 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
 
     @Override
     public String toString() {
-        return format(name, value);
+        return format(getName(), value);
     }
 
     public void init(int qualityLevel) {
@@ -86,4 +84,5 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
 
     public abstract void setPassiveEffect(AbstractCharacter character);
 
+    public abstract String getName();
 }

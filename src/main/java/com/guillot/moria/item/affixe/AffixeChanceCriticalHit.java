@@ -13,7 +13,6 @@ public class AffixeChanceCriticalHit extends AbstractAffixe {
     private static final long serialVersionUID = -387211472651229146L;
 
     public AffixeChanceCriticalHit() {
-        name = "+%d%% to Chance to critical hit";
         type = LEGENDARY;
         excludedItemType = asList(new ItemType[] {ARMOR, SHIELD});
     }
@@ -28,4 +27,8 @@ public class AffixeChanceCriticalHit extends AbstractAffixe {
         character.setChanceHit(character.getChanceHit() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d%% to Chance to critical hit";
+    }
 }

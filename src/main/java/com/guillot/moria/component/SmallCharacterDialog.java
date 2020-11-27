@@ -1,7 +1,7 @@
 package com.guillot.moria.component;
 
 import static com.guillot.moria.ressources.Colors.ROSE_PALE;
-import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static com.guillot.moria.ressources.Colors.YELLOW;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -39,7 +39,7 @@ public class SmallCharacterDialog extends Window {
 
         showOverlay = false;
 
-        nameText = new Text("", 32, 72, GUI.get().getFont(1), YELLOW_PALE.getColor());
+        nameText = new Text("", 32, 72, GUI.get().getFont(1), YELLOW.getColor());
 
         lifeBar = new ProgressBar(32, 104, width - 64, 16, 0);
 

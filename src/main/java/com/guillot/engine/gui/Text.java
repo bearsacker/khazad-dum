@@ -67,7 +67,7 @@ public class Text extends Component {
         if (font != null) {
             int offset = 0;
             for (String line : text.split("\n")) {
-                font.drawString(x, y + offset, line, filter);
+                GUI.drawColoredString(g, font, x, y + offset, line, filter);
                 offset += font.getHeight();
             }
         }

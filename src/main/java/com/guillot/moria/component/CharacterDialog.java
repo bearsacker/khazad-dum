@@ -1,9 +1,9 @@
 package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.moria.ressources.Colors.YELLOW;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.Button;
@@ -21,6 +21,8 @@ public class CharacterDialog extends Window {
     private AbstractCharacter player;
 
     private TextBox characterTextBox;
+
+    private Text nameText;
 
     private Text attributesPointsText;
 
@@ -40,12 +42,12 @@ public class CharacterDialog extends Window {
         characterTextBox = new TextBox();
         characterTextBox.setDrawBox(false);
         characterTextBox.setWidth(width);
-        characterTextBox.setX(16);
-        characterTextBox.setY(48);
+        characterTextBox.setX(64);
+        characterTextBox.setY(128);
         characterTextBox.setText(player.toString());
-        height = characterTextBox.getHeight() + 64;
+        height = characterTextBox.getHeight() + 128;
 
-        increaseStrengthButton = new Button("+", 576, 224, 32, 32);
+        increaseStrengthButton = new Button("+", 176, 248, 32, 32);
         increaseStrengthButton.setEnabled(false);
         increaseStrengthButton.setEvent(new Event() {
 
@@ -56,7 +58,7 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseAgilityButton = new Button("+", 576, 288, 32, 32);
+        increaseAgilityButton = new Button("+", 176, 320, 32, 32);
         increaseAgilityButton.setEnabled(false);
         increaseAgilityButton.setEvent(new Event() {
 
@@ -67,7 +69,7 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseSpiritButton = new Button("+", 576, 352, 32, 32);
+        increaseSpiritButton = new Button("+", 176, 400, 32, 32);
         increaseSpiritButton.setEnabled(false);
         increaseSpiritButton.setEvent(new Event() {
 
@@ -78,7 +80,7 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseDestinyButton = new Button("+", 576, 416, 32, 32);
+        increaseDestinyButton = new Button("+", 176, 472, 32, 32);
         increaseDestinyButton.setEnabled(false);
         increaseDestinyButton.setEvent(new Event() {
 
@@ -89,9 +91,11 @@ public class CharacterDialog extends Window {
             }
         });
 
-        attributesPointsText = new Text("Available attributes points : " + player.getAttributesPoints(), 640, 80, Color.white);
+        nameText = new Text("WHITE@@" + player.getName() + " @@YELLOW_PALE@@(Level " + player.getLevel() + ")", 160, 80);
+        nameText.setFont(GUI.get().getFont(2));
+        attributesPointsText = new Text("Available attributes points : " + player.getAttributesPoints(), 640, 88, YELLOW.getColor());
 
-        add(characterTextBox, attributesPointsText);
+        add(characterTextBox, nameText, attributesPointsText);
     }
 
     @Override
@@ -104,7 +108,7 @@ public class CharacterDialog extends Window {
     public void update() throws Exception {
         super.update();
 
-        height = characterTextBox.getHeight() + 64;
+        height = characterTextBox.getHeight() + 128;
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);

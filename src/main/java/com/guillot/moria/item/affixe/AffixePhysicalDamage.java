@@ -16,7 +16,6 @@ public class AffixePhysicalDamage extends AbstractAffixe {
     private static final long serialVersionUID = 1936480382270881871L;
 
     public AffixePhysicalDamage() {
-        name = "+%d%% to Physical Damage";
         type = LEGENDARY;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD});
     }
@@ -31,4 +30,8 @@ public class AffixePhysicalDamage extends AbstractAffixe {
         character.setPhysicalDamage(character.getPhysicalDamage() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d%% to Pysical Damage";
+    }
 }

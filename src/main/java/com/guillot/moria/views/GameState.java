@@ -69,10 +69,10 @@ public class GameState {
                     deadMonsters.add(x);
 
                     int xp = x.getXPValue();
-                    addMessage(getPlayer().getName() + " earns " + x.getXPValue() + " xp.");
+                    addMessage("GREEN_PALE@@You@@WHITE@@ earn " + x.getXPValue() + " xp.");
                     int levelsGained = getPlayer().earnXP(xp);
                     if (levelsGained > 0) {
-                        addMessage(getPlayer().getName() + " gains " + levelsGained + " levels!");
+                        addMessage("GREEN_PALE@@You@@WHITE@@ gain " + levelsGained + " levels!");
                     }
                 });
         getDungeon().getMonsters().removeAll(deadMonsters);
@@ -99,7 +99,7 @@ public class GameState {
                     getDungeon().getItemsAt(getPlayer().getPosition()).forEach(x -> {
                         if (getPlayer().pickUpItem(x)) {
                             getDungeon().removeItem(x);
-                            addMessage(getPlayer().getName() + " picked up " + x.getName());
+                            addMessage("GREEN_PALE@@You@@WHITE@@ picked up " + x.getName());
                         }
                     });
                 }
@@ -141,7 +141,7 @@ public class GameState {
             currentLevel--;
             player.setPosition(getDungeon().getSpawnDownStairs());
 
-            addMessage(getPlayer().getName() + " comes back to level " + getDungeon().getLevel());
+            addMessage("GREEN_PALE@@You@@WHITE@@ come back to level " + getDungeon().getLevel());
         }
     }
 
@@ -150,7 +150,7 @@ public class GameState {
             currentLevel++;
             player.setPosition(getDungeon().getSpawnUpStairs());
 
-            addMessage(getPlayer().getName() + " goes to level " + getDungeon().getLevel());
+            addMessage("GREEN_PALE@@You@@WHITE@@ go to level " + getDungeon().getLevel());
         }
     }
 

@@ -17,7 +17,6 @@ public class AffixeChanceDodge extends AbstractAffixe {
     private static final long serialVersionUID = -554681734521595596L;
 
     public AffixeChanceDodge() {
-        name = "+%d%% to Chance to dodge";
         type = RARE;
         excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON, SHIELD});
     }
@@ -32,4 +31,8 @@ public class AffixeChanceDodge extends AbstractAffixe {
         character.setChanceDodge(character.getChanceDodge() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d%% to Chance to dodge";
+    }
 }

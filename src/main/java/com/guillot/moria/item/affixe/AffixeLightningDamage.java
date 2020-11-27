@@ -17,7 +17,6 @@ public class AffixeLightningDamage extends AbstractAffixe {
     private static final long serialVersionUID = -4240117615749327408L;
 
     public AffixeLightningDamage() {
-        name = "+%d to Lightning Damage";
         type = NORMAL;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
     }
@@ -30,6 +29,11 @@ public class AffixeLightningDamage extends AbstractAffixe {
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
         character.setLightningDamage(character.getLightningDamage() + value);
+    }
+
+    @Override
+    public String getName() {
+        return "+%d to Lightning Damage";
     }
 
 }

@@ -751,30 +751,23 @@ public abstract class AbstractCharacter implements Serializable {
 
     @Override
     public String toString() {
-        String text = getName() + " - " + getClassName() + " - Level " + level + "\n\n";
-        text += "Strength: " + strength + "\n";
-        text += "     Physical damage: + 0-" + physicalDamage + "%\n";
-        text += "     Inventory limit: + " + inventoryLimit + " blocks\n";
+        String text = "RED_PALE@@Strength: @@LIGHT_GREY@@" + strength + "\n";
+        text += "RED_PALE@@     Physical damage: @@LIGHT_GREY@@+ 0-" + physicalDamage + "%\n";
+        text += "RED_PALE@@     Inventory limit: @@LIGHT_GREY@@" + inventoryLimit + " blocks\n\n";
 
-        text += "Agility: " + agility + "\n";
-        text += "     Chance to hit: " + chanceHit + "%\n";
-        text += "     Chance to block/dodge: " + chanceDodge + "%\n";
-        text += "     Movement: " + movement + "m\n";
+        text += "GREEN_PALE@@Agility: @@LIGHT_GREY@@" + agility + "\n";
+        text += "GREEN_PALE@@     Chance to hit: @@LIGHT_GREY@@" + chanceHit + "%\n";
+        text += "GREEN_PALE@@     Chance to block/dodge: @@LIGHT_GREY@@" + chanceDodge + "%\n";
+        text += "GREEN_PALE@@     Movement: @@LIGHT_GREY@@" + movement + "m\n\n";
 
-        text += "Spirit: " + spirit + "\n";
-        text += "     Life: " + currentLife + "/" + life + "\n";
-        text += "     Light radius: " + lightRadius + "m\n";
+        text += "YELLOW_PALE@@Spirit: @@LIGHT_GREY@@" + spirit + "\n";
+        text += "YELLOW_PALE@@     Life: @@LIGHT_GREY@@" + currentLife + "/" + life + "\n";
+        text += "YELLOW_PALE@@     Light radius: @@LIGHT_GREY@@" + lightRadius + "m\n\n";
 
-        text += "Destiny: " + destiny + "\n";
-        text += "     Chance to find a magic object: + " + chanceMagicFind + "%\n";
-        text += "     Chance to pick a lock: " + chanceLockPicking + "%\n";
-        text += "     Chance of critical hit: " + chanceCriticalHit + "%\n\n";
-
-        text += "Damages: " + damages + "\n";
-        text += "Armor: " + armor + "\n";
-        text += "Fire damage: + " + fireDamage + "\n";
-        text += "Frost damage: + " + frostDamage + "\n";
-        text += "Lightning damage: + " + lightningDamage;
+        text += "BLUE_PALE@@Destiny: @@LIGHT_GREY@@" + destiny + "\n";
+        text += "BLUE_PALE@@     Chance to magic find: @@LIGHT_GREY@@+ " + chanceMagicFind + "%\n";
+        text += "BLUE_PALE@@     Chance to pick a lock: @@LIGHT_GREY@@" + chanceLockPicking + "%\n";
+        text += "BLUE_PALE@@     Chance of critical hit: @@LIGHT_GREY@@" + chanceCriticalHit + "%\n\n";
 
         return text;
     }

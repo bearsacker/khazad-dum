@@ -16,6 +16,10 @@ public class VaultSaveManager {
 
     public final static String VAULT_SAVE_PATH = "vault.dat";
 
+    public static boolean isSaveFilePresent(String path) {
+        return new File(path).exists();
+    }
+
     public static void writeSaveFile(String path, Vault vault) throws IOException {
         FileOutputStream fos = new FileOutputStream(path);
         ObjectOutputStream stream = new ObjectOutputStream(fos);

@@ -9,7 +9,6 @@ public class AffixeAgility extends AbstractAffixe {
     private static final long serialVersionUID = -7233240430294637766L;
 
     public AffixeAgility() {
-        name = "+%d to Agility";
         type = RARE;
     }
 
@@ -21,6 +20,11 @@ public class AffixeAgility extends AbstractAffixe {
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
         character.setAgility(character.getAgility() + value);
+    }
+
+    @Override
+    public String getName() {
+        return "+%d to @@GREEN_PALE@@Agility";
     }
 
 }

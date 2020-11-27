@@ -18,7 +18,6 @@ public class AffixeChanceMagicFind extends AbstractAffixe {
     private static final long serialVersionUID = 2815321090989489537L;
 
     public AffixeChanceMagicFind() {
-        name = "+%d%% to chance to find a magic object";
         type = RARE;
         excludedItemType = Arrays.asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON});
     }
@@ -33,4 +32,8 @@ public class AffixeChanceMagicFind extends AbstractAffixe {
         character.setChanceMagicFind(character.getChanceMagicFind() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d%% to Chance to magic find";
+    }
 }

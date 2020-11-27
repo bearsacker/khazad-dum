@@ -16,7 +16,6 @@ public class AffixeFireDamage extends AbstractAffixe {
     private static final long serialVersionUID = -1203099419882446709L;
 
     public AffixeFireDamage() {
-        name = "+%d to Fire Damage";
         type = NORMAL;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
     }
@@ -31,4 +30,8 @@ public class AffixeFireDamage extends AbstractAffixe {
         character.setFireDamage(character.getFireDamage() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to Fire Damage";
+    }
 }

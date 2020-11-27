@@ -17,7 +17,6 @@ public class AffixeArmor extends AbstractAffixe {
     private static final long serialVersionUID = 2237632435463107411L;
 
     public AffixeArmor() {
-        name = "+%d to Armor";
         type = NORMAL;
         excludedItemType = asList(new ItemType[] {BOW, ONE_HANDED_WEAPON, STAFF, TWO_HANDED_WEAPON});
     }
@@ -32,4 +31,8 @@ public class AffixeArmor extends AbstractAffixe {
         character.setArmor(character.getArmor() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to Armor";
+    }
 }

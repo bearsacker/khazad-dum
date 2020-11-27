@@ -21,7 +21,6 @@ public class AffixeChanceBlock extends AbstractAffixe {
     private static final long serialVersionUID = 5245446279633960212L;
 
     public AffixeChanceBlock() {
-        name = "+%d%% to Chance to block";
         type = NORMAL;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, AMULET, BOW, ONE_HANDED_WEAPON, RING, STAFF, TWO_HANDED_WEAPON});
     }
@@ -36,4 +35,8 @@ public class AffixeChanceBlock extends AbstractAffixe {
         character.setChanceDodge(character.getChanceDodge() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d%% to Chance to block";
+    }
 }

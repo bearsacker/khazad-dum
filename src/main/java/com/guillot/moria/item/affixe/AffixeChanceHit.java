@@ -14,7 +14,6 @@ public class AffixeChanceHit extends AbstractAffixe {
     private static final long serialVersionUID = 6237313089637360419L;
 
     public AffixeChanceHit() {
-        name = "+%d%% to Chance to hit";
         type = RARE;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD});
     }
@@ -29,4 +28,8 @@ public class AffixeChanceHit extends AbstractAffixe {
         character.setChanceHit(character.getChanceHit() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d%% to Chance to hit";
+    }
 }

@@ -1,5 +1,8 @@
 package com.guillot.moria.item;
 
+import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.ressources.Colors.LIGHT_GREY;
 import static java.util.stream.Collectors.toList;
 
 import java.io.Serializable;
@@ -163,17 +166,30 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
 
     @Override
     public String toString() {
-        String text = name + " - " + type + "\n";
-        text += "Quality level " + qualityLevel + " (" + rarity + ")\n\n";
-        if (getValueName() != null) {
-            text += "     " + getValueName() + ": " + value + "\n";
-        }
-        if (getRequirementName() != null && requirement > 0) {
-            text += "     " + getRequirementName() + " Requirement: " + requirement + "\n";
+        String color = LIGHT_GREY.name();
+        switch (rarity) {
+        case LEGENDARY:
+            color = ITEM_LEGENDARY.name();
+            break;
+        case MAGIC:
+            color = ITEM_MAGIC.name();
+            break;
+        case NORMAL:
+            break;
         }
 
+        String text = color + "@@" + name + " - " + type + "\n";
+        text += LIGHT_GREY.name() + "@@Quality level " + qualityLevel + " (" + rarity + ")\n\n";
+        if (getValueName() != null) {
+            text += "ROSE_PALE@@     " + getValueName() + ": @@LIGHT_GREY@@" + value + "\n";
+        }
+        if (getRequirementName() != null && requirement > 0) {
+            text += "ROSE_PALE@@     " + getRequirementName() + " Requirement: @@LIGHT_GREY@@" + requirement + "\n";
+        }
+
+        text += "\n";
         for (AbstractAffixe attribute : affixes) {
-            text += "\n     " + attribute;
+            text += "LIGHT_GREY@@     " + attribute + "\n";
         }
 
         return text;

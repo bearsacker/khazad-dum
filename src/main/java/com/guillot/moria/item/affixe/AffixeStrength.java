@@ -9,7 +9,6 @@ public class AffixeStrength extends AbstractAffixe {
     private static final long serialVersionUID = 2806758303840204814L;
 
     public AffixeStrength() {
-        name = "+%d to Strength";
         type = RARE;
     }
 
@@ -23,4 +22,8 @@ public class AffixeStrength extends AbstractAffixe {
         character.setStrength(character.getStrength() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to @@RED_PALE@@Strength";
+    }
 }

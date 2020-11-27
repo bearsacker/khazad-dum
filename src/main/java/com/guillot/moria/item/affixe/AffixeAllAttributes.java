@@ -9,7 +9,6 @@ public class AffixeAllAttributes extends AbstractAffixe {
     private static final long serialVersionUID = -4565320136195088139L;
 
     public AffixeAllAttributes() {
-        name = "+%d to All Attributes";
         type = LEGENDARY;
     }
 
@@ -26,4 +25,8 @@ public class AffixeAllAttributes extends AbstractAffixe {
         character.setDestiny(character.getDestiny() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to @@ITEM_LEGENDARY@@All Attributes";
+    }
 }

@@ -9,7 +9,6 @@ public class AffixeLife extends AbstractAffixe {
     private static final long serialVersionUID = 5668403465597050898L;
 
     public AffixeLife() {
-        name = "+%d to Life";
         type = NORMAL;
     }
 
@@ -23,4 +22,8 @@ public class AffixeLife extends AbstractAffixe {
         character.setLife(character.getLife() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to Life";
+    }
 }

@@ -103,7 +103,7 @@ public class DoorDialog extends Window {
 
         door.setState(DoorState.OPEN);
         player.setPosition(door.getDirectionPosition(player.getPosition()));
-        game.addMessage(player.getName() + " uses a key to unlock the door!");
+        game.addMessage("GREEN_PALE@@You@@WHITE@@ use a key to unlock the door!");
         setVisible(false);
     }
 

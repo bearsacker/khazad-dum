@@ -1,6 +1,8 @@
 package com.guillot.moria.component;
 
-import org.newdawn.slick.Color;
+import static com.guillot.engine.gui.GUI.drawColoredString;
+import static com.guillot.moria.ressources.Colors.WHITE;
+
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.Component;
@@ -29,7 +31,7 @@ public class Console extends Component {
         float alpha = 1f;
         int line = 1;
         for (int i = messages.size() - 1; i >= 0; i--) {
-            GUI.get().getFont().drawString(x + 8, y + height - (line * LINE_HEIGHT), messages.get(i), new Color(1f, 1f, 1f, alpha));
+            drawColoredString(g, GUI.get().getFont(), x + 8, y + height - (line * LINE_HEIGHT), messages.get(i), WHITE.getColor(), alpha);
 
             line++;
             alpha -= 1f / messages.getMaxSize();

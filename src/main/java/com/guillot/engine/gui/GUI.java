@@ -17,6 +17,7 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
 import com.guillot.engine.utils.FileLoader;
+import com.guillot.moria.ressources.Colors;
 
 
 public class GUI {
@@ -242,5 +243,29 @@ public class GUI {
         image.draw(0, height - borderSize, borderSize, height, 0, spriteHeight - borderSize, borderSize, spriteHeight, filter);
         image.draw(width - borderSize, height - borderSize, width, height, spriteWidth - borderSize, spriteHeight - borderSize, spriteWidth,
                 spriteHeight, filter);
+    }
+
+    public static void drawColoredString(Graphics g, org.newdawn.slick.Font font, int x, int y, String text, Color defaultColor) {
+        drawColoredString(g, font, x, y, text, defaultColor, 1f);
+    }
+
+    public static void drawColoredString(Graphics g, org.newdawn.slick.Font font, int x, int y, String text, Color defaultColor,
+            float alpha) {
+        String[] values = text.split("@@");
+
+        if (values.length == 1) {
+            Color color = new Color(defaultColor);
+            color.a = alpha;
+            font.drawString(x, y, text, color);
+        } else {
+            int currentOffset = x;
+
+            for (int i = 0; i < values.length; i += 2) {
+                Color color = new Color(Colors.valueOf(values[i]).getColor());
+                color.a = alpha;
+                font.drawString(currentOffset, y, values[i + 1], color);
+                currentOffset += font.getWidth((values[i + 1]));
+            }
+        }
     }
 }

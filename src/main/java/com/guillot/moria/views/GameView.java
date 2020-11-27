@@ -2,7 +2,7 @@ package com.guillot.moria.views;
 
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
-import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
@@ -86,7 +86,7 @@ public class GameView extends View {
     public void start() throws Exception {
         depthBuffer = new DepthBuffer<>(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
-        turnText = new Text("", 8, 8, GUI.get().getFont(2), YELLOW_PALE.getColor());
+        turnText = new Text("", 8, 8, GUI.get().getFont(2), YELLOW.getColor());
 
         escapeDialog = new EscapeDialog(this, game);
         inventoryDialog = new InventoryDialog(this, game);
@@ -103,7 +103,7 @@ public class GameView extends View {
 
         lifeBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 44, 256, 32, 100);
         xpBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
-        xpBar.setValueColor(YELLOW_PALE.getColor());
+        xpBar.setValueColor(YELLOW.getColor());
 
         add(turnText, cursorTextBox, lifeBar, xpBar, doorDialog, console, escapeDialog, inventoryDialog, characterDialog, mapDialog,
                 smallCharacterDialog);
@@ -152,7 +152,7 @@ public class GameView extends View {
                                 break;
                             case SECRET:
                                 door.setState(DoorState.OPEN);
-                                game.addMessage(getPlayer().getName() + " discover a secret door !");
+                                game.addMessage("GREEN_PALE@@You@@WHITE@@ discover a secret door !");
                             case OPEN:
                                 getPlayer().setPosition(door.getDirectionPosition(getPlayer().getPosition()));
                                 break;

@@ -9,7 +9,6 @@ public class AffixeSpirit extends AbstractAffixe {
     private static final long serialVersionUID = 1961334588726173217L;
 
     public AffixeSpirit() {
-        name = "+%d to Spirit";
         type = RARE;
     }
 
@@ -23,4 +22,8 @@ public class AffixeSpirit extends AbstractAffixe {
         character.setSpirit(character.getSpirit() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to @@YELLOW_PALE@@Spirit";
+    }
 }

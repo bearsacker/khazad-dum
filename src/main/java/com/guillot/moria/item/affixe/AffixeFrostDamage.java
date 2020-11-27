@@ -16,7 +16,6 @@ public class AffixeFrostDamage extends AbstractAffixe {
     private static final long serialVersionUID = 3710812042416955626L;
 
     public AffixeFrostDamage() {
-        name = "+%d to Frost Damage";
         type = AffixeRarity.NORMAL;
         excludedItemType = asList(new ItemType[] {ARMOR, HELMET, SHIELD, AMULET, RING});
     }
@@ -31,4 +30,8 @@ public class AffixeFrostDamage extends AbstractAffixe {
         character.setFrostDamage(character.getFrostDamage() + value);
     }
 
+    @Override
+    public String getName() {
+        return "+%d to Frost Damage";
+    }
 }

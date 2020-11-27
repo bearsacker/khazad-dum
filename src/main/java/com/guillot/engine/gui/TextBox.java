@@ -5,6 +5,7 @@ import static com.guillot.engine.configs.GUIConfig.TEXTBOX_PADDING;
 import static com.guillot.engine.configs.GUIConfig.TEXTBOX_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.TEXTBOX_SPRITE_SIZE;
 import static com.guillot.engine.configs.GUIConfig.TEXTBOX_TEXT_COLOR;
+import static com.guillot.engine.gui.GUI.drawColoredString;
 
 import java.util.ArrayList;
 
@@ -53,20 +54,19 @@ public class TextBox extends Component {
 
     @Override
     public void paint(Graphics g) {
+        g.pushTransform();
+        g.translate(x, y);
+
         if (drawBox) {
-            g.pushTransform();
-            g.translate(x, y);
-
             GUI.drawTiledImage(image, filter, width, height, TEXTBOX_SPRITE_SIZE, TEXTBOX_SPRITE_SIZE, TEXTBOX_BORDER);
-
-            g.popTransform();
         }
 
         for (String line : lines) {
-            GUI.get().getFont().drawString(x + TEXTBOX_PADDING, y + lines.indexOf(line) * GUI.get().getFont().getHeight() + TEXTBOX_PADDING,
-                    line,
-                    textColor);
+            drawColoredString(g, GUI.get().getFont(), TEXTBOX_PADDING,
+                    lines.indexOf(line) * GUI.get().getFont().getHeight() + TEXTBOX_PADDING, line, TEXTBOX_TEXT_COLOR);
         }
+
+        g.popTransform();
     }
 
     private void resizeWidth() {
