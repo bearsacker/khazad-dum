@@ -1,10 +1,13 @@
 package com.guillot.moria.component;
 
 
+import static com.guillot.moria.ressources.Colors.ITEM_BLOCK;
+import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.ressources.Colors.ITEM_SELECTED;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
 
@@ -15,14 +18,6 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.ItemBlock;
 
 public class ItemBlockComponent extends Component {
-
-    private final static Color LEGENDARY_COLOR = new Color(Color.yellow);
-
-    private final static Color MAGIC_COLOR = new Color(Color.cyan);
-
-    private final static Color BLOCK_COLOR = new Color(1f, 1f, 1f, .2f);
-
-    private final static Color SELECTED_COLOR = new Color(1f, 1f, 1f, .5f);
 
     private final static int BLOCK_SIZE = 64;
 
@@ -91,12 +86,12 @@ public class ItemBlockComponent extends Component {
         g.pushTransform();
         g.translate(x, y);
 
-        g.setColor(BLOCK_COLOR);
+        g.setColor(ITEM_BLOCK.getColor());
         g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
 
         if (item != null) {
             if (mouseOn() || inventory.getSelectedItem() == item) {
-                g.setColor(SELECTED_COLOR);
+                g.setColor(ITEM_SELECTED.getColor());
                 g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
             }
 
@@ -106,11 +101,11 @@ public class ItemBlockComponent extends Component {
 
             switch (item.getRarity()) {
             case LEGENDARY:
-                g.setColor(LEGENDARY_COLOR);
+                g.setColor(ITEM_LEGENDARY.getColor());
                 g.fill(shape);
                 break;
             case MAGIC:
-                g.setColor(MAGIC_COLOR);
+                g.setColor(ITEM_MAGIC.getColor());
                 g.fill(shape);
                 break;
             default:

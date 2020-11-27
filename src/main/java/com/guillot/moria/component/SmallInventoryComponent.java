@@ -1,9 +1,12 @@
 package com.guillot.moria.component;
 
 
+import static com.guillot.moria.ressources.Colors.ITEM_BLOCK;
+import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
+
 import java.util.HashSet;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
 
@@ -15,12 +18,6 @@ import com.guillot.moria.item.Equipable;
 public class SmallInventoryComponent extends Component {
 
     private final static int BLOCK_SIZE = 32;
-
-    private final static Color BLOCK_COLOR = new Color(1f, 1f, 1f, .2f);
-
-    private final static Color LEGENDARY_COLOR = new Color(Color.yellow);
-
-    private final static Color MAGIC_COLOR = new Color(Color.cyan);
 
     private HashSet<Equipable> items;
 
@@ -51,7 +48,7 @@ public class SmallInventoryComponent extends Component {
     }
 
     private void paintItem(Graphics g, AbstractItem item) {
-        g.setColor(BLOCK_COLOR);
+        g.setColor(ITEM_BLOCK.getColor());
         g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
 
         if (item != null) {
@@ -61,11 +58,11 @@ public class SmallInventoryComponent extends Component {
 
             switch (item.getRarity()) {
             case LEGENDARY:
-                g.setColor(LEGENDARY_COLOR);
+                g.setColor(ITEM_LEGENDARY.getColor());
                 g.fill(shape);
                 break;
             case MAGIC:
-                g.setColor(MAGIC_COLOR);
+                g.setColor(ITEM_MAGIC.getColor());
                 g.fill(shape);
                 break;
             default:

@@ -4,6 +4,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public enum Images {
+    LOGO("sprites/logo.png"), //
+    LOGO_TEXT("sprites/logo-text.png"), //
+
     GRANITE_WALL("sprites/granite_wall.png", 64, 96), //
     MAGMA_WALL("sprites/magma_wall.png", 64, 96), //
     QUARTZ_WALL("sprites/quartz_wall.png", 64, 96), //

@@ -1,11 +1,16 @@
 package com.guillot.moria.component;
 
 
+import static com.guillot.moria.ressources.Colors.ITEM_BLOCK;
+import static com.guillot.moria.ressources.Colors.ITEM_EQUIPED;
+import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.ressources.Colors.ITEM_NOT_EQUIPABLE;
+import static com.guillot.moria.ressources.Colors.ITEM_SELECTED;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
 
@@ -22,18 +27,6 @@ public class InventoryGridComponent extends Component {
     private final static int BLOCK_SIZE = 80;
 
     private final static int BORDER_BLOCK_SIZE = 8;
-
-    private final static Color BLOCK_COLOR = new Color(1f, 1f, 1f, .2f);
-
-    private final static Color SELECTED_COLOR = new Color(1f, 1f, 1f, .5f);
-
-    private final static Color EQUIPED_COLOR = new Color(1f, 1f, 0f, .5f);
-
-    private final static Color NOT_EQUIPABLE_COLOR = new Color(1f, 0f, 0f, .5f);
-
-    private final static Color LEGENDARY_COLOR = new Color(Color.yellow);
-
-    private final static Color MAGIC_COLOR = new Color(Color.cyan);
 
     private AbstractCharacter player;
 
@@ -93,7 +86,7 @@ public class InventoryGridComponent extends Component {
             int x = (i % INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
             int y = (i / INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
 
-            g.setColor(BLOCK_COLOR);
+            g.setColor(ITEM_BLOCK.getColor());
             g.fillRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
                     BLOCK_SIZE - BORDER_BLOCK_SIZE * 2);
         }
@@ -104,17 +97,17 @@ public class InventoryGridComponent extends Component {
             int y = (i / INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
 
             if (player != null && player.isEquipedByItem(item)) {
-                g.setColor(EQUIPED_COLOR);
+                g.setColor(ITEM_EQUIPED.getColor());
                 g.fillRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
                         BLOCK_SIZE - BORDER_BLOCK_SIZE * 2);
             } else if (selectedItem == item || hoveredItem == item) {
-                g.setColor(SELECTED_COLOR);
+                g.setColor(ITEM_SELECTED.getColor());
                 g.fillRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
                         BLOCK_SIZE - BORDER_BLOCK_SIZE * 2);
             }
 
             if (player != null && item instanceof Equipable && !((Equipable) item).isEquipable(player)) {
-                g.setColor(NOT_EQUIPABLE_COLOR);
+                g.setColor(ITEM_NOT_EQUIPABLE.getColor());
                 g.drawRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
                         BLOCK_SIZE - BORDER_BLOCK_SIZE * 2);
             }
@@ -129,11 +122,11 @@ public class InventoryGridComponent extends Component {
 
             switch (item.getRarity()) {
             case LEGENDARY:
-                g.setColor(LEGENDARY_COLOR);
+                g.setColor(ITEM_LEGENDARY.getColor());
                 g.fill(shape);
                 break;
             case MAGIC:
-                g.setColor(MAGIC_COLOR);
+                g.setColor(ITEM_MAGIC.getColor());
                 g.fill(shape);
                 break;
             default:

@@ -1,6 +1,11 @@
 package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
+import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.moria.ressources.Colors.LIGHT_GREY;
+import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static com.guillot.moria.ressources.Images.LOGO;
+import static com.guillot.moria.ressources.Images.LOGO_TEXT;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static com.guillot.moria.save.GameSaveManager.isSaveFilePresent;
 
@@ -84,6 +89,14 @@ public class MenuView extends View {
 
     @Override
     public void paint(Graphics g) throws Exception {
+        g.pushTransform();
+        g.translate(WIDTH / 2, 96);
+
+        LOGO.getImage().draw(-LOGO.getImage().getWidth(), 0, 2f, YELLOW_PALE.getColor());
+        LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, LIGHT_GREY.getColor());
+
+        g.popTransform();
+
         super.paint(g);
     }
 }

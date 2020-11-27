@@ -2,6 +2,7 @@ package com.guillot.moria.views;
 
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
@@ -42,8 +43,6 @@ import com.guillot.moria.utils.DepthBuffer;
 import com.guillot.moria.utils.Point;
 
 public class GameView extends View {
-
-    private final static Color TURN_COLOR = new Color(223, 207, 134);
 
     public final static int SIZE = 64;
 
@@ -87,7 +86,7 @@ public class GameView extends View {
     public void start() throws Exception {
         depthBuffer = new DepthBuffer<>(EngineConfig.WIDTH, EngineConfig.HEIGHT);
 
-        turnText = new Text("", 8, 8, GUI.get().getFont(2), TURN_COLOR);
+        turnText = new Text("", 8, 8, GUI.get().getFont(2), YELLOW_PALE.getColor());
 
         escapeDialog = new EscapeDialog(this, game);
         inventoryDialog = new InventoryDialog(this, game);
@@ -104,7 +103,7 @@ public class GameView extends View {
 
         lifeBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 44, 256, 32, 100);
         xpBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
-        xpBar.setValueColor(new Color(223, 207, 134));
+        xpBar.setValueColor(YELLOW_PALE.getColor());
 
         add(turnText, cursorTextBox, lifeBar, xpBar, doorDialog, console, escapeDialog, inventoryDialog, characterDialog, mapDialog,
                 smallCharacterDialog);
