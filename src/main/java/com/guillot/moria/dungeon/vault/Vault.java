@@ -10,8 +10,11 @@ public class Vault {
 
     private ArrayList<AbstractItem> items;
 
+    private int limit;
+
     public Vault() {
         items = new ArrayList<>();
+        limit = VAULT_LIMIT;
     }
 
     public ArrayList<AbstractItem> getItems() {
@@ -23,12 +26,20 @@ public class Vault {
     }
 
     public boolean addItem(AbstractItem item) {
-        if (item != null && items.size() < VAULT_LIMIT) {
+        if (item != null && items.size() < limit) {
             items.add(item);
             return true;
         }
 
         return false;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
 }

@@ -195,7 +195,7 @@ public class GameView extends View {
                             itemsName += "\n";
                         }
 
-                        itemsName += items.get(i).getName();
+                        itemsName += items.get(i).getFormattedName();
                     }
                     showTextBox(itemsName);
                 }

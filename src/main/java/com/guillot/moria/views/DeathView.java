@@ -32,7 +32,7 @@ public class DeathView extends View {
 
         this.player = game.getPlayer();
 
-        inventoryGrid = new InventoryGridComponent(player);
+        inventoryGrid = new InventoryGridComponent(null, player.getInventory(), player.getInventoryLimit());
         inventoryGrid.setX(128);
         inventoryGrid.setY(64);
 

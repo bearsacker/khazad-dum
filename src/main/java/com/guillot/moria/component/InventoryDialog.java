@@ -214,7 +214,7 @@ public class InventoryDialog extends SubView {
             if (item instanceof Usable) {
                 if (((Usable) item).use(player)) {
                     player.getInventory().remove(item);
-                    game.addMessage("GREEN_PALE@@You@@WHITE@@ use " + item.getName());
+                    game.addMessage("GREEN_PALE@@You@@WHITE@@ use @@" + item.getFormattedName());
                     inventoryGrid.setSelectedItem(null);
                     inventoryGrid.setHoveredItem(null);
                 }
@@ -232,7 +232,7 @@ public class InventoryDialog extends SubView {
         if (player.dropItem(parent.getDungeon(), item)) {
             player.unequipItem(item);
 
-            game.addMessage("GREEN_PALE@@You@@WHITE@@ drop " + item.getName());
+            game.addMessage("GREEN_PALE@@You@@WHITE@@ drop @@" + item.getFormattedName());
             inventoryGrid.setSelectedItem(null);
             inventoryGrid.setHoveredItem(null);
         }

@@ -19,10 +19,13 @@ import static org.lwjgl.opengl.ARBShaderObjects.glUseProgramObjectARB;
 import static org.lwjgl.opengl.ARBShaderObjects.glValidateProgramARB;
 import static org.lwjgl.opengl.ARBVertexShader.GL_VERTEX_SHADER_ARB;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1;
 import static org.lwjgl.opengl.GL20.glUniform1f;
 import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform2f;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 
 import java.io.BufferedReader;
@@ -32,9 +35,10 @@ import java.nio.IntBuffer;
 import java.util.stream.Collectors;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class Shader {
@@ -89,9 +93,23 @@ public class Shader {
         return true;
     }
 
+    public void setUniform(String name, Image image, int unit) {
+        GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
+
+        glBindTexture(GL_TEXTURE_2D, image.getTexture().getTextureID());
+        setUniform(name, unit);
+    }
+
+    public void setUniform(String name, FrameBuffer buffer) {
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
+        glBindTexture(GL_TEXTURE_2D, buffer.getTextureId());
+        setUniform(name, 0);
+    }
+
     public void setUniform(String name, Vector2f object) {
         loc = glGetUniformLocation(program, name);
-        GL20.glUniform2f(loc, object.x, object.y);
+        glUniform2f(loc, object.x, object.y);
     }
 
     public void setUniform(String name, Vector3f object) {

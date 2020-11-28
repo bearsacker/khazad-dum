@@ -135,8 +135,24 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
         return image.getImage();
     }
 
-    public String getName() {
+    public String geName() {
         return name;
+    }
+
+    public String getFormattedName() {
+        String color = LIGHT_GREY.name();
+        switch (rarity) {
+        case LEGENDARY:
+            color = ITEM_LEGENDARY.name();
+            break;
+        case MAGIC:
+            color = ITEM_MAGIC.name();
+            break;
+        case NORMAL:
+            break;
+        }
+
+        return color + "@@" + name;
     }
 
     public void setName(String name) {
@@ -166,19 +182,7 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
 
     @Override
     public String toString() {
-        String color = LIGHT_GREY.name();
-        switch (rarity) {
-        case LEGENDARY:
-            color = ITEM_LEGENDARY.name();
-            break;
-        case MAGIC:
-            color = ITEM_MAGIC.name();
-            break;
-        case NORMAL:
-            break;
-        }
-
-        String text = color + "@@" + name + " - " + type + "\n";
+        String text = getFormattedName() + " - " + type + "\n";
         text += LIGHT_GREY.name() + "@@Quality level " + qualityLevel + " (" + rarity + ")\n\n";
         if (getValueName() != null) {
             text += "ROSE_PALE@@     " + getValueName() + ": @@LIGHT_GREY@@" + value + "\n";

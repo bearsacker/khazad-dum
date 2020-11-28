@@ -1,5 +1,7 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.EngineConfig.HEIGHT;
+import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.FONT;
 import static com.guillot.engine.configs.GUIConfig.FONT_SIZES;
 
@@ -16,6 +18,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
+import com.guillot.engine.opengl.FrameBuffer;
+import com.guillot.engine.opengl.OpenGL;
 import com.guillot.engine.utils.FileLoader;
 import com.guillot.moria.ressources.Colors;
 
@@ -42,11 +46,18 @@ public class GUI {
 
     private ArrayList<TrueTypeFont> fonts;
 
+    private ArrayList<Bindable> shaders;
+
+    private FrameBuffer frameBuffer;
+
     public static GUI get() {
         return instance;
     }
 
     private GUI() {
+        frameBuffer = new FrameBuffer(WIDTH, HEIGHT);
+
+        shaders = new ArrayList<>();
         fonts = new ArrayList<>();
         for (String size : FONT_SIZES) {
             try {
@@ -111,7 +122,13 @@ public class GUI {
     public void paint(Graphics g) {
         try {
             if (currentView != null) {
+                frameBuffer.bind();
                 currentView.paint(g);
+                frameBuffer.unbind();
+
+                shaders.forEach(x -> x.bind());
+                OpenGL.drawRectangle(0, 0, WIDTH, HEIGHT, frameBuffer.getTextureId());
+                shaders.forEach(x -> x.unbind());
             }
         } catch (Exception e) {
             switchView(new ViewException(e));
@@ -203,6 +220,18 @@ public class GUI {
 
     public Input getInput() {
         return input;
+    }
+
+    public void addShader(Bindable shader) {
+        shaders.add(shader);
+    }
+
+    public boolean containsShader(String name) {
+        return shaders.stream().anyMatch(x -> x.getName().equals(name));
+    }
+
+    public ArrayList<Bindable> getShaders() {
+        return shaders;
     }
 
     public static void drawTiledImage(Image image, Color filter, int width, int height, int spriteWidth, int spriteHeight, int borderSize) {

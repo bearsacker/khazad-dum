@@ -27,7 +27,7 @@ public class VaultDialog extends Window {
     private TextBox itemTextBox;
 
     public VaultDialog(View parent) throws Exception {
-        super(parent, 256, 128, WIDTH - 512, HEIGHT - 448, "GREEN_PALE@@You@@WHITE@@r vault");
+        super(parent, 256, 128, WIDTH - 512, HEIGHT - 448, "Your vault");
 
         vault = VaultSaveManager.loadSaveFile(VAULT_SAVE_PATH);
 

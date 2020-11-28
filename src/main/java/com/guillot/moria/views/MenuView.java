@@ -33,6 +33,10 @@ public class MenuView extends View {
 
     @Override
     public void start() throws Exception {
+        if (!GUI.get().containsShader("magicalShader")) {
+            GUI.get().addShader(new MagicalShader());
+        }
+
         newGameButton = new LinkButton("New game", 64, HEIGHT - 244, 256);
         newGameButton.setFont(GUI.get().getFont(1));
         newGameButton.setEvent(new Event() {
@@ -95,7 +99,7 @@ public class MenuView extends View {
         g.pushTransform();
         g.translate(WIDTH / 2, 96);
 
-        LOGO.getImage().draw(-LOGO.getImage().getWidth(), 0, 2f, YELLOW.getColor());
+        LOGO.getImage().draw(-LOGO.getImage().getWidth() / 2, 0, YELLOW.getColor());
         LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, LIGHT_GREY.getColor());
 
         g.popTransform();

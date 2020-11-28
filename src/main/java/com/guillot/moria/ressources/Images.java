@@ -29,6 +29,8 @@ public enum Images {
     PARCHMENT("sprites/parchment.png"), //
     MAP_CURSOR("sprites/map_cursor.png"), //
 
+    MAGICAL_OVERLAY("sprites/magical.png"), //
+
     DICE("sprites/items.png", 16, 16, 12, 11), //
     COPPER("sprites/items.png", 16, 16, 1, 5), //
     SILVER("sprites/items.png", 16, 16, 2, 5), //

@@ -25,6 +25,7 @@ public class VaultSaveManager {
         ObjectOutputStream stream = new ObjectOutputStream(fos);
 
         stream.writeInt(VAULT_VERSION);
+        stream.writeInt(vault.getLimit());
         stream.writeInt(vault.getItems().size());
         for (AbstractItem item : vault.getItems()) {
             stream.writeObject(item);
@@ -47,6 +48,7 @@ public class VaultSaveManager {
 
         int version = stream.readInt();
         if (version == VAULT_VERSION) {
+            vault.setLimit(stream.readInt());
             int itemsNumber = stream.readInt();
             for (int i = 0; i < itemsNumber; i++) {
                 vault.getItems().add((AbstractItem) stream.readObject());

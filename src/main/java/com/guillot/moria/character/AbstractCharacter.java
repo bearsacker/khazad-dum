@@ -734,12 +734,12 @@ public abstract class AbstractCharacter implements Serializable {
             if (attack == null) {
                 game.addMessage(getName() + " misses his attack!");
             } else {
-                String message = (attack.isCritical() ? "Critical hit! " : "");
+                String message = (attack.isCritical() ? "RED_PALE@@Critical hit! @@WHITE@@" : "WHITE@@");
                 int damagesReceived = target.takeAHit(attack);
                 if (damagesReceived < 0) {
                     message += target.getName() + " dodges the attack!";
                 } else {
-                    message += target.getName() + " takes " + damagesReceived + " damages!";
+                    message += target.getName() + " takes @@RED_PALE@@" + damagesReceived + "@@WHITE@@ damages!";
                 }
 
                 game.addMessage(message);
