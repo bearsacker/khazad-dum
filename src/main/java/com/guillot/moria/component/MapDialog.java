@@ -2,7 +2,6 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 import static com.guillot.moria.ressources.Images.MAP_CURSOR;
 import static com.guillot.moria.ressources.Images.PARCHMENT;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
@@ -11,7 +10,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.GUI;
-import com.guillot.engine.gui.SubView;
+import com.guillot.engine.gui.Window;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.Entity;
 import com.guillot.moria.dungeon.Tile;
@@ -19,7 +18,7 @@ import com.guillot.moria.utils.Point;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
-public class MapDialog extends SubView {
+public class MapDialog extends Window {
 
     private final static Color TRANSPARENT_COLOR = new Color(0f, 0f, 0f, 0f);
 
@@ -36,7 +35,8 @@ public class MapDialog extends SubView {
     private GameState game;
 
     public MapDialog(GameView parent, GameState game) throws Exception {
-        super(parent);
+        super(parent, 0, 0, WIDTH, HEIGHT, "Maps");
+        setShowCloseButton(true);
 
         this.game = game;
     }
@@ -59,15 +59,14 @@ public class MapDialog extends SubView {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(DIALOG_OVERLAY_COLOR);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        super.paint(g);
 
-        int width = PARCHMENT.getImage().getWidth() * HEIGHT / PARCHMENT.getImage().getHeight();
+        int width = PARCHMENT.getImage().getWidth() * (HEIGHT - 112) / PARCHMENT.getImage().getHeight();
 
         g.pushTransform();
-        g.translate(x + (WIDTH - width) / 2, y);
+        g.translate(32, 64);
 
-        g.drawImage(PARCHMENT.getImage(), 0, 0, width, HEIGHT, 0, 0,
+        g.drawImage(PARCHMENT.getImage(), 0, 0, width, HEIGHT - 112, 0, 0,
                 PARCHMENT.getImage().getWidth(), PARCHMENT.getImage().getHeight());
 
         g.popTransform();
@@ -142,13 +141,6 @@ public class MapDialog extends SubView {
         g.drawImage(MAP_CURSOR.getImage(), playerPosition.x * PIXEL_SIZE - 4, mapHeight - playerPosition.y * PIXEL_SIZE - 4);
 
         g.popTransform();
-
-        String text = "Level " + game.getDungeon().getLevel();
-        int widthText = GUI.get().getFont(2).getWidth(text);
-
-        GUI.get().getFont(1).drawString(WIDTH / 2 - widthText / 2, HEIGHT - 80, text, Color.black);
-
-        super.paint(g);
     }
 
 }

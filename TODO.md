@@ -1,4 +1,4 @@
-Simple UI: Close button for window and base button on game (map/character/escape/inventory)
+Simple UI: Base button on game (map/character/escape/inventory)
 Character creation screen
 DeathView
 Character Dialog

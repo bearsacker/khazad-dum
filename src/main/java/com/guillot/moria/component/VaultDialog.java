@@ -28,6 +28,7 @@ public class VaultDialog extends Window {
 
     public VaultDialog(View parent) throws Exception {
         super(parent, 256, 128, WIDTH - 512, HEIGHT - 448, "Your vault");
+        setShowCloseButton(true);
 
         vault = VaultSaveManager.loadSaveFile(VAULT_SAVE_PATH);
 

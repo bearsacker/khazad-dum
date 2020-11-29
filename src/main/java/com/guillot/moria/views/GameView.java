@@ -306,6 +306,7 @@ public class GameView extends View {
         super.paint(g);
     }
 
+    // TODO Improve with diag movements
     private void computeViewedTiles(HashMap<Point, Integer> depthList, Tile[][] grid, Point position, int length) {
         if (length >= getPlayer().getLightRadius()) {
             return;

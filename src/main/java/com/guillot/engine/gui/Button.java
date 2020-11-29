@@ -74,6 +74,10 @@ public class Button extends Component {
         sizeAuto = false;
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public boolean isSizeAuto() {
         return sizeAuto;
     }

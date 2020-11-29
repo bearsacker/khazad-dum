@@ -6,6 +6,8 @@ import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_BODY_BORDER;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_BODY_SIZE;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_BODY_SPRITE;
+import static com.guillot.engine.configs.GUIConfig.WINDOW_CLOSE_BUTTON_SIZE;
+import static com.guillot.engine.configs.GUIConfig.WINDOW_CLOSE_BUTTON_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_BORDER;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_HEIGHT;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_SPRITE;
@@ -20,6 +22,8 @@ public class Window extends SubView {
     private Image imageHeader;
 
     private Image imageBody;
+
+    private Button closeButton;
 
     protected String title;
 
@@ -45,6 +49,25 @@ public class Window extends SubView {
         imageBody.setFilter(Image.FILTER_NEAREST);
         showOverlay = true;
         showHeader = true;
+
+        closeButton = new Button("", x + width - WINDOW_HEADER_BORDER / 2 - WINDOW_CLOSE_BUTTON_SIZE, y + WINDOW_HEADER_BORDER / 2,
+                WINDOW_CLOSE_BUTTON_SIZE, WINDOW_CLOSE_BUTTON_SIZE);
+        closeButton.setImage(new Image(WINDOW_CLOSE_BUTTON_SPRITE));
+        closeButton.setVisible(false);
+        closeButton.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                close();
+            }
+        });
+    }
+
+    @Override
+    public void update() throws Exception {
+        super.update();
+
+        closeButton.update();
     }
 
     @Override
@@ -73,6 +96,11 @@ public class Window extends SubView {
         super.paint(g);
 
         g.popTransform();
+
+        // TODO with window position
+        if (isShowCloseButton()) {
+            closeButton.paint(g);
+        }
     }
 
     @Override
@@ -80,6 +108,18 @@ public class Window extends SubView {
 
     @Override
     public void onHide() throws Exception {}
+
+    public void close() {
+        setVisible(false);
+    }
+
+    public void setImageHeader(Image imageHeader) {
+        this.imageHeader = imageHeader;
+    }
+
+    public void setImageBody(Image imageBody) {
+        this.imageBody = imageBody;
+    }
 
     public boolean isShowOverlay() {
         return showOverlay;
@@ -95,6 +135,14 @@ public class Window extends SubView {
 
     public void setShowHeader(boolean showHeader) {
         this.showHeader = showHeader;
+    }
+
+    public void setShowCloseButton(boolean showCloseButton) {
+        closeButton.setVisible(showCloseButton);
+    }
+
+    public boolean isShowCloseButton() {
+        return closeButton.isVisible();
     }
 
     public String getTitle() {

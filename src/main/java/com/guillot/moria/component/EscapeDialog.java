@@ -22,11 +22,10 @@ public class EscapeDialog extends Window {
     private Button saveAndQuitButton;
 
     public EscapeDialog(GameView parent, GameState game) throws Exception {
-        super(parent, 256, 224, WIDTH - 512, 240);
+        super(parent, 256, 256, WIDTH - 512, 240, "Menu");
+        setShowCloseButton(true);
 
-        showHeader = false;
-
-        saveAndBackToMenuButton = new Button("Save and Back to menu", WIDTH / 2 - 144, y + 64, 288, 48);
+        saveAndBackToMenuButton = new Button("Save and Back to menu", WIDTH / 2 - 144, y + 80, 288, 48);
         saveAndBackToMenuButton.setEvent(new Event() {
 
             @Override
@@ -36,7 +35,7 @@ public class EscapeDialog extends Window {
             }
         });
 
-        saveAndQuitButton = new Button("Save and Quit", WIDTH / 2 - 144, y + 128, 288, 48);
+        saveAndQuitButton = new Button("Save and Quit", WIDTH / 2 - 144, y + 144, 288, 48);
         saveAndQuitButton.setEvent(new Event() {
 
             @Override

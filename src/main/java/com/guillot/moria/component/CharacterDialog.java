@@ -36,6 +36,7 @@ public class CharacterDialog extends Window {
 
     public CharacterDialog(GameView parent, GameState game) throws Exception {
         super(parent, 128, 96, WIDTH - 256, 0);
+        setShowCloseButton(true);
 
         this.player = game.getPlayer();
 

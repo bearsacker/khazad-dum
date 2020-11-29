@@ -11,11 +11,11 @@ import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 import java.util.Collections;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
-import com.guillot.engine.gui.SubView;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
@@ -26,7 +26,7 @@ import com.guillot.moria.item.Usable;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
-public class InventoryDialog extends SubView {
+public class InventoryDialog extends Window {
 
     private GameView parent;
 
@@ -59,7 +59,8 @@ public class InventoryDialog extends SubView {
     private ItemBlockComponent itemBlockFinger;
 
     public InventoryDialog(GameView parent, GameState game) throws Exception {
-        super(parent);
+        super(parent, 0, 0, WIDTH, HEIGHT, "Inventory");
+        setShowCloseButton(true);
 
         this.parent = parent;
         this.game = game;
@@ -87,9 +88,10 @@ public class InventoryDialog extends SubView {
 
         inventoryGrid = new InventoryGridComponent(player);
         inventoryGrid.setX(128);
-        inventoryGrid.setY(64);
+        inventoryGrid.setY(128);
 
         itemWindow = new Window(parent, 0, HEIGHT, WIDTH, 0);
+        itemWindow.setImageHeader(new Image("gui/window_header_alternate.png"));
         itemWindow.setShowOverlay(false);
         itemWindow.setVisible(false);
 
@@ -105,27 +107,27 @@ public class InventoryDialog extends SubView {
 
         itemBlockNeck = new ItemBlockComponent(this, player, ItemBlock.NECK);
         itemBlockNeck.setX(WIDTH - 360);
-        itemBlockNeck.setY(68);
+        itemBlockNeck.setY(132);
 
         itemBlockHead = new ItemBlockComponent(this, player, ItemBlock.HEAD);
         itemBlockHead.setX(WIDTH - 280);
-        itemBlockHead.setY(68);
+        itemBlockHead.setY(132);
 
         itemBlockBody = new ItemBlockComponent(this, player, ItemBlock.BODY);
         itemBlockBody.setX(WIDTH - 280);
-        itemBlockBody.setY(148);
+        itemBlockBody.setY(212);
 
         itemBlockLeftHand = new ItemBlockComponent(this, player, ItemBlock.LEFT_HAND);
         itemBlockLeftHand.setX(WIDTH - 200);
-        itemBlockLeftHand.setY(148);
+        itemBlockLeftHand.setY(212);
 
         itemBlockRightHand = new ItemBlockComponent(this, player, ItemBlock.RIGHT_HAND);
         itemBlockRightHand.setX(WIDTH - 360);
-        itemBlockRightHand.setY(148);
+        itemBlockRightHand.setY(212);
 
         itemBlockFinger = new ItemBlockComponent(this, player, ItemBlock.FINGER);
         itemBlockFinger.setX(WIDTH - 200);
-        itemBlockFinger.setY(228);
+        itemBlockFinger.setY(292);
 
         add(itemWindow, buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
                 itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, itemTextBox, cursorTextBox);
@@ -161,10 +163,10 @@ public class InventoryDialog extends SubView {
         if (inventoryGrid.getHoveredItem() != null) {
             itemTextBox.setText(inventoryGrid.getHoveredItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
-            itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
+            itemTextBox.setY(HEIGHT - itemTextBox.getHeight());
             itemTextBox.setVisible(true);
 
-            itemWindow.setHeight(itemTextBox.getHeight() + 64);
+            itemWindow.setHeight(itemTextBox.getHeight() + 40);
             itemWindow.setY(HEIGHT - itemWindow.getHeight());
             itemWindow.setVisible(true);
         } else if (inventoryGrid.getSelectedItem() != null) {

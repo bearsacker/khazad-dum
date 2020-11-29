@@ -52,6 +52,10 @@ public final class GUIConfig extends Config {
 
     public final static int WINDOW_BODY_SIZE = get().getInt("gui.window.body.size", 32);
 
+    public final static String WINDOW_CLOSE_BUTTON_SPRITE = get().getString("gui.window.button.sprite", "gui/default_window_button.png");
+
+    public final static int WINDOW_CLOSE_BUTTON_SIZE = get().getInt("gui.window.button.size", 32);
+
     // Textbox
 
     public final static String TEXTBOX_SPRITE = get().getString("gui.textbox.sprite", "gui/default_textbox.png");

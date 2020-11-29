@@ -34,6 +34,7 @@ public class DoorDialog extends Window {
 
     public DoorDialog(GameView parent, GameState game) throws Exception {
         super(parent, 256, 224, WIDTH - 512, HEIGHT - 448, "The door is locked!");
+        setShowCloseButton(true);
 
         this.game = game;
         this.player = game.getPlayer();
