@@ -5,7 +5,11 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.DIALOG_BUTTON_TEXT;
 import static com.guillot.engine.configs.GUIConfig.EXCEPTION_TEXT_COLOR;
 
+import org.apache.log4j.Logger;
+
 public class ViewException extends View {
+
+    private final static Logger logger = Logger.getLogger(ViewException.class);
 
     private Exception exception;
 
@@ -15,7 +19,7 @@ public class ViewException extends View {
 
     @Override
     public void start() throws Exception {
-        exception.printStackTrace();
+        logger.error(exception);
 
         String text = "";
         StackTraceElement[] traces = exception.getStackTrace();

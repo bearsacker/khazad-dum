@@ -5,6 +5,7 @@ import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.newdawn.slick.SlickException;
 
 import com.guillot.engine.Game;
@@ -18,6 +19,8 @@ import com.guillot.moria.save.GameSaveManager;
 import com.guillot.moria.utils.RNG;
 
 public class GameState {
+
+    private final static Logger logger = Logger.getLogger(GameState.class);
 
     private final static int NUMBER_LEVELS = 9;
 
@@ -55,7 +58,7 @@ public class GameState {
         try {
             GameSaveManager.loadSaveFile(this, path);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

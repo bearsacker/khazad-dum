@@ -36,8 +36,6 @@ public class NumberGenerator {
 
     private NumberGenerator() {
         seed = System.currentTimeMillis();
-        System.out.println(seed);
-
         random = new Random();
         random.setSeed(seed);
     }

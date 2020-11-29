@@ -53,6 +53,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.Monster;
@@ -64,6 +66,8 @@ import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 
 public class Dungeon {
+
+    private final static Logger logger = Logger.getLogger(Dungeon.class);
 
     private int level;
 
@@ -110,7 +114,7 @@ public class Dungeon {
 
     // Cave logic flow for generation of new dungeon
     public boolean generate() {
-        System.out.println("Generating dungeon of level " + level + " [seed=" + RNG.get().getSeed() + "]...");
+        logger.debug("Generating dungeon of level " + level + " [seed=" + RNG.get().getSeed() + "]...");
 
         for (int y = 0; y < DUNGEON_MAX_HEIGHT; y++) {
             for (int x = 0; x < DUNGEON_MAX_WIDTH; x++) {
@@ -138,7 +142,7 @@ public class Dungeon {
         }
 
         // Build rooms
-        System.out.println("Building " + random_room_count + " rooms...");
+        logger.debug("Building " + random_room_count + " rooms...");
         ArrayList<Point> locations = new ArrayList<>();
 
         for (int row = 0; row < row_rooms; row++) {
@@ -261,7 +265,7 @@ public class Dungeon {
     // Builds a room at a row, column coordinate
     // Type 1 unusual rooms are several overlapping rectangular ones
     private void buildRoomOverlappingRectangles(Point coord) {
-        System.out.println("Building room overlapping rectangles at " + coord + "...");
+        logger.debug("Building room overlapping rectangles at " + coord + "...");
         Tile floor = ROOM_FLOOR;
 
         int limit = 1 + RNG.get().randomNumber(2);
@@ -348,12 +352,12 @@ public class Dungeon {
         // Inner room variations
         switch (InnerRoom.random()) {
         case PLAIN:
-            System.out.println("Building room with inner rooms (plain) at " + coord + "...");
+            logger.debug("Building room with inner rooms (plain) at " + coord + "...");
             eraseInnerRoom(depth, height, left, right);
             placeVaultMonster(coord, 1);
             break;
         case TREASURE_VAULT:
-            System.out.println("Building room with inner rooms (treasure vault) at " + coord + "...");
+            logger.debug("Building room with inner rooms (treasure vault) at " + coord + "...");
             placeTreasureVault(coord, depth, height, left, right);
 
             // Guard the treasure well
@@ -363,7 +367,7 @@ public class Dungeon {
             placeVaultTrap(coord, new Point(10, 4), 2 + RNG.get().randomNumber(3));
             break;
         case PILLARS:
-            System.out.println("Building room with inner rooms (pillars) at " + coord + "...");
+            logger.debug("Building room with inner rooms (pillars) at " + coord + "...");
             eraseInnerRoom(depth, height, left, right);
 
             placeInnerPillars(coord);
@@ -395,7 +399,7 @@ public class Dungeon {
             placeVaultMonster(new Point(coord.x + 2, coord.y), RNG.get().randomNumber(2));
             break;
         case MAZE:
-            System.out.println("Building room with inner rooms (maze) at " + coord + "...");
+            logger.debug("Building room with inner rooms (maze) at " + coord + "...");
             eraseInnerRoom(depth, height, left, right);
 
             placeMazeInsideRoom(depth, height, left, right);
@@ -414,7 +418,7 @@ public class Dungeon {
             }
             break;
         case FOUR_SMALL_ROOMS:
-            System.out.println("Building room with inner rooms (four small rooms) at " + coord + "...");
+            logger.debug("Building room with inner rooms (four small rooms) at " + coord + "...");
             placeFourSmallRooms(coord, depth, height, left, right);
 
             // Treasure in each one.
@@ -493,11 +497,11 @@ public class Dungeon {
         // Special features.
         switch (RNG.get().randomNumber(4)) {
         case 1: // Large middle pillar
-            System.out.println("Building room cross shaped (large middle pillar) at " + coord + "...");
+            logger.debug("Building room cross shaped (large middle pillar) at " + coord + "...");
             placeLargeMiddlePillar(coord);
             break;
         case 2: // Inner treasure vault
-            System.out.println("Building room cross shaped (treasure vault) at " + coord + "...");
+            logger.debug("Building room cross shaped (treasure vault) at " + coord + "...");
             placeVault(coord);
 
             // Place a secret door
@@ -518,7 +522,7 @@ public class Dungeon {
             placeVaultTrap(coord, new Point(4, 4), 1 + RNG.get().randomNumber(3));
             break;
         case 3:
-            System.out.println("Building room cross shaped at " + coord + "...");
+            logger.debug("Building room cross shaped at " + coord + "...");
             if (RNG.get().randomNumber(3) == 1) {
                 entities.put(new Point(coord.x - 2, coord.y - 1), Entity.PILLAR);
                 entities.put(new Point(coord.x - 2, coord.y + 1), Entity.PILLAR);
@@ -543,7 +547,7 @@ public class Dungeon {
 
     // Builds a room at a row, column coordinate
     private void buildRoom(Point coord) {
-        System.out.println("Building room at " + coord + "...");
+        logger.debug("Building room at " + coord + "...");
         Tile floor = ROOM_FLOOR;
 
         int height = coord.y - RNG.get().randomNumber(4);
@@ -572,7 +576,7 @@ public class Dungeon {
 
     // Constructs a tunnel between two points
     private void buildTunnel(ArrayList<Point> wantedDoors, Point start, Point end) {
-        System.out.println("Building tunnel between " + start + " and " + end + "...");
+        logger.debug("Building tunnel between " + start + " and " + end + "...");
 
         ArrayList<Point> tunnels = new ArrayList<>();
         ArrayList<Point> walls = new ArrayList<>();
@@ -701,7 +705,7 @@ public class Dungeon {
     }
 
     void placeInnerPillars(Point coord) {
-        System.out.println("\t-> Placing inner pillars at " + coord + "...");
+        logger.debug("\t-> Placing inner pillars at " + coord + "...");
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 1; x <= coord.x + 1; x++) {
                 this.floor[y][x] = GRANITE_WALL;
@@ -728,7 +732,7 @@ public class Dungeon {
     }
 
     private void placeLargeMiddlePillar(Point coord) {
-        System.out.println("\t-> Placing large middle pillar at " + coord + "...");
+        logger.debug("\t-> Placing large middle pillar at " + coord + "...");
 
         entities.put(new Point(coord.x, coord.y - 1), Entity.PILLAR);
         entities.put(new Point(coord.x, coord.y + 1), Entity.PILLAR);
@@ -756,21 +760,21 @@ public class Dungeon {
     }
 
     private void placeOpenDoor(Point coord, Direction direction) {
-        System.out.println("\t-> Placing open door at " + coord + "...");
+        logger.debug("\t-> Placing open door at " + coord + "...");
         floor[coord.y][coord.x] = GRANITE_WALL;
 
         doors.add(new Door(coord, DoorState.OPEN, direction));
     }
 
     private void placeLockedDoor(Point coord, Direction direction) {
-        System.out.println("\t-> Placing locked door at " + coord + "...");
+        logger.debug("\t-> Placing locked door at " + coord + "...");
         this.floor[coord.y][coord.x] = GRANITE_WALL;
 
         doors.add(new Door(coord, DoorState.LOCKED, direction));
     }
 
     private void placeStuckDoor(Point coord, Direction direction) {
-        System.out.println("\t-> Placing stuck door at " + coord + "...");
+        logger.debug("\t-> Placing stuck door at " + coord + "...");
         this.floor[coord.y][coord.x] = GRANITE_WALL;
 
         doors.add(new Door(coord, DoorState.STUCK, direction));
@@ -784,7 +788,7 @@ public class Dungeon {
     }
 
     private void placeSecretDoor(Point coord, Direction direction) {
-        System.out.println("\t-> Placing secret door at " + coord + "...");
+        logger.debug("\t-> Placing secret door at " + coord + "...");
         this.floor[coord.y][coord.x] = GRANITE_WALL;
 
         doors.add(new Door(coord, DoorState.SECRET, direction));
@@ -856,7 +860,7 @@ public class Dungeon {
 
     // Places "streamers" of rock through dungeon
     private void placeStreamerRock(Tile rock_type, int chance_of_treasure) {
-        System.out.println("Placing streamer of rock type " + rock_type + "...");
+        logger.debug("Placing streamer of rock type " + rock_type + "...");
 
         // Choose starting point and direction
         Point coord = new Point(
@@ -891,7 +895,7 @@ public class Dungeon {
 
     // Places a staircase 1=up, 2=down
     private Point placeStairs(int stairType, int walls) {
-        System.out.println("Placing stairs of type " + stairType + "...");
+        logger.debug("Placing stairs of type " + stairType + "...");
 
         Point coord1 = new Point();
         Point coord2 = new Point();
@@ -928,19 +932,19 @@ public class Dungeon {
 
     // Place an up staircase at given y, x
     private void placeUpStairs(Point coord) {
-        System.out.println("\t-> Placing up stairs at " + coord + "...");
+        logger.debug("\t-> Placing up stairs at " + coord + "...");
         this.floor[coord.y][coord.x] = UP_STAIR;
     }
 
     // Place a down staircase at given y, x
     private void placeDownStairs(Point coord) {
-        System.out.println("\t-> Placing down stairs at " + coord + "...");
+        logger.debug("\t-> Placing down stairs at " + coord + "...");
         this.floor[coord.y][coord.x] = DOWN_STAIR;
     }
 
     // Places rubble at location y, x
     private void placeRubble(Point coord) {
-        System.out.println("\t-> Placing rubble at " + coord + "...");
+        logger.debug("\t-> Placing rubble at " + coord + "...");
         entities.put(new Point(coord.x, coord.y), Entity.RUBBLE);
     }
 
@@ -965,7 +969,7 @@ public class Dungeon {
     }
 
     private void placeTreasureVault(Point coord, int depth, int height, int left, int right) {
-        System.out.println("\t-> Placing treasure vault at " + coord + "...");
+        logger.debug("\t-> Placing treasure vault at " + coord + "...");
         placeRandomSecretDoor(coord, depth, height, left, right);
         placeVault(coord);
 
@@ -981,7 +985,7 @@ public class Dungeon {
 
     // Place a trap with a given displacement of point
     private void placeVaultMonster(Point coord, int number) {
-        System.out.println("\t-> Placing vault monster at " + coord + "...");
+        logger.debug("\t-> Placing vault monster at " + coord + "...");
         Point spot = new Point();
 
         for (int i = 0; i < number; i++) {
@@ -993,7 +997,7 @@ public class Dungeon {
 
     // Place a trap with a given displacement of point
     private void placeVaultTrap(Point coord, Point displacement, int number) {
-        System.out.println("\t-> Placing vault trap at " + coord + "...");
+        logger.debug("\t-> Placing vault trap at " + coord + "...");
         Point spot = new Point();
 
         for (int i = 0; i < number; i++) {
@@ -1191,7 +1195,7 @@ public class Dungeon {
 
     // Places indestructible rock around edges of dungeon
     private void placeBoundaryWalls() {
-        System.out.println("Placing boundary walls...");
+        logger.debug("Placing boundary walls...");
 
         // put permanent wall on leftmost row and rightmost row
         for (int i = 0; i < this.height; i++) {
@@ -1207,7 +1211,7 @@ public class Dungeon {
     }
 
     private void cleaningGraniteWalls() {
-        System.out.println("Cleaning granite walls...");
+        logger.debug("Cleaning granite walls...");
 
         for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
@@ -1219,7 +1223,7 @@ public class Dungeon {
     }
 
     private void cleaningDoors() {
-        System.out.println("Cleaning doors...");
+        logger.debug("Cleaning doors...");
 
         for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
@@ -1233,7 +1237,7 @@ public class Dungeon {
 
     // Places an object at given row, column co-ordinate
     private void placeRandomObjectAt(Point coord) {
-        System.out.println("\t-> Placing random object at " + coord + "...");
+        logger.debug("\t-> Placing random object at " + coord + "...");
         int qualityLevel = level + RNG.get().randomNumberNormalDistribution(1, 1);
 
         AbstractItem item = ItemGenerator.generateItem(level, qualityLevel);
@@ -1280,7 +1284,7 @@ public class Dungeon {
 
     // Places a treasure (Gold or Gems) at given row, column
     private void placeGold(Point coord) {
-        System.out.println("\t-> Placing gold at " + coord + "...");
+        logger.debug("\t-> Placing gold at " + coord + "...");
         int qualityLevel = ((RNG.get().randomNumber(this.level + 2) + 2) / 2) - 1;
 
         if (RNG.get().randomNumber(TREASURE_CHANCE_OF_GREAT_ITEM) == 1) {
@@ -1298,7 +1302,7 @@ public class Dungeon {
 
     // Allocates an object for tunnels and rooms
     private void allocateAndPlaceObject(List<Tile> types, PlacedObject type, int number) {
-        System.out.println("Placing " + number + " objects of type " + type + "...");
+        logger.debug("Placing " + number + " objects of type " + type + "...");
         Point coord = new Point();
 
         for (int i = 0; i < number; i++) {
@@ -1330,7 +1334,7 @@ public class Dungeon {
 
     // Allocates a random monster
     private void monsterPlaceNewWithinDistance(Point playerPosition, int number, int distanceFromSource, boolean sleeping) {
-        System.out.println("Placing " + number + " monsters...");
+        logger.debug("Placing " + number + " monsters...");
 
         Point position = new Point();
 
@@ -1391,7 +1395,7 @@ public class Dungeon {
 
     // Places a monster at given location
     private void monsterPlaceNew(Point coord, MonsterRace race, boolean sleeping) {
-        System.out.println("\t-> Placing monster at " + coord + "...");
+        logger.debug("\t-> Placing monster at " + coord + "...");
 
         Monster monster = new Monster(race);
         monster.setSleeping(sleeping);

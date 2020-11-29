@@ -34,6 +34,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Vector2f;
@@ -42,6 +43,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class Shader {
+
+    private final static Logger logger = Logger.getLogger(Shader.class);
 
     private int program;
 
@@ -61,8 +64,8 @@ public class Shader {
         try {
             vertShader = createShader(vertexFile, GL_VERTEX_SHADER_ARB);
             fragShader = createShader(fragmentFile, GL_FRAGMENT_SHADER_ARB);
-        } catch (Exception exc) {
-            exc.printStackTrace();
+        } catch (Exception e) {
+            logger.error(e);
             return false;
         } finally {
             if (vertShader == 0 || fragShader == 0) {
@@ -80,13 +83,13 @@ public class Shader {
 
         glLinkProgramARB(program);
         if (glGetObjectParameteriARB(program, GL_OBJECT_LINK_STATUS_ARB) == GL_FALSE) {
-            System.err.println(getLogInfo(program));
+            logger.error(getLogInfo(program));
             return false;
         }
 
         glValidateProgramARB(program);
         if (glGetObjectParameteriARB(program, GL_OBJECT_VALIDATE_STATUS_ARB) == GL_FALSE) {
-            System.err.println(getLogInfo(program));
+            logger.error(getLogInfo(program));
             return false;
         }
 

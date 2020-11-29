@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -25,6 +26,8 @@ import com.guillot.moria.ressources.Colors;
 
 
 public class GUI {
+
+    private final static Logger logger = Logger.getLogger(GUI.class);
 
     private static GUI instance = new GUI();
 
@@ -65,7 +68,7 @@ public class GUI {
                 awtFont = awtFont.deriveFont(Float.parseFloat(size));
                 fonts.add(new TrueTypeFont(awtFont, false));
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error while loading font", e);
             }
         }
 
@@ -99,7 +102,7 @@ public class GUI {
 
             return (new TrueTypeFont(awtFont2, antiAlias));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while loading font", e);
         }
 
         return null;
@@ -114,7 +117,6 @@ public class GUI {
             currentView = v;
             currentView.start();
         } catch (Exception e) {
-            e.printStackTrace();
             switchView(new ViewException(e));
         }
     }
@@ -169,7 +171,6 @@ public class GUI {
                 currentView.update();
             }
         } catch (Exception e) {
-            e.printStackTrace();
             switchView(new ViewException(e));
         }
     }
@@ -179,7 +180,6 @@ public class GUI {
             currentView.stop(true);
             System.exit(0);
         } catch (Exception e) {
-            e.printStackTrace();
             switchView(new ViewException(e));
         }
     }
