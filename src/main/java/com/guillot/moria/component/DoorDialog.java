@@ -28,9 +28,9 @@ public class DoorDialog extends Window {
 
     private AbstractCharacter player;
 
-    private Button buttonUseKey;
+    private Button useKeyButton;
 
-    private Button buttonPickingLock;
+    private Button pickingLockButton;
 
     public DoorDialog(GameView parent, GameState game) throws Exception {
         super(parent, 256, 224, WIDTH - 512, HEIGHT - 448, "The door is locked!");
@@ -39,9 +39,9 @@ public class DoorDialog extends Window {
         this.game = game;
         this.player = game.getPlayer();
 
-        buttonUseKey = new Button("Use a key", WIDTH / 2 - 144, y + 96, 288, 48);
-        buttonUseKey.setIcon(Images.KEY.getImage());
-        buttonUseKey.setEvent(new Event() {
+        useKeyButton = new Button("Use a key", WIDTH / 2 - 144, y + 96, 288, 48);
+        useKeyButton.setIcon(Images.KEY.getImage());
+        useKeyButton.setEvent(new Event() {
 
             @Override
             public void perform() throws Exception {
@@ -49,9 +49,9 @@ public class DoorDialog extends Window {
             }
         });
 
-        buttonPickingLock = new Button("Pick the lock", WIDTH / 2 - 144, y + 160, 288, 48);
-        buttonPickingLock.setIcon(Images.DICE.getImage());
-        buttonPickingLock.setEvent(new Event() {
+        pickingLockButton = new Button("Pick the lock", WIDTH / 2 - 144, y + 160, 288, 48);
+        pickingLockButton.setIcon(Images.LOCK_PICKING.getImage());
+        pickingLockButton.setEvent(new Event() {
 
             @Override
             public void perform() throws Exception {
@@ -62,8 +62,8 @@ public class DoorDialog extends Window {
 
     @Override
     public void onShow() throws Exception {
-        buttonUseKey.setEnabled(false);
-        buttonPickingLock.setEnabled(false);
+        useKeyButton.setEnabled(false);
+        pickingLockButton.setEnabled(false);
     }
 
     @Override
@@ -78,20 +78,20 @@ public class DoorDialog extends Window {
             GUI.get().clearKeysPressed();
         }
 
-        buttonUseKey.update();
-        buttonUseKey.setEnabled(player.hasItemType(ItemType.KEY));
+        useKeyButton.update();
+        useKeyButton.setEnabled(player.hasItemType(ItemType.KEY));
 
-        buttonPickingLock.update();
-        buttonPickingLock.setText("Pick the lock (" + player.getChanceLockPicking() + "%)");
-        buttonPickingLock.setEnabled(!door.isPicked());
+        pickingLockButton.update();
+        pickingLockButton.setText("Pick the lock (" + player.getChanceLockPicking() + "%)");
+        pickingLockButton.setEnabled(!door.isPicked());
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
 
-        buttonUseKey.paint(g);
-        buttonPickingLock.paint(g);
+        useKeyButton.paint(g);
+        pickingLockButton.paint(g);
     }
 
     public void setDoor(Door door) {

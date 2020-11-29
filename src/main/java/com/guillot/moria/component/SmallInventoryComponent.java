@@ -17,7 +17,7 @@ import com.guillot.moria.item.Equipable;
 
 public class SmallInventoryComponent extends Component {
 
-    private final static int BLOCK_SIZE = 32;
+    private final static int BLOCK_SIZE = 36;
 
     private HashSet<Equipable> items;
 
@@ -52,7 +52,7 @@ public class SmallInventoryComponent extends Component {
         g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
 
         if (item != null) {
-            g.drawImage(item.getImage(), 2, 2, BLOCK_SIZE + 2, BLOCK_SIZE + 2, 0, 0, 16, 16);
+            g.drawImage(item.getImage(), 4, 4, BLOCK_SIZE, BLOCK_SIZE, 0, 0, 32, 32);
 
             Polygon shape = new Polygon(new float[] {0, 0, 8f, 0, 0, 8f});
 

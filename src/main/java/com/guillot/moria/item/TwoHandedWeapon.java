@@ -23,13 +23,13 @@ public class TwoHandedWeapon extends AbstractItem implements Equipable {
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
         return Arrays.asList(
-                new ItemRepresentation("War Hammer", 5, 5, 9, 40, Images.HAMMER), //
-                new ItemRepresentation("Broad Axe", 8, 8, 20, 50, Images.TWO_HANDED_AXE), //
-                new ItemRepresentation("Maul", 10, 6, 20, 55, Images.HAMMER), //
-                new ItemRepresentation("Battle Axe", 10, 10, 25, 65, Images.TWO_HANDED_AXE), //
-                new ItemRepresentation("Great Axe", 12, 12, 30, 80, Images.TWO_HANDED_AXE), //
+                new ItemRepresentation("War Hammer", 5, 5, 9, 40, Images.WAR_HAMMER), //
+                new ItemRepresentation("Broad Axe", 8, 8, 20, 50, Images.BROAD_AXE), //
+                new ItemRepresentation("Maul", 10, 6, 20, 55, Images.MAUL), //
+                new ItemRepresentation("Battle Axe", 10, 10, 25, 65, Images.BATTLE_AXE), //
+                new ItemRepresentation("Great Axe", 12, 12, 30, 80, Images.GREAT_AXE), //
                 new ItemRepresentation("Two-Handed Sword", 14, 8, 16, 65, Images.TWO_HANDED_SWORD), //
-                new ItemRepresentation("Great Sword", 17, 10, 20, 75, Images.TWO_HANDED_SWORD));
+                new ItemRepresentation("Great Sword", 17, 10, 20, 75, Images.GREAT_SWORD));
     }
 
     @Override

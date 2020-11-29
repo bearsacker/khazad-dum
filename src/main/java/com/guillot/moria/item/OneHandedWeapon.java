@@ -24,21 +24,21 @@ public class OneHandedWeapon extends AbstractItem implements Equipable {
     public List<ItemRepresentation> getValuesPerLevel() {
         return Arrays.asList(
                 new ItemRepresentation("Dagger", 1, 1, 4, 0, Images.DAGGER), //
-                new ItemRepresentation("Small Axe", 2, 2, 10, 0, Images.AXE), //
+                new ItemRepresentation("Small Axe", 2, 2, 10, 0, Images.SMALL_AXE), //
                 new ItemRepresentation("Axe", 4, 4, 12, 22, Images.AXE), //
                 new ItemRepresentation("Large Axe", 6, 6, 16, 30, Images.LARGE_AXE), //
-                new ItemRepresentation("Short Sword", 1, 2, 6, 18, Images.DAGGER), //
-                new ItemRepresentation("Sabre", 1, 1, 8, 17, Images.SWORD), //
-                new ItemRepresentation("Scimitar", 4, 3, 7, 23, Images.SWORD), //
-                new ItemRepresentation("Blade", 4, 3, 8, 25, Images.SWORD), //
-                new ItemRepresentation("Falchion", 2, 4, 8, 30, Images.SWORD), //
+                new ItemRepresentation("Short Sword", 1, 2, 6, 18, Images.SHORT_SWORD), //
+                new ItemRepresentation("Sabre", 1, 1, 8, 17, Images.SABRE), //
+                new ItemRepresentation("Scimitar", 4, 3, 7, 23, Images.SCIMITAR), //
+                new ItemRepresentation("Blade", 4, 3, 8, 25, Images.BLADE), //
+                new ItemRepresentation("Falchion", 2, 4, 8, 30, Images.FALCHION), //
                 new ItemRepresentation("Long Sword", 6, 2, 10, 30, Images.LONG_SWORD), //
-                new ItemRepresentation("Claymore", 5, 1, 12, 35, Images.LONG_SWORD), //
-                new ItemRepresentation("Broad Sword", 8, 4, 12, 40, Images.BASTARD_SWORD), //
+                new ItemRepresentation("Claymore", 5, 1, 12, 35, Images.CLAYMORE), //
+                new ItemRepresentation("Broad Sword", 8, 4, 12, 40, Images.BROAD_SWORD), //
                 new ItemRepresentation("Bastard Sword", 10, 6, 15, 50, Images.BASTARD_SWORD), //
                 new ItemRepresentation("Mace", 2, 1, 8, 16, Images.MACE), //
-                new ItemRepresentation("Morning Star", 3, 1, 10, 26, Images.MACE), //
-                new ItemRepresentation("Flail", 7, 2, 12, 30, Images.MACE));
+                new ItemRepresentation("Morning Star", 3, 1, 10, 26, Images.MORNING_STAR), //
+                new ItemRepresentation("Flail", 7, 2, 12, 30, Images.FLAIL));
     }
 
     @Override

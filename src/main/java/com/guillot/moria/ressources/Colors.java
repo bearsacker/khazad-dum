@@ -12,6 +12,10 @@ public enum Colors {
     YELLOW_PALE(new Color(255, 255, 204)), //
     GREEN_PALE(new Color(200, 230, 201)), //
 
+    TRANSPARENT(new Color(0, 0, 0, 0)), //
+    MAP_LOCKED_DOOR(new Color(255, 0, 0)), //
+    MAP_OPEN_DOOR(new Color(0, 255, 0)), //
+
     ITEM_BLOCK(new Color(1f, 1f, 1f, .2f)), //
     ITEM_SELECTED(new Color(255, 255, 255, 128)), //
     ITEM_NOT_EQUIPABLE(new Color(255, 0, 0, 128)), //

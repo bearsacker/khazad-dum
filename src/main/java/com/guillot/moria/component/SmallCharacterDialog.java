@@ -43,8 +43,8 @@ public class SmallCharacterDialog extends Window {
 
         lifeBar = new ProgressBar(32, 104, width - 64, 16, 0);
 
-        damagesText = new Text("", 80, 136, GUI.get().getFont(2), Color.white);
-        armorText = new Text("", 264, 136, GUI.get().getFont(2), Color.white);
+        damagesText = new Text("", 104, 136, GUI.get().getFont(2), Color.white);
+        armorText = new Text("", 280, 136, GUI.get().getFont(2), Color.white);
 
         chanceHitText = new Text("", 40, 176, GUI.get().getFont(), ROSE_PALE.getColor());
         chanceCriticalHitText = new Text("", 40, 200, GUI.get().getFont(), ROSE_PALE.getColor());
@@ -62,7 +62,7 @@ public class SmallCharacterDialog extends Window {
 
             lifeBar.setValue(character.getCurrentLife() / (float) character.getLife());
 
-            damagesText.setText(character.computeMinDamages() + "-" + character.computeMaxDamages());
+            damagesText.setText(Integer.toString(character.computeDamages()));
             armorText.setText(Integer.toString(character.getArmor()));
 
             chanceHitText.setText(character.getChanceHit() + "% hit");
@@ -85,8 +85,8 @@ public class SmallCharacterDialog extends Window {
         g.pushTransform();
         g.translate(x, y);
 
-        g.drawImage(Images.SWORD.getImage(), 40, 136, 40 + 32, 136 + 32, 0, 0, 16, 16, filter);
-        g.drawImage(Images.LARGE_SHIELD.getImage(), 224, 136, 224 + 32, 136 + 32, 0, 0, 16, 16, filter);
+        g.drawImage(Images.LONG_SWORD.getImage(), 64, 136, 64 + 32, 136 + 32, 0, 0, 32, 32, filter);
+        g.drawImage(Images.LARGE_SHIELD.getImage(), 240, 136, 240 + 32, 136 + 32, 0, 0, 32, 32, filter);
 
         g.popTransform();
     }

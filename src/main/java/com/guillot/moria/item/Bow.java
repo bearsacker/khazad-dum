@@ -23,14 +23,14 @@ public class Bow extends AbstractItem implements Equipable {
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
         return Arrays.asList(
-                new ItemRepresentation("Short Bow", 1, 1, 4, 0, Images.BOW), //
-                new ItemRepresentation("Long Bow", 5, 1, 6, 30, Images.BOW), //
-                new ItemRepresentation("Hunter's Bow", 3, 2, 5, 35, Images.BOW), //
-                new ItemRepresentation("Composite Bow", 7, 3, 6, 40, Images.BOW), //
-                new ItemRepresentation("Short Battle Bow", 9, 3, 7, 50, Images.BOW), //
-                new ItemRepresentation("Long Battle Bow", 11, 1, 10, 60, Images.BOW), //
-                new ItemRepresentation("Short War Bow", 15, 4, 8, 70, Images.BOW), //
-                new ItemRepresentation("Long War Bow", 19, 1, 14, 80, Images.BOW));
+                new ItemRepresentation("Short Bow", 1, 1, 4, 0, Images.SHORT_BOW), //
+                new ItemRepresentation("Long Bow", 5, 1, 6, 30, Images.LONG_BOW), //
+                new ItemRepresentation("Hunter's Bow", 3, 2, 5, 35, Images.HUNTER_BOW), //
+                new ItemRepresentation("Composite Bow", 7, 3, 6, 40, Images.COMPOSITE_BOW), //
+                new ItemRepresentation("Short Battle Bow", 9, 3, 7, 50, Images.SHORT_BATTLE_BOW), //
+                new ItemRepresentation("Long Battle Bow", 11, 1, 10, 60, Images.LONG_BATTLE_BOW), //
+                new ItemRepresentation("Short War Bow", 15, 4, 8, 70, Images.SHORT_WAR_BOW), //
+                new ItemRepresentation("Long War Bow", 19, 1, 14, 80, Images.LONG_WAR_BOW));
     }
 
     @Override

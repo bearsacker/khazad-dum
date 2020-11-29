@@ -19,7 +19,7 @@ public class ViewException extends View {
 
     @Override
     public void start() throws Exception {
-        logger.error(exception);
+        logger.error("", exception);
 
         String text = "";
         StackTraceElement[] traces = exception.getStackTrace();

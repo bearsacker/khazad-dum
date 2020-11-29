@@ -19,7 +19,12 @@ public class Ring extends AbstractItem implements Equipable {
 
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
-        return Arrays.asList(new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING));
+        return Arrays.asList(
+                new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING_1), //
+                new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING_2), //
+                new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING_3), //
+                new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING_4), //
+                new ItemRepresentation("Ring", 1, 0, 0, 0, Images.RING_5));
     }
 
     @Override

@@ -623,11 +623,7 @@ public abstract class AbstractCharacter implements Serializable {
         }
     }
 
-    public int computeMinDamages() {
-        return damages + fireDamage + frostDamage + lightningDamage;
-    }
-
-    public int computeMaxDamages() {
+    public int computeDamages() {
         return (int) (damages + (physicalDamage / 100f) * damages) + fireDamage + frostDamage + lightningDamage;
     }
 
@@ -637,7 +633,7 @@ public abstract class AbstractCharacter implements Serializable {
         }
 
         boolean critical = RNG.get().randomNumber(100) < chanceCriticalHit;
-        int damages = (critical ? 2 : 1) * RNG.get().randomNumberBetween(computeMinDamages(), computeMaxDamages());
+        int damages = (critical ? 2 : 1) * computeDamages();
 
         return new Attack(damages, fireDamage, frostDamage, lightningDamage, critical);
     }
@@ -752,7 +748,7 @@ public abstract class AbstractCharacter implements Serializable {
     @Override
     public String toString() {
         String text = "RED_PALE@@Strength: @@LIGHT_GREY@@" + strength + "\n";
-        text += "RED_PALE@@     Physical damage: @@LIGHT_GREY@@+ 0-" + physicalDamage + "%\n";
+        text += "RED_PALE@@     Physical damage: @@LIGHT_GREY@@+ " + physicalDamage + "%\n";
         text += "RED_PALE@@     Inventory limit: @@LIGHT_GREY@@" + inventoryLimit + " blocks\n\n";
 
         text += "GREEN_PALE@@Agility: @@LIGHT_GREY@@" + agility + "\n";

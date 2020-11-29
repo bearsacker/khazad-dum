@@ -1,12 +1,11 @@
-Simple UI: Base button on game (map/character/escape/inventory)
-Character creation screen
 DeathView
 Character Dialog
+Character creation screen and sprites
 Bow
 
-cursor
+Cursor
 Better UI
-Merchant
+Merchant (after level 3, after level 6, after level  9)
 Add level 10 and Balrog
 Traps  
 

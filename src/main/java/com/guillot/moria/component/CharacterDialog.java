@@ -13,6 +13,7 @@ import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
@@ -48,7 +49,8 @@ public class CharacterDialog extends Window {
         characterTextBox.setText(player.toString());
         height = characterTextBox.getHeight() + 128;
 
-        increaseStrengthButton = new Button("+", 176, 248, 32, 32);
+        increaseStrengthButton = new Button("", 176, 248, 32, 32);
+        increaseStrengthButton.setIcon(Images.LEVEL_UP.getImage());
         increaseStrengthButton.setEnabled(false);
         increaseStrengthButton.setEvent(new Event() {
 
@@ -59,7 +61,8 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseAgilityButton = new Button("+", 176, 320, 32, 32);
+        increaseAgilityButton = new Button("", 176, 320, 32, 32);
+        increaseAgilityButton.setIcon(Images.LEVEL_UP.getImage());
         increaseAgilityButton.setEnabled(false);
         increaseAgilityButton.setEvent(new Event() {
 
@@ -70,7 +73,8 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseSpiritButton = new Button("+", 176, 400, 32, 32);
+        increaseSpiritButton = new Button("", 176, 400, 32, 32);
+        increaseSpiritButton.setIcon(Images.LEVEL_UP.getImage());
         increaseSpiritButton.setEnabled(false);
         increaseSpiritButton.setEvent(new Event() {
 
@@ -81,7 +85,8 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseDestinyButton = new Button("+", 176, 472, 32, 32);
+        increaseDestinyButton = new Button("", 176, 472, 32, 32);
+        increaseDestinyButton.setIcon(Images.LEVEL_UP.getImage());
         increaseDestinyButton.setEnabled(false);
         increaseDestinyButton.setEvent(new Event() {
 

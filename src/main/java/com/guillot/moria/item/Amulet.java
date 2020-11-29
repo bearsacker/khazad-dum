@@ -19,7 +19,12 @@ public class Amulet extends AbstractItem implements Equipable {
 
     @Override
     public List<ItemRepresentation> getValuesPerLevel() {
-        return Arrays.asList(new ItemRepresentation("Amulet", 1, 0, 0, 0, Images.AMULET));
+        return Arrays.asList(
+                new ItemRepresentation("Amulet", 1, 0, 0, 0, Images.AMULET_1), //
+                new ItemRepresentation("Amulet", 1, 0, 0, 0, Images.AMULET_2), //
+                new ItemRepresentation("Amulet", 1, 0, 0, 0, Images.AMULET_3), //
+                new ItemRepresentation("Amulet", 1, 0, 0, 0, Images.AMULET_4), //
+                new ItemRepresentation("Amulet", 1, 0, 0, 0, Images.AMULET_5));
     }
 
     @Override

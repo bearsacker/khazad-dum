@@ -64,7 +64,12 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
         int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        g.drawImage(this.image.getImage(), x + 24, y + 36);
+        g.pushTransform();
+        g.translate(x, y);
+
+        g.drawImage(this.image.getImage(), 24, 36, 40, 52, 0, 0, 32, 32);
+
+        g.popTransform();
     }
 
     public ItemRarity getRarity() {

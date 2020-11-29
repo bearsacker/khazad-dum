@@ -87,7 +87,7 @@ public class InventoryDialog extends Window {
         buttonDrop.setVisible(false);
 
         inventoryGrid = new InventoryGridComponent(player);
-        inventoryGrid.setX(128);
+        inventoryGrid.setX(96);
         inventoryGrid.setY(128);
 
         itemWindow = new Window(parent, 0, HEIGHT, WIDTH, 0);
@@ -110,24 +110,24 @@ public class InventoryDialog extends Window {
         itemBlockNeck.setY(132);
 
         itemBlockHead = new ItemBlockComponent(this, player, ItemBlock.HEAD);
-        itemBlockHead.setX(WIDTH - 280);
+        itemBlockHead.setX(WIDTH - 272);
         itemBlockHead.setY(132);
 
         itemBlockBody = new ItemBlockComponent(this, player, ItemBlock.BODY);
-        itemBlockBody.setX(WIDTH - 280);
-        itemBlockBody.setY(212);
+        itemBlockBody.setX(WIDTH - 272);
+        itemBlockBody.setY(220);
 
         itemBlockLeftHand = new ItemBlockComponent(this, player, ItemBlock.LEFT_HAND);
-        itemBlockLeftHand.setX(WIDTH - 200);
-        itemBlockLeftHand.setY(212);
+        itemBlockLeftHand.setX(WIDTH - 184);
+        itemBlockLeftHand.setY(220);
 
         itemBlockRightHand = new ItemBlockComponent(this, player, ItemBlock.RIGHT_HAND);
         itemBlockRightHand.setX(WIDTH - 360);
-        itemBlockRightHand.setY(212);
+        itemBlockRightHand.setY(220);
 
         itemBlockFinger = new ItemBlockComponent(this, player, ItemBlock.FINGER);
-        itemBlockFinger.setX(WIDTH - 200);
-        itemBlockFinger.setY(292);
+        itemBlockFinger.setX(WIDTH - 184);
+        itemBlockFinger.setY(308);
 
         add(itemWindow, buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
                 itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, itemTextBox, cursorTextBox);

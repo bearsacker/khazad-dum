@@ -19,7 +19,7 @@ import com.guillot.moria.item.ItemBlock;
 
 public class ItemBlockComponent extends Component {
 
-    private final static int BLOCK_SIZE = 64;
+    private final static int BLOCK_SIZE = 72;
 
     private InventoryDialog inventory;
 
@@ -95,7 +95,7 @@ public class ItemBlockComponent extends Component {
                 g.fillRect(2, 2, BLOCK_SIZE, BLOCK_SIZE);
             }
 
-            g.drawImage(item.getImage(), 2, 2, BLOCK_SIZE + 2, BLOCK_SIZE + 2, 0, 0, 16, 16);
+            g.drawImage(item.getImage(), 6, 6, BLOCK_SIZE - 2, BLOCK_SIZE - 2, 0, 0, 32, 32);
 
             Polygon shape = new Polygon(new float[] {0, 0, 16f, 0, 0, 16f});
 

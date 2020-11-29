@@ -15,13 +15,13 @@ import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 import com.guillot.moria.views.MenuView;
 
-public class EscapeDialog extends Window {
+public class MenuDialog extends Window {
 
     private Button saveAndBackToMenuButton;
 
     private Button saveAndQuitButton;
 
-    public EscapeDialog(GameView parent, GameState game) throws Exception {
+    public MenuDialog(GameView parent, GameState game) throws Exception {
         super(parent, 256, 256, WIDTH - 512, 240, "Menu");
         setShowCloseButton(true);
 

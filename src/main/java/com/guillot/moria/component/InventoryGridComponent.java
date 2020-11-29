@@ -24,7 +24,7 @@ public class InventoryGridComponent extends Component {
 
     private final static int INVENTORY_BLOCKS_WIDTH = 8;
 
-    private final static int BLOCK_SIZE = 80;
+    private final static int BLOCK_SIZE = 88;
 
     private final static int BORDER_BLOCK_SIZE = 8;
 
@@ -112,8 +112,8 @@ public class InventoryGridComponent extends Component {
                         BLOCK_SIZE - BORDER_BLOCK_SIZE * 2);
             }
 
-            g.drawImage(item.getImage(), x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, x + BLOCK_SIZE - BORDER_BLOCK_SIZE,
-                    y + BLOCK_SIZE - BORDER_BLOCK_SIZE, 0, 0, 16, 16);
+            g.drawImage(item.getImage(), x + BORDER_BLOCK_SIZE + 4, y + BORDER_BLOCK_SIZE + 4, x + BLOCK_SIZE - 4 - BORDER_BLOCK_SIZE,
+                    y + BLOCK_SIZE - 4 - BORDER_BLOCK_SIZE, 0, 0, 32, 32);
 
             g.pushTransform();
             g.translate(x + BORDER_BLOCK_SIZE - 2, y + BORDER_BLOCK_SIZE - 2);

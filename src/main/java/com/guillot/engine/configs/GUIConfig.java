@@ -82,8 +82,6 @@ public final class GUIConfig extends Config {
 
     public final static int BUTTON_PADDING = get().getInt("gui.button.padding", 10);
 
-    public final static int BUTTON_ICON_SIZE = get().getInt("gui.button.icon.size", 32);
-
     // Progress Bar
 
     public final static String PROGRESSBAR_SPRITE = get().getString("gui.progressbar.sprite", "gui/default_progressbar.png");

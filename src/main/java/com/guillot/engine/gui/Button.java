@@ -1,7 +1,6 @@
 package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.GUIConfig.BUTTON_BORDER;
-import static com.guillot.engine.configs.GUIConfig.BUTTON_ICON_SIZE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_PADDING;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.BUTTON_SPRITE_SIZE;
@@ -176,8 +175,8 @@ public class Button extends Component {
         font.drawString((width / 2) - (lineWidth / 2), (height / 2) - (lineHeight / 2), text, (mouseOn && enabled ? colorHover : color));
 
         if (icon != null) {
-            int iconX = 8;
-            int iconY = (height - BUTTON_ICON_SIZE) / 2;
+            int iconX = BUTTON_BORDER;
+            int iconY = BUTTON_BORDER;
 
             switch (iconAlignement) {
             case CENTER:
@@ -192,8 +191,8 @@ public class Button extends Component {
                 break;
             }
 
-            g.drawImage(icon, iconX, iconY, iconX + BUTTON_ICON_SIZE, iconY + BUTTON_ICON_SIZE, 0, 0, icon.getWidth(), icon.getHeight(),
-                    enabled ? filter : COMPONENT_DISABLED_FILTER);
+            g.drawImage(icon, iconX, iconY, iconX + height - BUTTON_BORDER * 2, iconY + height - BUTTON_BORDER * 2, 0, 0, icon.getWidth(),
+                    icon.getHeight(), enabled && frame == 0 ? filter : COMPONENT_DISABLED_FILTER);
         }
 
         g.popTransform();

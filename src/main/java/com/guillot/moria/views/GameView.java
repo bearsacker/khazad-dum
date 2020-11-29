@@ -1,5 +1,6 @@
 package com.guillot.moria.views;
 
+import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Colors.YELLOW;
@@ -17,6 +18,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.configs.EngineConfig;
+import com.guillot.engine.gui.Button;
+import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.ProgressBar;
 import com.guillot.engine.gui.Text;
@@ -27,7 +30,7 @@ import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.DoorDialog;
-import com.guillot.moria.component.EscapeDialog;
+import com.guillot.moria.component.MenuDialog;
 import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.component.MapDialog;
 import com.guillot.moria.component.SmallCharacterDialog;
@@ -58,7 +61,7 @@ public class GameView extends View {
 
     private Text turnText;
 
-    private EscapeDialog escapeDialog;
+    private MenuDialog menuDialog;
 
     private InventoryDialog inventoryDialog;
 
@@ -78,35 +81,83 @@ public class GameView extends View {
 
     private ProgressBar xpBar;
 
+    private Button mapButton;
+
+    private Button inventoryButton;
+
+    private Button characterButton;
+
+    private Button menuButton;
+
     public GameView(GameState game) {
         this.game = game;
     }
 
     @Override
     public void start() throws Exception {
-        depthBuffer = new DepthBuffer<>(EngineConfig.WIDTH, EngineConfig.HEIGHT);
+        depthBuffer = new DepthBuffer<>(WIDTH, EngineConfig.HEIGHT);
 
         turnText = new Text("", 8, 8, GUI.get().getFont(2), YELLOW.getColor());
 
-        escapeDialog = new EscapeDialog(this, game);
+        menuDialog = new MenuDialog(this, game);
         inventoryDialog = new InventoryDialog(this, game);
         characterDialog = new CharacterDialog(this, game);
         smallCharacterDialog = new SmallCharacterDialog(this);
         doorDialog = new DoorDialog(this, game);
         mapDialog = new MapDialog(this, game);
 
-        console = new Console(EngineConfig.WIDTH, game.getMessages());
+        console = new Console(WIDTH, game.getMessages());
         console.setY(EngineConfig.HEIGHT - console.getHeight());
 
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        lifeBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 44, 256, 32, 100);
-        xpBar = new ProgressBar(EngineConfig.WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
+        lifeBar = new ProgressBar(WIDTH / 2 - 128, EngineConfig.HEIGHT - 44, 256, 32, 100);
+        xpBar = new ProgressBar(WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
         xpBar.setValueColor(YELLOW.getColor());
 
-        add(turnText, cursorTextBox, lifeBar, xpBar, doorDialog, console, escapeDialog, inventoryDialog, characterDialog, mapDialog,
-                smallCharacterDialog);
+        mapButton = new Button("", WIDTH / 2 + 128, EngineConfig.HEIGHT - 48, 48, 48);
+        mapButton.setIcon(Images.MAP.getImage());
+        mapButton.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                mapDialog.setVisible(true);
+            }
+        });
+
+        inventoryButton = new Button("", WIDTH / 2 + 176, EngineConfig.HEIGHT - 48, 48, 48);
+        inventoryButton.setIcon(Images.INVENTORY.getImage());
+        inventoryButton.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                inventoryDialog.setVisible(true);
+            }
+        });
+
+        characterButton = new Button("", WIDTH / 2 + 224, EngineConfig.HEIGHT - 48, 48, 48);
+        characterButton.setIcon(Images.CHARACTER.getImage());
+        characterButton.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                characterDialog.setVisible(true);
+            }
+        });
+
+        menuButton = new Button("", WIDTH / 2 + 272, EngineConfig.HEIGHT - 48, 48, 48);
+        menuButton.setIcon(Images.MENU.getImage());
+        menuButton.setEvent(new Event() {
+
+            @Override
+            public void perform() throws Exception {
+                menuDialog.setVisible(true);
+            }
+        });
+
+        add(turnText, lifeBar, xpBar, mapButton, inventoryButton, characterButton, menuButton, cursorTextBox, doorDialog, console,
+                menuDialog, inventoryDialog, characterDialog, mapDialog, smallCharacterDialog);
     }
 
     @Override
@@ -200,26 +251,36 @@ public class GameView extends View {
                     showTextBox(itemsName);
                 }
             }
+
+            if (mapButton.mouseOn()) {
+                showTextBox("Map (M)");
+            } else if (inventoryButton.mouseOn()) {
+                showTextBox("Inventory (I)");
+            } else if (characterButton.mouseOn()) {
+                showTextBox("Character (C)");
+            } else if (menuButton.mouseOn()) {
+                showTextBox("Menu (Esc)");
+            }
         }
 
         if (GUI.get().isKeyPressed(KEY_I)) {
             characterDialog.setVisible(false);
             mapDialog.setVisible(false);
-            escapeDialog.setVisible(false);
+            menuDialog.setVisible(false);
             inventoryDialog.toggleVisible();
         }
 
         if (GUI.get().isKeyPressed(KEY_C)) {
             inventoryDialog.setVisible(false);
             mapDialog.setVisible(false);
-            escapeDialog.setVisible(false);
+            menuDialog.setVisible(false);
             characterDialog.toggleVisible();
         }
 
         if (GUI.get().isKeyPressed(KEY_M)) {
             inventoryDialog.setVisible(false);
             characterDialog.setVisible(false);
-            escapeDialog.setVisible(false);
+            menuDialog.setVisible(false);
             mapDialog.toggleVisible();
         }
 
@@ -227,7 +288,7 @@ public class GameView extends View {
             inventoryDialog.setVisible(false);
             characterDialog.setVisible(false);
             mapDialog.setVisible(false);
-            escapeDialog.toggleVisible();
+            menuDialog.toggleVisible();
         }
     }
 

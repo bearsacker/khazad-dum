@@ -2,6 +2,10 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.ressources.Colors.MAP_LOCKED_DOOR;
+import static com.guillot.moria.ressources.Colors.MAP_OPEN_DOOR;
+import static com.guillot.moria.ressources.Colors.TRANSPARENT;
 import static com.guillot.moria.ressources.Images.MAP_CURSOR;
 import static com.guillot.moria.ressources.Images.PARCHMENT;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
@@ -19,16 +23,6 @@ import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
 public class MapDialog extends Window {
-
-    private final static Color TRANSPARENT_COLOR = new Color(0f, 0f, 0f, 0f);
-
-    private final static Color OPEN_DOOR_COLOR = new Color(Color.yellow);
-
-    private final static Color LOCKED_DOOR_COLOR = new Color(Color.red);
-
-    private final static Color STAIRS_COLOR = new Color(Color.cyan);
-
-    private final static Color BLOCKED_COLOR = new Color(Color.gray);
 
     private final static int PIXEL_SIZE = 4;
 
@@ -61,41 +55,40 @@ public class MapDialog extends Window {
     public void paint(Graphics g) {
         super.paint(g);
 
-        int width = PARCHMENT.getImage().getWidth() * (HEIGHT - 112) / PARCHMENT.getImage().getHeight();
+        int width = PARCHMENT.getImage().getWidth() * (HEIGHT - 80) / PARCHMENT.getImage().getHeight();
 
         g.pushTransform();
-        g.translate(32, 64);
+        g.translate(16, 48);
 
-        g.drawImage(PARCHMENT.getImage(), 0, 0, width, HEIGHT - 112, 0, 0,
+        g.drawImage(PARCHMENT.getImage(), 0, 0, width, HEIGHT - 80, 0, 0,
                 PARCHMENT.getImage().getWidth(), PARCHMENT.getImage().getHeight());
 
         g.popTransform();
 
-        int mapWidth = game.getDungeon().getWidth() * PIXEL_SIZE;
         int mapHeight = game.getDungeon().getHeight() * PIXEL_SIZE;
 
         g.pushTransform();
-        g.translate(x + (WIDTH - mapWidth) / 2, y + (HEIGHT - mapHeight) / 2);
+        g.translate(48, y + (HEIGHT - mapHeight) / 2);
 
         for (int i = 0; i < game.getDungeon().getHeight(); i++) {
             for (int j = 0; j < game.getDungeon().getWidth(); j++) {
                 Tile tile = game.getDungeon().getDiscoveredTiles()[i][j];
 
-                float alpha = .5f;
-                g.setColor(TRANSPARENT_COLOR);
+                float alpha = .2f;
+                g.setColor(TRANSPARENT.getColor());
 
                 if (tile != null) {
                     switch (tile) {
                     case UP_STAIR:
                     case DOWN_STAIR:
-                        g.setColor(STAIRS_COLOR);
+                        g.setColor(ITEM_MAGIC.getColor());
                         break;
                     case GRANITE_WALL:
                     case MAGMA_WALL:
                     case QUARTZ_WALL:
                     case TMP1_WALL:
                     case TMP2_WALL:
-                        g.setColor(new Color(0f, 0f, 0f, alpha));
+                        g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
                         break;
                     case ROOM_FLOOR:
                     case CORRIDOR_FLOOR:
@@ -109,13 +102,13 @@ public class MapDialog extends Window {
                     if (door != null) {
                         switch (door.getState()) {
                         case LOCKED:
-                            g.setColor(LOCKED_DOOR_COLOR);
+                            g.setColor(MAP_LOCKED_DOOR.getColor());
                             break;
                         case OPEN:
-                            g.setColor(OPEN_DOOR_COLOR);
+                            g.setColor(MAP_OPEN_DOOR.getColor());
                             break;
                         case STUCK:
-                            g.setColor(BLOCKED_COLOR);
+                            g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
                             break;
                         default:
                             break;
@@ -127,7 +120,7 @@ public class MapDialog extends Window {
                         switch (entity) {
                         case PILLAR:
                         case RUBBLE:
-                            g.setColor(BLOCKED_COLOR);
+                            g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
                             break;
                         }
                     }
