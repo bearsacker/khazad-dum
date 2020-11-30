@@ -22,10 +22,10 @@ public class HealthPotion extends AbstractItem implements Usable {
     public List<ItemRepresentation> getValuesPerLevel() {
         return Arrays.asList(
                 new ItemRepresentation("Minor Health Potion", 1, 30, 30, 0, Images.HEALTH_POTION), //
-                new ItemRepresentation("Lesser Health Potion", 5, 75, 75, 0, Images.HEALTH_POTION), //
-                new ItemRepresentation("Health potion", 10, 100, 100, 0, Images.HEALTH_POTION), //
-                new ItemRepresentation("Greater Health Potion", 20, 150, 150, 0, Images.HEALTH_POTION), //
-                new ItemRepresentation("Major Health Potion", 25, 200, 200, 0, Images.HEALTH_POTION));
+                new ItemRepresentation("Lesser Health Potion", 3, 75, 75, 0, Images.HEALTH_POTION), //
+                new ItemRepresentation("Health potion", 6, 100, 100, 0, Images.HEALTH_POTION), //
+                new ItemRepresentation("Greater Health Potion", 9, 150, 150, 0, Images.HEALTH_POTION), //
+                new ItemRepresentation("Major Health Potion", 12, 200, 200, 0, Images.HEALTH_POTION));
     }
 
     @Override

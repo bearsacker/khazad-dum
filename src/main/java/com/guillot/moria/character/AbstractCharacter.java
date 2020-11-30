@@ -240,9 +240,10 @@ public abstract class AbstractCharacter implements Serializable {
     public boolean pickUpItem(AbstractItem item) {
         if (!inventory.contains(item) && inventory.size() < inventoryLimit) {
             inventory.add(item);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public boolean dropItem(AbstractItem item) {
@@ -688,6 +689,12 @@ public abstract class AbstractCharacter implements Serializable {
 
     public int computePhysicalDamages() {
         return (int) (damages + (physicalDamage / 100f) * damages);
+    }
+
+    public boolean canAttack(Point targetPosition) {
+        double distance = position.distanceFrom(targetPosition);
+
+        return distance == 1 || (leftHand != null && ((AbstractItem) leftHand).getType() == ItemType.BOW && distance <= getLightRadius());
     }
 
     public Attack doAttack() {

@@ -1,13 +1,13 @@
 Character sprites
 Character creation screen
-Bow
 
 Bullets
+Vault management
 Monster sprites
-Better animation
+Better walking animation
 Cursor
 Better UI
-Merchant (after level 3, after level 6, after level  9)
+Merchant
 Add level 10 and Balrog
 Traps  
 

@@ -1238,7 +1238,7 @@ public class Dungeon {
     // Places an object at given row, column co-ordinate
     private void placeRandomObjectAt(Point coord) {
         logger.debug("\t-> Placing random object at " + coord + "...");
-        int qualityLevel = level + RNG.get().randomNumberNormalDistribution(1, 1);
+        int qualityLevel = level * 2 + RNG.get().randomNumberNormalDistribution(0, 1);
 
         AbstractItem item = ItemGenerator.generateItem(level, qualityLevel);
         item.setPosition(coord);

@@ -4,6 +4,7 @@ import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Images.CURSOR;
 import static org.newdawn.slick.Input.KEY_C;
@@ -79,6 +80,8 @@ public class GameView extends View {
 
     private Console console;
 
+    private Text lifeText;
+
     private ProgressBar lifeBar;
 
     private ProgressBar xpBar;
@@ -99,7 +102,7 @@ public class GameView extends View {
     public void start() throws Exception {
         depthBuffer = new DepthBuffer<>(WIDTH, EngineConfig.HEIGHT);
 
-        turnText = new Text("", 8, 8, GUI.get().getFont(2), YELLOW.getColor());
+        turnText = new Text("", 8, 16, GUI.get().getFont(2), YELLOW.getColor());
 
         menuDialog = new MenuDialog(this, game);
         inventoryDialog = new InventoryDialog(this, game);
@@ -114,11 +117,16 @@ public class GameView extends View {
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        lifeBar = new ProgressBar(WIDTH / 2 - 224, EngineConfig.HEIGHT - 54, 256, 32, 100);
-        xpBar = new ProgressBar(WIDTH / 2 - 224, EngineConfig.HEIGHT - 22, 256, 12, 0);
+        lifeText = new Text(getPlayer().getCurrentLife() + "/" + getPlayer().getLife(), 0, HEIGHT - 46, GUI.get().getFont(),
+                WHITE.getColor());
+        lifeText.setVisible(false);
+        lifeText.setX(WIDTH / 2 - 96 - lifeText.getWidth() / 2);
+
+        lifeBar = new ProgressBar(WIDTH / 2 - 224, HEIGHT - 54, 256, 32, 100);
+        xpBar = new ProgressBar(WIDTH / 2 - 224, HEIGHT - 22, 256, 12, 0);
         xpBar.setValueColor(YELLOW.getColor());
 
-        mapButton = new Button("", WIDTH / 2 + 40, EngineConfig.HEIGHT - 56, 48, 48);
+        mapButton = new Button("", WIDTH / 2 + 40, HEIGHT - 56, 48, 48);
         mapButton.setIcon(Images.MAP.getImage());
         mapButton.setEvent(new Event() {
 
@@ -158,7 +166,7 @@ public class GameView extends View {
             }
         });
 
-        add(turnText, lifeBar, xpBar, mapButton, inventoryButton, characterButton, menuButton, cursorTextBox, doorDialog, console,
+        add(turnText, lifeBar, lifeText, xpBar, mapButton, inventoryButton, characterButton, menuButton, cursorTextBox, doorDialog, console,
                 menuDialog, inventoryDialog, characterDialog, mapDialog, smallCharacterDialog);
     }
 
@@ -170,11 +178,14 @@ public class GameView extends View {
         cursorTextBox.setVisible(false);
         cursor = null;
 
+        lifeText.setText(getPlayer().getCurrentLife() + "/" + getPlayer().getLife());
+        lifeText.setX(WIDTH / 2 - 96 - lifeText.getWidth() / 2);
+        lifeText.setVisible(lifeBar.mouseOn());
         lifeBar.setValue(getPlayer().getCurrentLife() / (float) getPlayer().getLife());
         xpBar.setValue(getPlayer().getXp() / (float) LEVELING_LEVELS[getPlayer().getLevel() - 1]);
 
         turnText.setText(game.getTurn() == Turn.PLAYER ? "Your turn" : "GameMaster's turn");
-        turnText.setX(EngineConfig.WIDTH / 2 - turnText.getWidth() / 2);
+        turnText.setX(WIDTH / 2 - turnText.getWidth() / 2);
 
         if (getPlayer().isDead()) {
             GUI.get().switchView(new DeathView(game));
@@ -217,7 +228,7 @@ public class GameView extends View {
                                     getDungeon().findPathNear(getPlayer().getPosition(), cursor, getPlayer().getLightRadius()));
                         }
                     } else if (monster != null) {
-                        if (getPlayer().getPosition().distanceFrom(cursor) == 1) {
+                        if (getPlayer().canAttack(cursor)) {
                             getPlayer().setTarget(monster);
                         } else {
                             getPlayer().setPath(

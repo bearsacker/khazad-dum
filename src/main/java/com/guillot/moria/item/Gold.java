@@ -49,6 +49,6 @@ public class Gold extends AbstractItem {
 
     @Override
     public String getValueName() {
-        return "Value (gold coins)";
+        return "Value";
     }
 }

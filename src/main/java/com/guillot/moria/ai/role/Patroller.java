@@ -18,14 +18,14 @@ public class Patroller implements Rolable, Serializable {
         double distanceFromPlayer = game.getPlayer().getPosition().distanceFrom(monster.getPosition());
 
         if (distanceFromPlayer <= monster.getLightRadius()) {
-            if (distanceFromPlayer > 1) {
+            if (monster.canAttack(game.getPlayer().getPosition())) {
+                monster.setTarget(game.getPlayer());
+            } else {
                 Path path = game.getDungeon().findPathNear(monster.getPosition(), game.getPlayer().getPosition(), monster.getLightRadius());
                 if (path != null) {
                     monster.setTarget(game.getPlayer());
                     monster.setPath(path);
                 }
-            } else {
-                monster.setTarget(game.getPlayer());
             }
         } else if (RNG.get().randomNumber(3) == 1) {
             int tries = 0;
