@@ -36,7 +36,7 @@ public class Button extends Component {
 
     private boolean enabled;
 
-    private boolean sizeAuto;
+    private boolean widthAuto;
 
     public Button(String text, int x, int y, int width, int height) throws Exception {
         super();
@@ -52,40 +52,39 @@ public class Button extends Component {
         this.font = GUI.get().getFont();
         this.width = width;
         this.height = height;
-        this.sizeAuto = false;
+        this.widthAuto = false;
     }
 
-    public Button(String text, int x, int y) throws Exception {
-        this(text, x, y, GUI.get().getFont().getWidth(text), GUI.get().getFont().getHeight());
+    public Button(String text, int x, int y, int height) throws Exception {
+        this(text, x, y, GUI.get().getFont().getWidth(text), height);
 
-        sizeAuto = true;
+        widthAuto = true;
+        resize();
     }
 
     @Override
     public void setWidth(int width) {
         this.width = width;
-        sizeAuto = false;
+        widthAuto = false;
     }
 
     @Override
     public void setHeight(int height) {
         this.height = height;
-        sizeAuto = false;
     }
 
     public void setImage(Image image) {
         this.image = image;
     }
 
-    public boolean isSizeAuto() {
-        return sizeAuto;
+    public boolean isWidthAuto() {
+        return widthAuto;
     }
 
-    public void setSizeAuto(boolean sizeAuto) {
-        this.sizeAuto = sizeAuto;
-        if (this.sizeAuto) {
-            width = GUI.getColoredStringWidth(font, text) + BUTTON_PADDING * 2;
-            height = font.getHeight();
+    public void setWidthAuto(boolean widthAuto) {
+        this.widthAuto = widthAuto;
+        if (this.widthAuto) {
+            resize();
         }
     }
 
@@ -95,6 +94,9 @@ public class Button extends Component {
 
     public void setText(String text) {
         this.text = text;
+        if (widthAuto) {
+            resize();
+        }
     }
 
     public Color getColor() {
@@ -130,9 +132,8 @@ public class Button extends Component {
 
     public void setFont(TrueTypeFont font) {
         this.font = font;
-        if (sizeAuto) {
-            width = GUI.getColoredStringWidth(this.font, text) + BUTTON_PADDING * 2;
-            height = this.font.getHeight();
+        if (widthAuto) {
+            resize();
         }
     }
 
@@ -172,7 +173,8 @@ public class Button extends Component {
 
         int lineHeight = font.getLineHeight();
         int lineWidth = GUI.getColoredStringWidth(font, text);
-        font.drawString((width / 2) - (lineWidth / 2), (height / 2) - (lineHeight / 2), text, (mouseOn && enabled ? colorHover : color));
+        GUI.drawColoredString(g, font, (width / 2) - (lineWidth / 2), (height / 2) - (lineHeight / 2), text,
+                (mouseOn && enabled ? colorHover : color));
 
         if (icon != null) {
             int iconX = BUTTON_BORDER;
@@ -209,5 +211,9 @@ public class Button extends Component {
 
     public void setEvent(Event e) {
         event = e;
+    }
+
+    private void resize() {
+        width = GUI.getColoredStringWidth(this.font, text) + BUTTON_PADDING * 2;
     }
 }

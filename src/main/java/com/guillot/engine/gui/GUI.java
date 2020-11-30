@@ -274,11 +274,11 @@ public class GUI {
                 spriteHeight, filter);
     }
 
-    public static void drawColoredString(Graphics g, org.newdawn.slick.Font font, int x, int y, String text, Color defaultColor) {
+    public static void drawColoredString(Graphics g, TrueTypeFont font, int x, int y, String text, Color defaultColor) {
         drawColoredString(g, font, x, y, text, defaultColor, 1f);
     }
 
-    public static void drawColoredString(Graphics g, org.newdawn.slick.Font font, int x, int y, String text, Color defaultColor,
+    public static void drawColoredString(Graphics g, TrueTypeFont font, int x, int y, String text, Color defaultColor,
             float alpha) {
         String[] values = text.split("@@");
 
@@ -298,7 +298,7 @@ public class GUI {
         }
     }
 
-    public static int getColoredStringWidth(org.newdawn.slick.Font font, String text) {
+    public static int getColoredStringWidth(TrueTypeFont font, String text) {
         String[] values = text.split("@@");
 
         if (values.length == 1) {

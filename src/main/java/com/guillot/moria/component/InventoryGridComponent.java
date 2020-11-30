@@ -32,6 +32,8 @@ public class InventoryGridComponent extends Component {
 
     private ArrayList<AbstractItem> items;
 
+    private int blocksWidth;
+
     private int limit;
 
     private AbstractItem selectedItem;
@@ -39,16 +41,17 @@ public class InventoryGridComponent extends Component {
     private AbstractItem hoveredItem;
 
     public InventoryGridComponent(AbstractCharacter player) {
-        this(player, player.getInventory(), player.getInventoryLimit());
+        this(player, player.getInventory(), player.getInventoryLimit(), INVENTORY_BLOCKS_WIDTH);
     }
 
-    public InventoryGridComponent(AbstractCharacter player, ArrayList<AbstractItem> items, int limit) {
+    public InventoryGridComponent(AbstractCharacter player, ArrayList<AbstractItem> items, int limit, int blocksWidth) {
         this.player = player;
         this.items = items;
         this.limit = limit;
+        this.blocksWidth = blocksWidth;
 
-        width = INVENTORY_BLOCKS_WIDTH * BLOCK_SIZE;
-        height = (limit / INVENTORY_BLOCKS_WIDTH + 1) * BLOCK_SIZE;
+        width = blocksWidth * BLOCK_SIZE;
+        height = (limit / blocksWidth + 1) * BLOCK_SIZE;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class InventoryGridComponent extends Component {
         if (mouseOn) {
             int x = (GUI.get().getMouseX() - this.x) / BLOCK_SIZE;
             int y = (GUI.get().getMouseY() - this.y) / BLOCK_SIZE;
-            int index = y * INVENTORY_BLOCKS_WIDTH + x;
+            int index = y * blocksWidth + x;
 
             if (index >= 0 && index < items.size()) {
                 hoveredItem = items.get(index);
@@ -67,11 +70,8 @@ public class InventoryGridComponent extends Component {
             }
 
             if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-                if (hoveredItem != null) {
-                    selectedItem = hoveredItem;
-                }
+                selectedItem = hoveredItem;
             }
-
         } else {
             hoveredItem = null;
         }
@@ -83,8 +83,8 @@ public class InventoryGridComponent extends Component {
         g.translate(this.x, this.y);
 
         for (int i = 0; i < limit; i++) {
-            int x = (i % INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
-            int y = (i / INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
+            int x = (i % blocksWidth) * BLOCK_SIZE;
+            int y = (i / blocksWidth) * BLOCK_SIZE;
 
             g.setColor(ITEM_BLOCK.getColor());
             g.fillRect(x + BORDER_BLOCK_SIZE, y + BORDER_BLOCK_SIZE, BLOCK_SIZE - BORDER_BLOCK_SIZE * 2,
@@ -93,8 +93,8 @@ public class InventoryGridComponent extends Component {
 
         for (int i = 0; i < items.size(); i++) {
             AbstractItem item = items.get(i);
-            int x = (i % INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
-            int y = (i / INVENTORY_BLOCKS_WIDTH) * BLOCK_SIZE;
+            int x = (i % blocksWidth) * BLOCK_SIZE;
+            int y = (i / blocksWidth) * BLOCK_SIZE;
 
             if (player != null && player.isEquipedByItem(item)) {
                 g.setColor(ITEM_EQUIPED.getColor());

@@ -15,8 +15,8 @@ import com.guillot.moria.character.Human;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
+import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.save.GameSaveManager;
-import com.guillot.moria.utils.RNG;
 
 public class GameState {
 
@@ -52,6 +52,11 @@ public class GameState {
 
         player = new Human("Jean");
         player.setPosition(levels.get(currentLevel).getSpawnUpStairs());
+
+        // TODO remove this
+        for (AbstractItem item : getDungeon().getItems()) {
+            player.pickUpItem(item);
+        }
     }
 
     public void init(String path) {
@@ -197,8 +202,6 @@ public class GameState {
 
 
     public static void main(String[] args) throws SlickException {
-        RNG.get().setSeed(1606213583967L);
-
         new Game(new MenuView());
     }
 }

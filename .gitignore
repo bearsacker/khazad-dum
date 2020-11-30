@@ -5,6 +5,6 @@ syntax: glob
 bin/*
 *.project
 target/*
-*.log
+*.log*
 /target/
 *.dat

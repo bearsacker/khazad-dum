@@ -4,6 +4,8 @@ import org.newdawn.slick.Color;
 
 public enum Colors {
     WHITE(new Color(255, 255, 255)), //
+    BLACK(new Color(0, 0, 0)), //
+    DARK_GREY(new Color(38, 38, 38)), //
     LIGHT_GREY(new Color(220, 220, 220)), //
     YELLOW(new Color(223, 207, 134)), //
     ROSE_PALE(new Color(240, 220, 220)), //

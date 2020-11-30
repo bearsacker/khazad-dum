@@ -6,6 +6,7 @@ import static com.guillot.moria.configs.VaultConfig.VAULT_LIMIT;
 import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
 import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
+import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Graphics;
 
@@ -32,7 +33,7 @@ public class VaultDialog extends Window {
 
         vault = VaultSaveManager.loadSaveFile(VAULT_SAVE_PATH);
 
-        inventoryGrid = new InventoryGridComponent(null, vault.getItems(), VAULT_LIMIT);
+        inventoryGrid = new InventoryGridComponent(null, vault.getItems(), VAULT_LIMIT, 8);
         inventoryGrid.setX(288);
         inventoryGrid.setY(128 + 64);
 
@@ -46,8 +47,6 @@ public class VaultDialog extends Window {
         itemTextBox.setWidth(WIDTH);
         itemTextBox.setDrawBox(false);
         itemTextBox.setVisible(false);
-
-        add();
     }
 
     @Override
@@ -61,6 +60,10 @@ public class VaultDialog extends Window {
 
     @Override
     public void update() throws Exception {
+        if (!inventoryGrid.mouseOn() && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+            inventoryGrid.setSelectedItem(null);
+        }
+
         super.update();
 
         inventoryGrid.update();

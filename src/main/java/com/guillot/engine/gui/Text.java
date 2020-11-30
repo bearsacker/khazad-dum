@@ -30,6 +30,10 @@ public class Text extends Component {
         this(text, x, y, GUI.get().getFont(), color);
     }
 
+    public Text(String text, int x, int y, TrueTypeFont font) {
+        this(text, x, y, font, COMPONENT_FILTER_COLOR);
+    }
+
     public Text(String text, int x, int y, TrueTypeFont font, Color color) {
         super();
 

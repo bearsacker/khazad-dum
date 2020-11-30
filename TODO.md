@@ -1,4 +1,3 @@
-DeathView
 Quick Animation and sprites
 Character creation screen
 Bow and bullets
@@ -12,3 +11,4 @@ Add level 10 and Balrog
 Traps  
 
 Fix component position with parent view
+Fix inventory limit and strenght

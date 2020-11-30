@@ -292,6 +292,11 @@ public class GameView extends View {
             mapDialog.setVisible(false);
             menuDialog.toggleVisible();
         }
+
+        // TODO to remove
+        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
+            getPlayer().setCurrentLife(0);
+        }
     }
 
     @Override

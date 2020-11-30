@@ -6,6 +6,7 @@ import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
 import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_DELETE;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
+import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 
 import java.util.Collections;
@@ -144,6 +145,11 @@ public class InventoryDialog extends Window {
     @Override
     public void update() throws Exception {
         cursorTextBox.setVisible(false);
+
+        if (!inventoryGrid.mouseOn() && !buttonAction.mouseOn() && !buttonDrop.mouseOn()
+                && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+            inventoryGrid.setSelectedItem(null);
+        }
 
         super.update();
 
