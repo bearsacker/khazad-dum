@@ -3,7 +3,7 @@ package com.guillot.moria.dungeon;
 import com.guillot.moria.utils.RNG;
 
 public enum Direction {
-    NORTHWEST(0), NORTH(1), NORTHEAST(2), EAST(3), SOUTHEAST(4), SOUTH(5), SOUTHWEST(6), WEST(7);
+    NORTHWEST(4), NORTH(0), NORTHEAST(5), EAST(1), SOUTHEAST(6), SOUTH(2), SOUTHWEST(7), WEST(3);
 
     private int value;
 

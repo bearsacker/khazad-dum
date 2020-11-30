@@ -61,6 +61,12 @@ public abstract class AbstractCharacter implements Serializable {
 
     protected AbstractCharacter target;
 
+    // Animation
+
+    private int currentFrame;
+
+    private long lastAnimation;
+
     // Attributes
 
     protected int strengthBase;
@@ -358,11 +364,62 @@ public abstract class AbstractCharacter implements Serializable {
         return inventory.stream().filter(x -> x.getType() == type).findAny().orElse(null);
     }
 
+    public void update(GameState game) {
+        if (isMoving()) {
+            long time = System.currentTimeMillis();
+            if (time - lastAnimation > 50) {
+                currentFrame++;
+                currentFrame %= 4;
+
+                lastAnimation = time;
+            }
+        } else {
+            currentFrame = 0;
+        }
+
+        if (path != null) {
+            Point newPosition = path.getStep(currentStep).inverseXY();
+            currentStep++;
+
+            if (position.x - newPosition.x == 1) {
+                direction = NORTH;
+            } else if (position.x - newPosition.x == -1) {
+                direction = SOUTH;
+            } else if (position.y - newPosition.y == 1) {
+                direction = WEST;
+            } else if (position.y - newPosition.y == -1) {
+                direction = EAST;
+            }
+            setPosition(newPosition);
+
+            if (currentStep > movement || currentStep >= path.getLength()) {
+                path = null;
+            }
+        } else if (target != null) {
+            Attack attack = doAttack();
+            if (attack == null) {
+                game.addMessage(getName() + " misses his attack!");
+            } else {
+                String message = (attack.isCritical() ? "RED_PALE@@Critical hit! @@WHITE@@" : "WHITE@@");
+                int damagesReceived = target.takeAHit(attack);
+                if (damagesReceived < 0) {
+                    message += target.getName() + " dodges the attack!";
+                } else {
+                    message += target.getName() + " takes @@RED_PALE@@" + damagesReceived + "@@WHITE@@ damages!";
+                }
+
+                game.addMessage(message);
+            }
+
+            target = null;
+        }
+    }
+
     public void draw(Graphics g, Point playerPosition) {
         int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        g.drawImage(this.image.getSubImage(direction.getValue(), 0), x, y);
+        g.drawImage(this.image.getSubImage(direction.getValue() + currentFrame * 4, 0), x, y);
     }
 
     public int getLevel() {
@@ -710,45 +767,6 @@ public abstract class AbstractCharacter implements Serializable {
 
     public void setTarget(AbstractCharacter target) {
         this.target = target;
-    }
-
-    public void update(GameState game) {
-        if (path != null) {
-            Point newPosition = path.getStep(currentStep).inverseXY();
-            currentStep++;
-
-            if (position.x - newPosition.x == 1) {
-                direction = NORTH;
-            } else if (position.x - newPosition.x == -1) {
-                direction = SOUTH;
-            } else if (position.y - newPosition.y == 1) {
-                direction = WEST;
-            } else if (position.y - newPosition.y == -1) {
-                direction = EAST;
-            }
-            setPosition(newPosition);
-
-            if (currentStep > movement || currentStep >= path.getLength()) {
-                path = null;
-            }
-        } else if (target != null) {
-            Attack attack = doAttack();
-            if (attack == null) {
-                game.addMessage(getName() + " misses his attack!");
-            } else {
-                String message = (attack.isCritical() ? "RED_PALE@@Critical hit! @@WHITE@@" : "WHITE@@");
-                int damagesReceived = target.takeAHit(attack);
-                if (damagesReceived < 0) {
-                    message += target.getName() + " dodges the attack!";
-                } else {
-                    message += target.getName() + " takes @@RED_PALE@@" + damagesReceived + "@@WHITE@@ damages!";
-                }
-
-                game.addMessage(message);
-            }
-
-            target = null;
-        }
     }
 
     @Override

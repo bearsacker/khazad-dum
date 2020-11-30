@@ -1,7 +1,8 @@
-Quick Animation and sprites
+Character sprites
 Character creation screen
-Bow and bullets
+Bow
 
+Bullets
 Monster sprites
 Better animation
 Cursor
