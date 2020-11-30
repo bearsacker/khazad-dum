@@ -126,6 +126,8 @@ public enum Images {
     CLAYMORE("sprites/weapon.png", 32, 32, 0, 15), //
     BROAD_SWORD("sprites/weapon.png", 32, 32, 12, 0), //
     BASTARD_SWORD("sprites/weapon.png", 32, 32, 11, 0), //
+    CLUB("sprites/weapon.png", 32, 32, 13, 5), //
+    SPIKED_CLUB("sprites/weapon.png", 32, 32, 2, 16), //
     MACE("sprites/weapon.png", 32, 32, 7, 13), //
     MORNING_STAR("sprites/weapon.png", 32, 32, 14, 5), //
     FLAIL("sprites/weapon.png", 32, 32, 15, 5), //

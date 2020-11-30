@@ -36,6 +36,8 @@ public class OneHandedWeapon extends AbstractItem implements Equipable {
                 new ItemRepresentation("Claymore", 5, 1, 12, 35, Images.CLAYMORE), //
                 new ItemRepresentation("Broad Sword", 8, 4, 12, 40, Images.BROAD_SWORD), //
                 new ItemRepresentation("Bastard Sword", 10, 6, 15, 50, Images.BASTARD_SWORD), //
+                new ItemRepresentation("Club", 1, 1, 6, 0, Images.CLUB), //
+                new ItemRepresentation("Spiked Club", 4, 3, 6, 18, Images.SPIKED_CLUB), //
                 new ItemRepresentation("Mace", 2, 1, 8, 16, Images.MACE), //
                 new ItemRepresentation("Morning Star", 3, 1, 10, 26, Images.MORNING_STAR), //
                 new ItemRepresentation("Flail", 7, 2, 12, 30, Images.FLAIL));

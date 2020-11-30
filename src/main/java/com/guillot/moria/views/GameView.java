@@ -30,9 +30,9 @@ import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
 import com.guillot.moria.component.Console;
 import com.guillot.moria.component.DoorDialog;
-import com.guillot.moria.component.MenuDialog;
 import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.component.MapDialog;
+import com.guillot.moria.component.MenuDialog;
 import com.guillot.moria.component.SmallCharacterDialog;
 import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Door;
@@ -126,7 +126,7 @@ public class GameView extends View {
             }
         });
 
-        inventoryButton = new Button("", WIDTH / 2 + 176, EngineConfig.HEIGHT - 48, 48, 48);
+        inventoryButton = new Button("", WIDTH / 2 + 172, EngineConfig.HEIGHT - 48, 48, 48);
         inventoryButton.setIcon(Images.INVENTORY.getImage());
         inventoryButton.setEvent(new Event() {
 
@@ -136,7 +136,7 @@ public class GameView extends View {
             }
         });
 
-        characterButton = new Button("", WIDTH / 2 + 224, EngineConfig.HEIGHT - 48, 48, 48);
+        characterButton = new Button("", WIDTH / 2 + 216, EngineConfig.HEIGHT - 48, 48, 48);
         characterButton.setIcon(Images.CHARACTER.getImage());
         characterButton.setEvent(new Event() {
 
@@ -146,7 +146,7 @@ public class GameView extends View {
             }
         });
 
-        menuButton = new Button("", WIDTH / 2 + 272, EngineConfig.HEIGHT - 48, 48, 48);
+        menuButton = new Button("", WIDTH / 2 + 260, EngineConfig.HEIGHT - 48, 48, 48);
         menuButton.setIcon(Images.MENU.getImage());
         menuButton.setEvent(new Event() {
 

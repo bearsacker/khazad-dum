@@ -184,8 +184,8 @@ public class InventoryDialog extends Window {
         }
 
         if (inventoryGrid.getSelectedItem() != null) {
-            buttonAction.setY(itemTextBox.getY() + 40);
-            buttonDrop.setY(itemTextBox.getY() + 104);
+            buttonAction.setY(itemTextBox.getY() + 32);
+            buttonDrop.setY(itemTextBox.getY() + 96);
 
             buttonAction
                     .setVisible(inventoryGrid.getSelectedItem() instanceof Usable || inventoryGrid.getSelectedItem() instanceof Equipable);
