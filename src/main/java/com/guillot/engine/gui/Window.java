@@ -13,6 +13,7 @@ import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_HEIGHT;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_TEXT_COLOR;
 import static com.guillot.engine.configs.GUIConfig.WINDOW_HEADER_WIDTH;
+import static com.guillot.engine.gui.GUI.drawColoredString;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -24,6 +25,8 @@ public class Window extends SubView {
     private Image imageBody;
 
     private Button closeButton;
+
+    private int titleWidth;
 
     protected String title;
 
@@ -42,7 +45,7 @@ public class Window extends SubView {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.title = title;
+        setTitle(title);
         imageHeader = new Image(WINDOW_HEADER_SPRITE);
         imageHeader.setFilter(Image.FILTER_NEAREST);
         imageBody = new Image(WINDOW_BODY_SPRITE);
@@ -88,7 +91,7 @@ public class Window extends SubView {
                     WINDOW_HEADER_BORDER);
 
             if (title != null) {
-                GUI.get().getFont().drawString(width / 2 - GUI.get().getFont().getWidth(title) / 2,
+                drawColoredString(g, GUI.get().getFont(), width / 2 - titleWidth / 2,
                         WINDOW_HEADER_HEIGHT / 2 - GUI.get().getFont().getHeight() / 2, title, WINDOW_HEADER_TEXT_COLOR);
             }
         }
@@ -98,7 +101,7 @@ public class Window extends SubView {
         g.popTransform();
 
         // TODO with window position
-        if (isShowCloseButton()) {
+        if (showHeader && isShowCloseButton()) {
             closeButton.paint(g);
         }
     }
@@ -151,6 +154,9 @@ public class Window extends SubView {
 
     public void setTitle(String title) {
         this.title = title;
+        if (title != null) {
+            titleWidth = GUI.getColoredStringWidth(GUI.get().getFont(), title);
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import static com.guillot.engine.configs.GUIConfig.TEXTBOX_SPRITE;
 import static com.guillot.engine.configs.GUIConfig.TEXTBOX_SPRITE_SIZE;
 import static com.guillot.engine.configs.GUIConfig.TEXTBOX_TEXT_COLOR;
 import static com.guillot.engine.gui.GUI.drawColoredString;
+import static java.lang.Math.max;
 
 import java.util.ArrayList;
 
@@ -44,11 +45,11 @@ public class TextBox extends Component {
         image = new Image(TEXTBOX_SPRITE);
         image.setFilter(Image.FILTER_NEAREST);
         textColor = new Color(TEXTBOX_TEXT_COLOR);
+        lines = new ArrayList<>();
         this.x = x;
         this.y = y;
         this.width = width;
-        this.text = text;
-        resizeHeight();
+        setText(text);
         drawBox = true;
     }
 
@@ -70,26 +71,15 @@ public class TextBox extends Component {
     }
 
     private void resizeWidth() {
-        width = GUI.get().getFont().getWidth(text) + TEXTBOX_PADDING * 2;
+        int maxWidth = 0;
+        for (String line : lines) {
+            maxWidth = max(maxWidth, GUI.getColoredStringWidth(GUI.get().getFont(), line) + TEXTBOX_PADDING * 2);
+        }
+
+        width = maxWidth;
     }
 
     private void resizeHeight() {
-        lines = new ArrayList<>();
-        String line = "";
-
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '\n') {
-                lines.add(new String(line));
-                line = "";
-            } else if (GUI.get().getFont().getWidth(line + text.charAt(i) + "    ") > width) {
-                lines.add(new String(line));
-                line = "" + text.charAt(i);
-            } else {
-                line += text.charAt(i);
-            }
-        }
-
-        lines.add(new String(line));
         height = lines.size() * GUI.get().getFont().getHeight() + TEXTBOX_PADDING * 2;
     }
 
@@ -99,6 +89,12 @@ public class TextBox extends Component {
 
     public void setText(String text) {
         this.text = text;
+
+        lines.clear();
+        String[] temp = text.split("\n");
+        for (String line : temp) {
+            lines.add(line);
+        }
 
         if (autoWidth) {
             resizeWidth();

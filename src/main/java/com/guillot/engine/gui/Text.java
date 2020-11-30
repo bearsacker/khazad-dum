@@ -1,5 +1,11 @@
 package com.guillot.engine.gui;
 
+import static com.guillot.engine.configs.GUIConfig.COMPONENT_FILTER_COLOR;
+import static com.guillot.engine.gui.GUI.drawColoredString;
+import static java.lang.Math.max;
+
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.TrueTypeFont;
@@ -8,6 +14,8 @@ public class Text extends Component {
 
     private String text;
 
+    private ArrayList<String> lines;
+
     private TrueTypeFont font;
 
     public Text(String text) {
@@ -15,26 +23,22 @@ public class Text extends Component {
     }
 
     public Text(String text, int x, int y) {
-        super();
-
-        this.text = text;
-        this.x = x;
-        this.y = y;
-        this.font = GUI.get().getFont();
-        this.height = font.getHeight();
-        this.width = font.getWidth(text);
+        this(text, x, y, GUI.get().getFont(), COMPONENT_FILTER_COLOR);
     }
 
     public Text(String text, int x, int y, Color color) {
-        this(text, x, y);
-        this.filter = new Color(color);
+        this(text, x, y, GUI.get().getFont(), color);
     }
 
     public Text(String text, int x, int y, TrueTypeFont font, Color color) {
-        this(text, x, y, color);
+        super();
+
+        this.x = x;
+        this.y = y;
         this.font = font;
-        this.height = font.getHeight();
-        this.width = font.getWidth(text);
+        lines = new ArrayList<>();
+        filter = new Color(color);
+        setText(text);
     }
 
     public String getText() {
@@ -43,7 +47,14 @@ public class Text extends Component {
 
     public void setText(String text) {
         this.text = text;
-        this.width = font.getWidth(text);
+
+        lines.clear();
+        String[] temp = text.split("\n");
+        for (String line : temp) {
+            lines.add(line);
+        }
+
+        resize();
     }
 
     public Color getColor() {
@@ -62,14 +73,25 @@ public class Text extends Component {
         this.font = font;
     }
 
+    private void resize() {
+        int maxWidth = 0;
+        for (String line : lines) {
+            maxWidth = max(maxWidth, GUI.getColoredStringWidth(font, line));
+        }
+
+        width = maxWidth;
+        height = lines.size() * font.getHeight();
+    }
+
     @Override
     public void paint(Graphics g) {
-        if (font != null) {
-            int offset = 0;
-            for (String line : text.split("\n")) {
-                GUI.drawColoredString(g, font, x, y + offset, line, filter);
-                offset += font.getHeight();
-            }
+        g.pushTransform();
+        g.translate(x, y);
+
+        for (String line : lines) {
+            drawColoredString(g, font, 0, lines.indexOf(line) * font.getHeight(), line, filter);
         }
+
+        g.popTransform();
     }
 }

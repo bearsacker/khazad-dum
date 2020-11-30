@@ -1,5 +1,6 @@
 package com.guillot.moria.views;
 
+import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
@@ -113,11 +114,11 @@ public class GameView extends View {
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        lifeBar = new ProgressBar(WIDTH / 2 - 128, EngineConfig.HEIGHT - 44, 256, 32, 100);
-        xpBar = new ProgressBar(WIDTH / 2 - 128, EngineConfig.HEIGHT - 12, 256, 12, 0);
+        lifeBar = new ProgressBar(WIDTH / 2 - 224, EngineConfig.HEIGHT - 54, 256, 32, 100);
+        xpBar = new ProgressBar(WIDTH / 2 - 224, EngineConfig.HEIGHT - 22, 256, 12, 0);
         xpBar.setValueColor(YELLOW.getColor());
 
-        mapButton = new Button("", WIDTH / 2 + 128, EngineConfig.HEIGHT - 48, 48, 48);
+        mapButton = new Button("", WIDTH / 2 + 40, EngineConfig.HEIGHT - 56, 48, 48);
         mapButton.setIcon(Images.MAP.getImage());
         mapButton.setEvent(new Event() {
 
@@ -127,7 +128,7 @@ public class GameView extends View {
             }
         });
 
-        inventoryButton = new Button("", WIDTH / 2 + 172, EngineConfig.HEIGHT - 48, 48, 48);
+        inventoryButton = new Button("", WIDTH / 2 + 84, EngineConfig.HEIGHT - 56, 48, 48);
         inventoryButton.setIcon(Images.INVENTORY.getImage());
         inventoryButton.setEvent(new Event() {
 
@@ -137,7 +138,7 @@ public class GameView extends View {
             }
         });
 
-        characterButton = new Button("", WIDTH / 2 + 216, EngineConfig.HEIGHT - 48, 48, 48);
+        characterButton = new Button("", WIDTH / 2 + 128, EngineConfig.HEIGHT - 56, 48, 48);
         characterButton.setIcon(Images.CHARACTER.getImage());
         characterButton.setEvent(new Event() {
 
@@ -147,7 +148,7 @@ public class GameView extends View {
             }
         });
 
-        menuButton = new Button("", WIDTH / 2 + 260, EngineConfig.HEIGHT - 48, 48, 48);
+        menuButton = new Button("", WIDTH / 2 + 172, EngineConfig.HEIGHT - 56, 48, 48);
         menuButton.setIcon(Images.MENU.getImage());
         menuButton.setEvent(new Event() {
 
@@ -365,9 +366,11 @@ public class GameView extends View {
             drawCursor(g, cursor.y, cursor.x, getDungeon().getFloor()[cursor.y][cursor.x]);
         }
 
+        g.drawImage(Images.STONE.getImage(), WIDTH / 2 - Images.STONE.getImage().getWidth() / 2, HEIGHT - 64);
+
         super.paint(g);
 
-        if (getPlayer().getAttributesPoints() > 0) {
+        if (focused && getPlayer().getAttributesPoints() > 0) {
             g.setColor(Colors.ITEM_LEGENDARY.getColor());
             g.setLineWidth(2f);
 

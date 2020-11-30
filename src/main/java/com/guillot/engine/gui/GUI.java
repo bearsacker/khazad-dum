@@ -297,4 +297,20 @@ public class GUI {
             }
         }
     }
+
+    public static int getColoredStringWidth(org.newdawn.slick.Font font, String text) {
+        String[] values = text.split("@@");
+
+        if (values.length == 1) {
+            return font.getWidth(text);
+        } else {
+            int width = 0;
+
+            for (int i = 0; i < values.length; i += 2) {
+                width += font.getWidth((values[i + 1]));
+            }
+
+            return width;
+        }
+    }
 }

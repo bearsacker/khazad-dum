@@ -30,6 +30,8 @@ public enum Images {
     MAP_CURSOR("sprites/map_cursor.png"), //
 
     MAGICAL_OVERLAY("sprites/magical.png"), //
+    WINDOW_HEADER_ALTERNATE("gui/window_header_alternate.png"), //
+    STONE("gui/stone.png"), //
 
     MINOR_HEALTH_POTION("sprites/potion.png", 32, 32, 0, 15), //
     LESSER_HEALTH_POTION("sprites/potion.png", 32, 32, 0, 5), //

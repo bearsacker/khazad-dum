@@ -84,7 +84,7 @@ public class Button extends Component {
     public void setSizeAuto(boolean sizeAuto) {
         this.sizeAuto = sizeAuto;
         if (this.sizeAuto) {
-            width = font.getWidth(text) + BUTTON_PADDING * 2;
+            width = GUI.getColoredStringWidth(font, text) + BUTTON_PADDING * 2;
             height = font.getHeight();
         }
     }
@@ -131,7 +131,7 @@ public class Button extends Component {
     public void setFont(TrueTypeFont font) {
         this.font = font;
         if (sizeAuto) {
-            width = this.font.getWidth(text) + BUTTON_PADDING * 2;
+            width = GUI.getColoredStringWidth(this.font, text) + BUTTON_PADDING * 2;
             height = this.font.getHeight();
         }
     }
@@ -171,7 +171,7 @@ public class Button extends Component {
         GUI.drawTiledImage(image, filter, width, height, BUTTON_SPRITE_SIZE, BUTTON_SPRITE_SIZE, BUTTON_BORDER);
 
         int lineHeight = font.getLineHeight();
-        int lineWidth = font.getWidth(text);
+        int lineWidth = GUI.getColoredStringWidth(font, text);
         font.drawString((width / 2) - (lineWidth / 2), (height / 2) - (lineHeight / 2), text, (mouseOn && enabled ? colorHover : color));
 
         if (icon != null) {

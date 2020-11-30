@@ -2,8 +2,8 @@ package com.guillot.moria.item;
 
 
 public enum ItemRarity {
-    NORMAL("Normal", 79, 0, 0), //
-    MAGIC("Magic", 20, 3, 1), //
+    NORMAL("Normal", 90, 0, 0), //
+    MAGIC("Magic", 9, 3, 1), //
     LEGENDARY("Legendary", 1, 9, 3);
 
     private String name;

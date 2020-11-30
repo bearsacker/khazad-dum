@@ -6,6 +6,8 @@ import static com.guillot.moria.dungeon.Direction.EAST;
 import static com.guillot.moria.dungeon.Direction.NORTH;
 import static com.guillot.moria.dungeon.Direction.SOUTH;
 import static com.guillot.moria.dungeon.Direction.WEST;
+import static com.guillot.moria.item.ItemRarity.LEGENDARY;
+import static com.guillot.moria.item.ItemRarity.MAGIC;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
@@ -751,23 +753,24 @@ public abstract class AbstractCharacter implements Serializable {
 
     @Override
     public String toString() {
-        String text = "RED_PALE@@Strength: @@LIGHT_GREY@@" + strength + "\n";
-        text += "RED_PALE@@     Physical damage: @@LIGHT_GREY@@+ " + physicalDamage + "%\n";
-        text += "RED_PALE@@     Inventory limit: @@LIGHT_GREY@@" + inventoryLimit + " blocks\n\n";
+        String text = "RED_PALE@@Strength: @@WHITE@@" + strength + "\n";
+        text += "LIGHT_GREY@@     Physical damage: @@WHITE@@+ " + physicalDamage + "%\n";
+        text += "LIGHT_GREY@@     Inventory limit: @@WHITE@@" + inventoryLimit + " blocks\n\n";
 
-        text += "GREEN_PALE@@Agility: @@LIGHT_GREY@@" + agility + "\n";
-        text += "GREEN_PALE@@     Chance to hit: @@LIGHT_GREY@@" + chanceHit + "%\n";
-        text += "GREEN_PALE@@     Chance to block/dodge: @@LIGHT_GREY@@" + chanceDodge + "%\n";
-        text += "GREEN_PALE@@     Movement: @@LIGHT_GREY@@" + movement + "m\n\n";
+        text += "GREEN_PALE@@Agility: @@WHITE@@" + agility + "\n";
+        text += "LIGHT_GREY@@     Chance to hit: @@WHITE@@" + chanceHit + "%\n";
+        text += "LIGHT_GREY@@     Chance to block/dodge: @@WHITE@@" + chanceDodge + "%\n";
+        text += "LIGHT_GREY@@     Movement: @@WHITE@@" + movement + "m\n\n";
 
-        text += "YELLOW_PALE@@Spirit: @@LIGHT_GREY@@" + spirit + "\n";
-        text += "YELLOW_PALE@@     Life: @@LIGHT_GREY@@" + currentLife + "/" + life + "\n";
-        text += "YELLOW_PALE@@     Light radius: @@LIGHT_GREY@@" + lightRadius + "m\n\n";
+        text += "YELLOW_PALE@@Spirit: @@WHITE@@" + spirit + "\n";
+        text += "LIGHT_GREY@@     Life: @@WHITE@@" + currentLife + "/" + life + "\n";
+        text += "LIGHT_GREY@@     Light radius: @@WHITE@@" + lightRadius + "m\n\n";
 
-        text += "BLUE_PALE@@Destiny: @@LIGHT_GREY@@" + destiny + "\n";
-        text += "BLUE_PALE@@     Chance to magic find: @@LIGHT_GREY@@+ " + chanceMagicFind + "%\n";
-        text += "BLUE_PALE@@     Chance to pick a lock: @@LIGHT_GREY@@" + chanceLockPicking + "%\n";
-        text += "BLUE_PALE@@     Chance of critical hit: @@LIGHT_GREY@@" + chanceCriticalHit + "%\n\n";
+        text += "BLUE_PALE@@Destiny: @@WHITE@@" + destiny + "\n";
+        text += "LIGHT_GREY@@     Chance to magic find: @@WHITE@@+ "
+                + (MAGIC.getProbability() + LEGENDARY.getProbability() + chanceMagicFind) + "%\n";
+        text += "LIGHT_GREY@@     Chance to pick a lock: @@WHITE@@" + chanceLockPicking + "%\n";
+        text += "LIGHT_GREY@@     Chance of critical hit: @@WHITE@@" + chanceCriticalHit + "%\n\n";
 
         return text;
     }

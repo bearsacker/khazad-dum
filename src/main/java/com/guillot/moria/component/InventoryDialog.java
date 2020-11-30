@@ -11,7 +11,6 @@ import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 import java.util.Collections;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
@@ -23,6 +22,7 @@ import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemBlock;
 import com.guillot.moria.item.Usable;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 
@@ -91,7 +91,7 @@ public class InventoryDialog extends Window {
         inventoryGrid.setY(128);
 
         itemWindow = new Window(parent, 0, HEIGHT, WIDTH, 0);
-        itemWindow.setImageHeader(new Image("gui/window_header_alternate.png"));
+        itemWindow.setImageHeader(Images.WINDOW_HEADER_ALTERNATE.getImage());
         itemWindow.setShowOverlay(false);
         itemWindow.setVisible(false);
 

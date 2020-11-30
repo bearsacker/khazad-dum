@@ -46,6 +46,8 @@ public class CharacterDialog extends Window {
 
     private Text armorText;
 
+    private TextBox cursorTextBox;
+
     public CharacterDialog(GameView parent, GameState game) throws Exception {
         super(parent, 128, 96, WIDTH - 256, 0);
         setShowCloseButton(true);
@@ -58,7 +60,7 @@ public class CharacterDialog extends Window {
         characterTextBox.setX(64);
         characterTextBox.setY(128);
         characterTextBox.setText(player.toString());
-        height = characterTextBox.getHeight() + 128;
+        height = characterTextBox.getHeight() + 160;
 
         increaseStrengthButton = new Button("", 176, 248, 32, 32);
         increaseStrengthButton.setIcon(Images.LEVEL_UP.getImage());
@@ -68,7 +70,7 @@ public class CharacterDialog extends Window {
             @Override
             public void perform() throws Exception {
                 player.increaseStrength();
-                characterTextBox.setText(player.toString());
+                loadCharacterInfo();
             }
         });
 
@@ -80,7 +82,7 @@ public class CharacterDialog extends Window {
             @Override
             public void perform() throws Exception {
                 player.increaseAgility();
-                characterTextBox.setText(player.toString());
+                loadCharacterInfo();
             }
         });
 
@@ -92,7 +94,7 @@ public class CharacterDialog extends Window {
             @Override
             public void perform() throws Exception {
                 player.increaseSpirit();
-                characterTextBox.setText(player.toString());
+                loadCharacterInfo();
             }
         });
 
@@ -104,7 +106,7 @@ public class CharacterDialog extends Window {
             @Override
             public void perform() throws Exception {
                 player.increaseDestiny();
-                characterTextBox.setText(player.toString());
+                loadCharacterInfo();
             }
         });
 
@@ -119,26 +121,23 @@ public class CharacterDialog extends Window {
 
         armorText = new Text("", WIDTH / 2 + 224, 160, GUI.get().getFont(3), WHITE.getColor());
 
+        cursorTextBox = new TextBox();
+        cursorTextBox.setVisible(false);
+
         add(characterTextBox, nameText, damagesText, physicalDamagesText, fireDamagesText, frostDamagesText, lightningDamagesText,
-                armorText);
+                armorText, cursorTextBox);
     }
 
     @Override
     public void onShow() throws Exception {
-        characterTextBox.setText(player.toString());
-        damagesText.setText(Integer.toString(player.computeDamages()));
-        physicalDamagesText.setText(Integer.toString(player.computePhysicalDamages()));
-        fireDamagesText.setText(Integer.toString(player.getFireDamage()));
-        frostDamagesText.setText(Integer.toString(player.getFrostDamage()));
-        lightningDamagesText.setText(Integer.toString(player.getLightningDamage()));
-        armorText.setText(Integer.toString(player.getArmor()));
+        loadCharacterInfo();
     }
 
     @Override
     public void update() throws Exception {
         super.update();
 
-        height = characterTextBox.getHeight() + 128;
+        height = characterTextBox.getHeight() + 160;
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);
@@ -154,6 +153,12 @@ public class CharacterDialog extends Window {
         increaseAgilityButton.update();
         increaseSpiritButton.update();
         increaseDestinyButton.update();
+
+        cursorTextBox.setVisible(false);
+        if (increaseAgilityButton.mouseOn() || increaseDestinyButton.mouseOn() || increaseSpiritButton.mouseOn()
+                || increaseStrengthButton.mouseOn()) {
+            showTextBox("LIGHT_GREY@@Available points: @@ITEM_LEGENDARY@@" + player.getAttributesPoints());
+        }
     }
 
     @Override
@@ -192,6 +197,23 @@ public class CharacterDialog extends Window {
             g.drawRect(increaseDestinyButton.getX() + 1, increaseDestinyButton.getY(), increaseDestinyButton.getWidth() - 2,
                     increaseDestinyButton.getHeight() - 2);
         }
+    }
+
+    private void loadCharacterInfo() {
+        characterTextBox.setText(player.toString());
+        damagesText.setText(Integer.toString(player.computeDamages()));
+        physicalDamagesText.setText(Integer.toString(player.computePhysicalDamages()));
+        fireDamagesText.setText(Integer.toString(player.getFireDamage()));
+        frostDamagesText.setText(Integer.toString(player.getFrostDamage()));
+        lightningDamagesText.setText(Integer.toString(player.getLightningDamage()));
+        armorText.setText(Integer.toString(player.getArmor()));
+    }
+
+    private void showTextBox(String text) {
+        cursorTextBox.setText(text);
+        cursorTextBox.setX(GUI.get().getMouseX() + 16 - x);
+        cursorTextBox.setY(GUI.get().getMouseY() - cursorTextBox.getHeight() - 16 - y);
+        cursorTextBox.setVisible(true);
     }
 
 }
