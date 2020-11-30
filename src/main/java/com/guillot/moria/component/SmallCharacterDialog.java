@@ -1,9 +1,9 @@
 package com.guillot.moria.component;
 
 import static com.guillot.moria.ressources.Colors.ROSE_PALE;
+import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.GUI;
@@ -43,8 +43,8 @@ public class SmallCharacterDialog extends Window {
 
         lifeBar = new ProgressBar(32, 104, width - 64, 16, 0);
 
-        damagesText = new Text("", 104, 136, GUI.get().getFont(2), Color.white);
-        armorText = new Text("", 280, 136, GUI.get().getFont(2), Color.white);
+        damagesText = new Text("", 104, 136, GUI.get().getFont(2), WHITE.getColor());
+        armorText = new Text("", 280, 136, GUI.get().getFont(2), WHITE.getColor());
 
         chanceHitText = new Text("", 40, 176, GUI.get().getFont(), ROSE_PALE.getColor());
         chanceCriticalHitText = new Text("", 40, 200, GUI.get().getFont(), ROSE_PALE.getColor());

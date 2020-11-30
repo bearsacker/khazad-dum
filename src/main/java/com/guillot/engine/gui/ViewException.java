@@ -22,9 +22,8 @@ public class ViewException extends View {
         logger.error("", exception);
 
         String text = "";
-        StackTraceElement[] traces = exception.getStackTrace();
-        for (StackTraceElement trace : traces) {
-            text += "\n" + trace.toString();
+        for (StackTraceElement trace : exception.getStackTrace()) {
+            text += "\n     " + trace.toString();
         }
 
         Button button = new Button(DIALOG_BUTTON_TEXT, WIDTH - 256, HEIGHT - 64, 240, 48);
@@ -35,6 +34,7 @@ public class ViewException extends View {
             }
         });
 
-        add(new Text("Exception: " + exception.getMessage(), 30, 30, EXCEPTION_TEXT_COLOR), new Text(text, 30, 50), button);
+        add(button, new Text("Exception: " + exception.getMessage(), 30, 30, GUI.get().getFont(0), EXCEPTION_TEXT_COLOR),
+                new Text(text, 30, 50));
     }
 }

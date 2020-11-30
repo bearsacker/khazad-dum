@@ -3,7 +3,7 @@ package com.guillot.moria.character;
 
 public class Attack {
 
-    private int damages;
+    private int physicalDamages;
 
     private int fireDamages;
 
@@ -13,20 +13,20 @@ public class Attack {
 
     private boolean critical;
 
-    public Attack(int damages, int fireDamages, int frostDamages, int lightningDamages, boolean critical) {
-        this.damages = damages;
+    public Attack(int physicalDamages, int fireDamages, int frostDamages, int lightningDamages, boolean critical) {
+        this.physicalDamages = physicalDamages;
         this.fireDamages = fireDamages;
         this.frostDamages = frostDamages;
         this.lightningDamages = lightningDamages;
         this.critical = critical;
     }
 
-    public int getDamages() {
-        return damages;
+    public int getPhysicalDamages() {
+        return physicalDamages;
     }
 
-    public void setDamages(int damages) {
-        this.damages = damages;
+    public void setDamages(int physicalDamages) {
+        this.physicalDamages = physicalDamages;
     }
 
     public boolean isCritical() {

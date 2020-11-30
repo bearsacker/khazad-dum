@@ -46,6 +46,11 @@ public enum Images {
     LOCK_PICKING("sprites/skill.png", 32, 32, 12, 3), //
     KEY("sprites/material.png", 32, 32, 7, 3), //
 
+    PHYSICAL_DAMAGES("sprites/skill.png", 32, 32, 3, 3), //
+    FIRE_DAMAGES("sprites/skill.png", 32, 32, 0, 0), //
+    FROST_DAMAGES("sprites/skill.png", 32, 32, 8, 0), //
+    LIGHTNING_DAMAGES("sprites/skill.png", 32, 32, 12, 4), //
+
     COPPER_1("sprites/material.png", 32, 32, 5, 3), //
     COPPER_2("sprites/material.png", 32, 32, 4, 3), //
     COPPER_3("sprites/material.png", 32, 32, 3, 3), //

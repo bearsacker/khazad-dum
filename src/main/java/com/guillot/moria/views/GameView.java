@@ -41,6 +41,7 @@ import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Entity;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
+import com.guillot.moria.ressources.Colors;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.DepthBuffer;
 import com.guillot.moria.utils.Point;
@@ -365,6 +366,14 @@ public class GameView extends View {
         }
 
         super.paint(g);
+
+        if (getPlayer().getAttributesPoints() > 0) {
+            g.setColor(Colors.ITEM_LEGENDARY.getColor());
+            g.setLineWidth(2f);
+
+            g.drawRect(characterButton.getX() + 2, characterButton.getY() + 2, characterButton.getWidth() - 6,
+                    characterButton.getHeight() - 6);
+        }
     }
 
     // TODO Improve with diag movements

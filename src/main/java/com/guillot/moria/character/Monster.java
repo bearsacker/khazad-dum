@@ -66,7 +66,7 @@ public class Monster extends AbstractCharacter {
         super(race.getName(), MONSTER);
 
         this.race = race;
-        role = RNG.get().randomNumber(2) == 1 ? new Guard(this) : new Patroller(this);
+        role = RNG.get().randomNumber(2) == 1 ? new Guard() : new Patroller();
         level = race.getLevel();
 
         init();
@@ -87,7 +87,7 @@ public class Monster extends AbstractCharacter {
     }
 
     public void takeDecision(GameState game) {
-        role.takeDecision(game);
+        role.takeDecision(game, this);
     }
 
     public boolean isSleeping() {

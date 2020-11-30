@@ -13,14 +13,8 @@ public class Patroller implements Rolable, Serializable {
 
     private static final long serialVersionUID = 2214343096019693244L;
 
-    private transient Monster monster;
-
-    public Patroller(Monster monster) {
-        this.monster = monster;
-    }
-
     @Override
-    public void takeDecision(GameState game) {
+    public void takeDecision(GameState game, Monster monster) {
         double distanceFromPlayer = game.getPlayer().getPosition().distanceFrom(monster.getPosition());
 
         if (distanceFromPlayer <= monster.getLightRadius()) {
@@ -43,7 +37,7 @@ public class Patroller implements Rolable, Serializable {
                     return;
                 }
 
-                path = findDestination(game.getDungeon());
+                path = findDestination(game.getDungeon(), monster);
                 tries++;
             }
 
@@ -51,16 +45,16 @@ public class Patroller implements Rolable, Serializable {
         }
     }
 
-    private Path findDestination(Dungeon dungeon) {
-        Point destination = placePoint();
+    private Path findDestination(Dungeon dungeon, Monster monster) {
+        Point destination = placePoint(monster);
         while (!dungeon.coordInBounds(destination)) {
-            destination = placePoint();
+            destination = placePoint(monster);
         }
 
         return dungeon.findPath(monster.getPosition(), destination, monster.getLightRadius());
     }
 
-    private Point placePoint() {
+    private Point placePoint(Monster monster) {
         int x = RNG.get().randomNumberBetween(monster.getPosition().x - monster.getMovement(),
                 monster.getPosition().x + monster.getMovement());
         int y = RNG.get().randomNumberBetween(monster.getPosition().y - monster.getMovement(),

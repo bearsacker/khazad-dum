@@ -624,7 +624,11 @@ public abstract class AbstractCharacter implements Serializable {
     }
 
     public int computeDamages() {
-        return (int) (damages + (physicalDamage / 100f) * damages) + fireDamage + frostDamage + lightningDamage;
+        return computePhysicalDamages() + fireDamage + frostDamage + lightningDamage;
+    }
+
+    public int computePhysicalDamages() {
+        return (int) (damages + (physicalDamage / 100f) * damages);
     }
 
     public Attack doAttack() {
@@ -633,9 +637,8 @@ public abstract class AbstractCharacter implements Serializable {
         }
 
         boolean critical = RNG.get().randomNumber(100) < chanceCriticalHit;
-        int damages = (critical ? 2 : 1) * computeDamages();
 
-        return new Attack(damages, fireDamage, frostDamage, lightningDamage, critical);
+        return new Attack(computePhysicalDamages(), fireDamage, frostDamage, lightningDamage, critical);
     }
 
     public int takeAHit(Attack attack) {
@@ -643,7 +646,8 @@ public abstract class AbstractCharacter implements Serializable {
             return -1;
         }
 
-        int damagesReceived = max(0, attack.getDamages() - armor);
+        int damagesReceived = max(0, (attack.isCritical() ? 2 : 1) * attack.getPhysicalDamages() - armor) + attack.getFireDamages()
+                + attack.getFrostDamages() + attack.getLightningDamages();
         setCurrentLife(getCurrentLife() - damagesReceived);
 
         return damagesReceived;

@@ -10,14 +10,8 @@ public class Guard implements Rolable, Serializable {
 
     private static final long serialVersionUID = 7438342314853159043L;
 
-    private transient Monster monster;
-
-    public Guard(Monster monster) {
-        this.monster = monster;
-    }
-
     @Override
-    public void takeDecision(GameState game) {
+    public void takeDecision(GameState game, Monster monster) {
         double distanceFromPlayer = game.getPlayer().getPosition().distanceFrom(monster.getPosition());
 
         if (distanceFromPlayer <= monster.getLightRadius()) {
