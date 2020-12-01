@@ -1,15 +1,22 @@
-Character sprites
 Character creation screen
+Verify affixe level
 
-Bullets
-Vault management
-Monster sprites
-Better walking animation
-Cursor
-Better UI
-Merchant
-Add level 10 and Balrog
-Traps  
+Display
+	Bullets (arrow)
+	Better walking animation
+	Cursor
+	Better UI
+	Monster sprites
+Gameplay
+	Vault management
+	Campfire
+	Merchant
+	Add level 10 and Balrog
+	Rooms and decorations
+	Traps 
+	Affixes
+	Boots, Gloves, Food 
 
-Fix component position with parent view
-Fix inventory limit and strenght
+Issues
+	Fix component position with parent view
+	Fix inventory limit and strenght

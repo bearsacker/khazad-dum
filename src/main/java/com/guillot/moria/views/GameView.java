@@ -192,7 +192,7 @@ public class GameView extends View {
         }
 
         long time = System.currentTimeMillis();
-        if (time - lastStep > 50) {
+        if (time - lastStep > 150) {
             game.update();
             lastStep = time;
         }

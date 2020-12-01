@@ -19,10 +19,10 @@ public enum Images {
     PILLAR("sprites/pillar.png"), //
     RUBBLE("sprites/rubble.png", 64, 96), //
 
-    HUMAN("sprites/elf.png", 64, 96), //
+    HUMAN("sprites/human.png", 64, 96), //
     ELF("sprites/elf.png", 64, 96), //
-    DWARF("sprites/elf.png", 64, 96), //
-    HOBBIT("sprites/elf.png", 64, 96), //
+    DWARF("sprites/dwarf.png", 64, 96), //
+    HOBBIT("sprites/hobbit.png", 64, 96), //
     MONSTER("sprites/elf.png", 64, 96), //
 
     CURSOR("sprites/cursor.png", 64, 96), //

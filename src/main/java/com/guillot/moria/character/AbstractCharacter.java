@@ -374,8 +374,6 @@ public abstract class AbstractCharacter implements Serializable {
 
                 lastAnimation = time;
             }
-        } else {
-            currentFrame = 0;
         }
 
         if (path != null) {
@@ -395,6 +393,7 @@ public abstract class AbstractCharacter implements Serializable {
 
             if (currentStep > movement || currentStep >= path.getLength()) {
                 path = null;
+                currentFrame = 0;
             }
         } else if (target != null) {
             Attack attack = doAttack();
@@ -420,7 +419,7 @@ public abstract class AbstractCharacter implements Serializable {
         int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        g.drawImage(this.image.getSubImage(direction.getValue() + currentFrame * 4, 0), x, y);
+        g.drawImage(this.image.getSubImage(direction.getValue() * 4 + currentFrame, 0), x, y);
     }
 
     public int getLevel() {
