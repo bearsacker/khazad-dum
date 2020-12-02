@@ -15,6 +15,8 @@ public final class GUIConfig extends Config {
 
     public final static String[] FONT_SIZES = toStringArray(get().getString("gui.font-sizes", "24"));
 
+    public final static Color DEFAULT_TEXT_COLOR = toColor(get().getString("gui.text-color", "255,255,255,255"));
+
     public final static Color EXCEPTION_TEXT_COLOR = toColor(get().getString("gui.exception.text-color", "255,0,0,255"));
 
     // View

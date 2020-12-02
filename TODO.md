@@ -1,16 +1,17 @@
 Character creation screen
 Verify affixe level
 
+Cursor
+Campfire
+Merchant
+Vault management
+
 Display
 	Bullets (arrow)
 	Better walking animation
-	Cursor
 	Better UI
 	Monster sprites
 Gameplay
-	Vault management
-	Campfire
-	Merchant
 	Add level 10 and Balrog
 	Rooms and decorations
 	Traps 

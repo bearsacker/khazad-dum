@@ -2,12 +2,14 @@ package com.guillot.engine.gui;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
+import static com.guillot.engine.configs.GUIConfig.DEFAULT_TEXT_COLOR;
 import static com.guillot.engine.configs.GUIConfig.FONT;
 import static com.guillot.engine.configs.GUIConfig.FONT_SIZES;
 
 import java.awt.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.lwjgl.input.Mouse;
@@ -22,7 +24,6 @@ import org.newdawn.slick.util.ResourceLoader;
 import com.guillot.engine.opengl.FrameBuffer;
 import com.guillot.engine.opengl.OpenGL;
 import com.guillot.engine.utils.FileLoader;
-import com.guillot.moria.ressources.Colors;
 
 
 public class GUI {
@@ -53,6 +54,8 @@ public class GUI {
 
     private FrameBuffer frameBuffer;
 
+    private HashMap<String, Color> colors;
+
     public static GUI get() {
         return instance;
     }
@@ -61,6 +64,7 @@ public class GUI {
         frameBuffer = new FrameBuffer(WIDTH, HEIGHT);
 
         shaders = new ArrayList<>();
+        colors = new HashMap<>();
         fonts = new ArrayList<>();
         for (String size : FONT_SIZES) {
             try {
@@ -234,6 +238,18 @@ public class GUI {
         return shaders;
     }
 
+    public void registerColor(String name, Color color) {
+        colors.put(name, color);
+    }
+
+    public Color getColor(String name) {
+        if (colors.containsKey(name)) {
+            return new Color(colors.get(name));
+        }
+
+        return null;
+    }
+
     public static void drawTiledImage(Image image, Color filter, int width, int height, int spriteWidth, int spriteHeight, int borderSize) {
         for (int i = borderSize; i < width - borderSize; i += (spriteWidth - borderSize * 2)) {
             int sizeW = spriteWidth - borderSize * 2;
@@ -282,7 +298,7 @@ public class GUI {
             float alpha) {
         String[] values = text.split("@@");
 
-        if (values.length == 1) {
+        if (values.length == 1 || values.length % 2 != 0) {
             Color color = new Color(defaultColor);
             color.a = alpha;
             font.drawString(x, y, text, color);
@@ -290,7 +306,11 @@ public class GUI {
             int currentOffset = x;
 
             for (int i = 0; i < values.length; i += 2) {
-                Color color = new Color(Colors.valueOf(values[i]).getColor());
+                Color color = GUI.get().getColor(values[i]);
+                if (color == null) {
+                    color = DEFAULT_TEXT_COLOR;
+                }
+
                 color.a = alpha;
                 font.drawString(currentOffset, y, values[i + 1], color);
                 currentOffset += font.getWidth((values[i + 1]));
