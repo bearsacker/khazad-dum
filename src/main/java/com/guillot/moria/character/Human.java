@@ -11,7 +11,13 @@ import static com.guillot.moria.configs.HumanConfig.LIFE;
 import static com.guillot.moria.configs.HumanConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HumanConfig.SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.STRENGTH;
+import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.ressources.Images.HUMAN;
+
+import java.util.ArrayList;
+
+import com.guillot.moria.item.Equipable;
+import com.guillot.moria.item.OneHandedWeapon;
 
 public class Human extends AbstractCharacter {
 
@@ -21,6 +27,15 @@ public class Human extends AbstractCharacter {
         super(name, HUMAN);
 
         init();
+
+        OneHandedWeapon sword = new OneHandedWeapon();
+        sword.generateBaseFromRepresentation("Short Sword");
+        sword.setAffixes(new ArrayList<>());
+        sword.setRarity(NORMAL);
+        if (sword.isGenerated()) {
+            pickUpItem(sword);
+            equipItem((Equipable) sword);
+        }
     }
 
     @Override

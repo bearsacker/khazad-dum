@@ -39,8 +39,8 @@ public class ItemBlockComponent extends Component {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
+    public void update(int offsetX, int offsetY) throws Exception {
+        super.update(offsetX, offsetY);
 
         switch (block) {
         case BODY:

@@ -60,6 +60,22 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
         }
     }
 
+    public void generateBaseFromRepresentation(String name) {
+        ItemRepresentation representation = getRepresentationByName(name);
+        if (representation != null) {
+            value = representation.getRandomValue();
+            requirement = representation.getRequirement();
+            this.name = representation.getName();
+            image = representation.getImage();
+            qualityLevel = representation.getLevel();
+            generated = true;
+        }
+    }
+
+    public ItemRepresentation getRepresentationByName(String name) {
+        return getValuesPerLevel().stream().filter(x -> x.getName().equals(name)).findAny().orElse(null);
+    }
+
     public void draw(Graphics g, Point playerPosition) {
         int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
@@ -168,6 +184,10 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
         for (AbstractAffixe affixe : affixes) {
             affixe.setPassiveEffect(character);
         }
+    }
+
+    public boolean isGenerated() {
+        return generated;
     }
 
     public abstract List<ItemRepresentation> getValuesPerLevel();

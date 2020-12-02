@@ -55,12 +55,12 @@ public class InventoryGridComponent extends Component {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
+    public void update(int offsetX, int offsetY) throws Exception {
+        super.update(offsetX, offsetY);
 
         if (mouseOn) {
-            int x = (GUI.get().getMouseX() - this.x) / BLOCK_SIZE;
-            int y = (GUI.get().getMouseY() - this.y) / BLOCK_SIZE;
+            int x = (GUI.get().getMouseX() - this.x - offsetX) / BLOCK_SIZE;
+            int y = (GUI.get().getMouseY() - this.y - offsetY) / BLOCK_SIZE;
             int index = y * blocksWidth + x;
 
             if (index >= 0 && index < items.size()) {

@@ -775,6 +775,10 @@ public abstract class AbstractCharacter implements Serializable {
         this.target = target;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         String text = "RED_PALE@@Strength: @@WHITE@@" + strength + "\n";

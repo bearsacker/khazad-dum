@@ -2,10 +2,10 @@ package com.guillot.moria.views;
 
 import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
 import org.newdawn.slick.SlickException;
 
 import com.guillot.engine.Game;
@@ -19,8 +19,6 @@ import com.guillot.moria.save.GameSaveManager;
 
 public class GameState {
 
-    private final static Logger logger = Logger.getLogger(GameState.class);
-
     private final static int NUMBER_LEVELS = 9;
 
     private Turn turn;
@@ -33,7 +31,7 @@ public class GameState {
 
     private LinkedNonBlockingQueue<String> messages;
 
-    public void init(AbstractCharacter player) {
+    public void init(AbstractCharacter player) throws Exception {
         levels = new ArrayList<>();
         messages = new LinkedNonBlockingQueue<>(10);
         turn = Turn.PLAYER;
@@ -54,16 +52,14 @@ public class GameState {
 
         // TODO remove this
         for (AbstractItem item : getDungeon().getItems()) {
-            // player.pickUpItem(item);
+            player.pickUpItem(item);
         }
+
+        GameSaveManager.writeSaveFile(GAME_SAVE_PATH, this);
     }
 
-    public void init(String path) {
-        try {
-            GameSaveManager.loadSaveFile(this, path);
-        } catch (Exception e) {
-            logger.error(e);
-        }
+    public void initFromSave() throws Exception {
+        GameSaveManager.loadSaveFile(this, GAME_SAVE_PATH);
     }
 
     public void update() {

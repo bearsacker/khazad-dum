@@ -11,7 +11,13 @@ import static com.guillot.moria.configs.DwarfConfig.LIFE;
 import static com.guillot.moria.configs.DwarfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.DwarfConfig.SPIRIT;
 import static com.guillot.moria.configs.DwarfConfig.STRENGTH;
+import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.ressources.Images.DWARF;
+
+import java.util.ArrayList;
+
+import com.guillot.moria.item.Equipable;
+import com.guillot.moria.item.OneHandedWeapon;
 
 public class Dwarf extends AbstractCharacter {
 
@@ -21,6 +27,15 @@ public class Dwarf extends AbstractCharacter {
         super(name, DWARF);
 
         init();
+
+        OneHandedWeapon axe = new OneHandedWeapon();
+        axe.generateBaseFromRepresentation("Small Axe");
+        axe.setAffixes(new ArrayList<>());
+        axe.setRarity(NORMAL);
+        if (axe.isGenerated()) {
+            pickUpItem(axe);
+            equipItem((Equipable) axe);
+        }
     }
 
     @Override

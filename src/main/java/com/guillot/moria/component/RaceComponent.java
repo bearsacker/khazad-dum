@@ -44,6 +44,8 @@ public class RaceComponent extends SubView {
 
     private Text destinyText;
 
+    private Text itemsText;
+
     private ProgressBar strengthBar;
 
     private ProgressBar agilityBar;
@@ -65,10 +67,10 @@ public class RaceComponent extends SubView {
         this.race = race;
         this.x = x;
         this.y = y;
-        width = 256;
-        height = 320;
+        width = 248;
+        height = 288;
 
-        choseButton = new Button("", 32, 0, 64, 64);
+        choseButton = new Button("", 40, 0, 64, 64);
         choseButton.setEvent(new Event() {
 
             @Override
@@ -96,30 +98,31 @@ public class RaceComponent extends SubView {
             break;
         }
 
-        raceNameText = new Text(character.getRaceName(), 112, 20, GUI.get().getFont(1), YELLOW.getColor());
+        raceNameText = new Text(character.getRaceName(), 120, 20, GUI.get().getFont(1), YELLOW.getColor());
 
-        strengthText = new Text("Strength", 16, 80, GUI.get().getFont(), WHITE.getColor());
-        agilityText = new Text("Agility", 16, 112, GUI.get().getFont(), WHITE.getColor());
-        spiritText = new Text("Spirit", 16, 144, GUI.get().getFont(), WHITE.getColor());
-        destinyText = new Text("Destiny", 16, 176, GUI.get().getFont(), WHITE.getColor());
+        strengthText = new Text("Strength", 24, 80, GUI.get().getFont(), WHITE.getColor());
+        agilityText = new Text("Agility", 24, 112, GUI.get().getFont(), WHITE.getColor());
+        spiritText = new Text("Spirit", 24, 144, GUI.get().getFont(), WHITE.getColor());
+        destinyText = new Text("Destiny", 24, 176, GUI.get().getFont(), WHITE.getColor());
+        itemsText = new Text("LIGHT_GREY@@Equipment", 24, 220, GUI.get().getFont(), WHITE.getColor());
 
-        strengthBar = new ProgressBar(120, 80, 96, 16, character.getStrength() / 40f);
+        strengthBar = new ProgressBar(128, 80, 96, 16, character.getStrength() / 40f);
         strengthBar.setValueColor(RED_PALE.getColor());
-        agilityBar = new ProgressBar(120, 112, 96, 16, character.getAgility() / 30f);
+        agilityBar = new ProgressBar(128, 112, 96, 16, character.getAgility() / 30f);
         agilityBar.setValueColor(GREEN_PALE.getColor());
-        spiritBar = new ProgressBar(120, 144, 96, 16, character.getSpirit() / 20f);
+        spiritBar = new ProgressBar(128, 144, 96, 16, character.getSpirit() / 20f);
         spiritBar.setValueColor(YELLOW_PALE.getColor());
-        destinyBar = new ProgressBar(120, 176, 96, 16, character.getDestiny() / 30f);
+        destinyBar = new ProgressBar(128, 176, 96, 16, character.getDestiny() / 30f);
         destinyBar.setValueColor(BLUE_PALE.getColor());
 
-        inventory = new SmallInventoryComponent(36, 240);
+        inventory = new SmallInventoryComponent(136, 208);
         inventory.setItems(character);
 
         cursorTextBox = new TextBox();
         cursorTextBox.setVisible(false);
 
-        add(raceNameText, choseButton, inventory, strengthText, agilityText, spiritText, destinyText, strengthBar, agilityBar, spiritBar,
-                destinyBar, cursorTextBox);
+        add(raceNameText, choseButton, inventory, strengthText, agilityText, spiritText, destinyText, itemsText, strengthBar, agilityBar,
+                spiritBar, destinyBar, cursorTextBox);
     }
 
     @Override
@@ -153,9 +156,19 @@ public class RaceComponent extends SubView {
         g.pushTransform();
         g.translate(x, y);
 
+        if (parent.getSelectedRace() == race) {
+            g.setColor(ITEM_LEGENDARY.getColor());
+            g.setLineWidth(2f);
+            g.drawRect(0, -16, width, height);
+        }
+
         super.paint(g);
 
         g.popTransform();
+    }
+
+    public AbstractCharacter getCharacter() {
+        return character;
     }
 
     private void showTextBox(String text) {

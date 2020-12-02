@@ -34,15 +34,15 @@ public class VaultDialog extends Window {
         vault = VaultSaveManager.loadSaveFile(VAULT_SAVE_PATH);
 
         inventoryGrid = new InventoryGridComponent(null, vault.getItems(), VAULT_LIMIT, 8);
-        inventoryGrid.setX(288);
-        inventoryGrid.setY(128 + 64);
+        inventoryGrid.setX(32);
+        inventoryGrid.setY(64);
 
-        itemWindow = new Window(parent, 0, HEIGHT, WIDTH, 0);
+        itemWindow = new Window(parent, -x, HEIGHT - y, WIDTH, 0);
         itemWindow.setShowOverlay(false);
         itemWindow.setVisible(false);
 
         itemTextBox = new TextBox();
-        itemTextBox.setX(16);
+        itemTextBox.setX(16 - x);
         itemTextBox.setAutoWidth(false);
         itemTextBox.setWidth(WIDTH);
         itemTextBox.setDrawBox(false);
@@ -61,12 +61,12 @@ public class VaultDialog extends Window {
     public void onHide() throws Exception {}
 
     @Override
-    public void update() throws Exception {
+    public void update(int offsetX, int offsetY) throws Exception {
         if (!inventoryGrid.mouseOn() && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
             inventoryGrid.setSelectedItem(null);
         }
 
-        super.update();
+        super.update(offsetX, offsetY);
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);
@@ -76,20 +76,20 @@ public class VaultDialog extends Window {
         if (inventoryGrid.getHoveredItem() != null) {
             itemTextBox.setText(inventoryGrid.getHoveredItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
-            itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
+            itemTextBox.setY(HEIGHT - y - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
 
             itemWindow.setHeight(itemTextBox.getHeight() + 64);
-            itemWindow.setY(HEIGHT - itemWindow.getHeight());
+            itemWindow.setY(HEIGHT - y - itemWindow.getHeight());
             itemWindow.setVisible(true);
         } else if (inventoryGrid.getSelectedItem() != null) {
             itemTextBox.setText(inventoryGrid.getSelectedItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
-            itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
+            itemTextBox.setY(HEIGHT - y - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
 
             itemWindow.setHeight(itemTextBox.getHeight() + 64);
-            itemWindow.setY(HEIGHT - itemWindow.getHeight());
+            itemWindow.setY(HEIGHT - y - itemWindow.getHeight());
             itemWindow.setVisible(true);
         } else {
             itemTextBox.setVisible(false);

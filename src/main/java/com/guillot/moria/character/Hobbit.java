@@ -11,7 +11,14 @@ import static com.guillot.moria.configs.HobbitConfig.LIFE;
 import static com.guillot.moria.configs.HobbitConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HobbitConfig.SPIRIT;
 import static com.guillot.moria.configs.HobbitConfig.STRENGTH;
+import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.ressources.Images.HOBBIT;
+
+import java.util.ArrayList;
+
+import com.guillot.moria.item.Armor;
+import com.guillot.moria.item.Equipable;
+import com.guillot.moria.item.OneHandedWeapon;
 
 public class Hobbit extends AbstractCharacter {
 
@@ -21,6 +28,24 @@ public class Hobbit extends AbstractCharacter {
         super(name, HOBBIT);
 
         init();
+
+        OneHandedWeapon dagger = new OneHandedWeapon();
+        dagger.generateBaseFromRepresentation("Dagger");
+        dagger.setAffixes(new ArrayList<>());
+        dagger.setRarity(NORMAL);
+        if (dagger.isGenerated()) {
+            pickUpItem(dagger);
+            equipItem((Equipable) dagger);
+        }
+
+        Armor cloak = new Armor();
+        cloak.generateBaseFromRepresentation("Rags");
+        cloak.setAffixes(new ArrayList<>());
+        cloak.setRarity(NORMAL);
+        if (cloak.isGenerated()) {
+            pickUpItem(cloak);
+            equipItem((Equipable) cloak);
+        }
     }
 
     @Override

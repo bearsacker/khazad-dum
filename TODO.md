@@ -3,12 +3,13 @@ Verify affixe level
 Cursor
 Campfire
 Merchant
-Vault management
+Vault management when death
 
 Display
 	Bullets (arrow)
+	Effects (hit, miss, dodge)
 	Better walking animation
-	Better UI
+	Menu
 	Monster sprites
 Gameplay
 	Add level 10 and Balrog

@@ -11,7 +11,13 @@ import static com.guillot.moria.configs.ElfConfig.LIFE;
 import static com.guillot.moria.configs.ElfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.ElfConfig.SPIRIT;
 import static com.guillot.moria.configs.ElfConfig.STRENGTH;
+import static com.guillot.moria.item.ItemRarity.NORMAL;
 import static com.guillot.moria.ressources.Images.ELF;
+
+import java.util.ArrayList;
+
+import com.guillot.moria.item.Bow;
+import com.guillot.moria.item.Equipable;
 
 public class Elf extends AbstractCharacter {
 
@@ -21,6 +27,15 @@ public class Elf extends AbstractCharacter {
         super(name, ELF);
 
         init();
+
+        Bow bow = new Bow();
+        bow.generateBaseFromRepresentation("Short Bow");
+        bow.setAffixes(new ArrayList<>());
+        bow.setRarity(NORMAL);
+        if (bow.isGenerated()) {
+            pickUpItem(bow);
+            equipItem((Equipable) bow);
+        }
     }
 
     @Override

@@ -5,6 +5,8 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
 import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
 import static java.lang.Math.max;
+import static org.newdawn.slick.Input.KEY_ENTER;
+import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import com.guillot.engine.gui.Button;
@@ -16,10 +18,6 @@ import com.guillot.engine.gui.TextField;
 import com.guillot.engine.gui.View;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.character.Dwarf;
-import com.guillot.moria.character.Elf;
-import com.guillot.moria.character.Hobbit;
-import com.guillot.moria.character.Human;
 import com.guillot.moria.character.Race;
 import com.guillot.moria.component.InventoryGridComponent;
 import com.guillot.moria.component.RaceComponent;
@@ -81,13 +79,13 @@ public class CharacterEditView extends View {
             }
         });
 
-        choseHumanButton = new RaceComponent(this, Race.HUMAN, 128, 192);
+        choseHumanButton = new RaceComponent(this, Race.HUMAN, 144, 192);
         choseHumanButton.setVisible(true);
-        choseElfButton = new RaceComponent(this, Race.ELF, 128 + choseHumanButton.getWidth(), 192);
+        choseElfButton = new RaceComponent(this, Race.ELF, 144 + choseHumanButton.getWidth(), 192);
         choseElfButton.setVisible(true);
-        choseDwarfButton = new RaceComponent(this, Race.DWARF, 128 + 2 * choseHumanButton.getWidth(), 192);
+        choseDwarfButton = new RaceComponent(this, Race.DWARF, 144 + 2 * choseHumanButton.getWidth(), 192);
         choseDwarfButton.setVisible(true);
-        choseHobbitButton = new RaceComponent(this, Race.HOBBIT, 128 + 3 * choseHumanButton.getWidth(), 192);
+        choseHobbitButton = new RaceComponent(this, Race.HOBBIT, 144 + 3 * choseHumanButton.getWidth(), 192);
         choseHobbitButton.setVisible(true);
 
         String text = "WHITE@@This is your vault. You can take an item from it,\n";
@@ -125,6 +123,14 @@ public class CharacterEditView extends View {
             inventoryGrid.setSelectedItem(null);
         }
 
+        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
+            GUI.get().switchView(new MenuView());
+        }
+
+        if (GUI.get().isKeyPressed(KEY_ENTER) && validateButton.isEnabled()) {
+            validate();
+        }
+
         validateButton.setText(inventoryGrid.getSelectedItem() != null
                 ? "DARK_GREY@@Begin adventure with @@" + inventoryGrid.getSelectedItem().getFormattedName().replace("LIGHT_", "DARK_")
                 : "Begin adventure");
@@ -157,20 +163,24 @@ public class CharacterEditView extends View {
         }
     }
 
-    private void validate() {
+    private void validate() throws Exception {
         AbstractCharacter player = null;
         switch (selectedRace) {
         case DWARF:
-            player = new Dwarf(nameField.getValue());
+            player = choseDwarfButton.getCharacter();
+            player.setName(nameField.getValue());
             break;
         case ELF:
-            player = new Elf(nameField.getValue());
+            player = choseElfButton.getCharacter();
+            player.setName(nameField.getValue());
             break;
         case HOBBIT:
-            player = new Hobbit(nameField.getValue());
+            player = choseHobbitButton.getCharacter();
+            player.setName(nameField.getValue());
             break;
         case HUMAN:
-            player = new Human(nameField.getValue());
+            player = choseHumanButton.getCharacter();
+            player.setName(nameField.getValue());
             break;
         }
 
