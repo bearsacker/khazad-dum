@@ -1,4 +1,3 @@
-Character creation screen
 Verify affixe level
 
 Cursor
@@ -19,5 +18,4 @@ Gameplay
 	Boots, Gloves, Food 
 
 Issues
-	Fix component position with parent view
 	Fix inventory limit and strenght

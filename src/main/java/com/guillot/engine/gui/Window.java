@@ -53,7 +53,7 @@ public class Window extends SubView {
         showOverlay = true;
         showHeader = true;
 
-        closeButton = new Button("", x + width - WINDOW_HEADER_BORDER / 2 - WINDOW_CLOSE_BUTTON_SIZE, y + WINDOW_HEADER_BORDER / 2,
+        closeButton = new Button("", width - WINDOW_HEADER_BORDER / 2 - WINDOW_CLOSE_BUTTON_SIZE, WINDOW_HEADER_BORDER / 2,
                 WINDOW_CLOSE_BUTTON_SIZE, WINDOW_CLOSE_BUTTON_SIZE);
         closeButton.setImage(new Image(WINDOW_CLOSE_BUTTON_SPRITE));
         closeButton.setVisible(false);
@@ -64,13 +64,15 @@ public class Window extends SubView {
                 close();
             }
         });
+
+        add(closeButton);
     }
 
     @Override
     public void update() throws Exception {
-        super.update();
+        closeButton.setVisible(showHeader && isShowCloseButton());
 
-        closeButton.update();
+        super.update();
     }
 
     @Override
@@ -99,11 +101,6 @@ public class Window extends SubView {
         super.paint(g);
 
         g.popTransform();
-
-        // TODO with window position
-        if (showHeader && isShowCloseButton()) {
-            closeButton.paint(g);
-        }
     }
 
     @Override

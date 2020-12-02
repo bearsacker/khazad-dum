@@ -122,8 +122,8 @@ public enum Images {
 
     DAGGER("sprites/weapon.png", 32, 32, 12, 1), //
     SMALL_AXE("sprites/weapon.png", 32, 32, 0, 3), //
-    AXE("sprites/weapon.png", 32, 32, 13, 3), //
-    LARGE_AXE("sprites/weapon.png", 32, 32, 12, 3), //
+    AXE("sprites/weapon.png", 32, 32, 12, 3), //
+    LARGE_AXE("sprites/weapon.png", 32, 32, 11, 3), //
     SHORT_SWORD("sprites/weapon.png", 32, 32, 11, 0), //
     SABRE("sprites/weapon.png", 32, 32, 1, 13), //
     SCIMITAR("sprites/weapon.png", 32, 32, 4, 12), //

@@ -82,7 +82,7 @@ public class Monster extends AbstractCharacter {
     }
 
     @Override
-    public String getClassName() {
+    public String getRaceName() {
         return "Monster";
     }
 

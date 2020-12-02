@@ -192,7 +192,7 @@ public class GameView extends View {
         }
 
         long time = System.currentTimeMillis();
-        if (time - lastStep > 150) {
+        if (time - lastStep > 75) {
             game.update();
             lastStep = time;
         }
@@ -302,11 +302,6 @@ public class GameView extends View {
             characterDialog.setVisible(false);
             mapDialog.setVisible(false);
             menuDialog.toggleVisible();
-        }
-
-        // TODO to remove
-        if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
-            getPlayer().setCurrentLife(0);
         }
     }
 

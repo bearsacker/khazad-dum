@@ -799,7 +799,7 @@ public abstract class AbstractCharacter implements Serializable {
         return text;
     }
 
-    public abstract String getClassName();
+    public abstract String getRaceName();
 
     public abstract int getStrengthMin();
 

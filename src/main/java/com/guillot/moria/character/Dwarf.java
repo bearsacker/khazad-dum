@@ -24,8 +24,8 @@ public class Dwarf extends AbstractCharacter {
     }
 
     @Override
-    public String getClassName() {
-        return "Dwarf";
+    public String getRaceName() {
+        return Race.DWARF.getName();
     }
 
     @Override

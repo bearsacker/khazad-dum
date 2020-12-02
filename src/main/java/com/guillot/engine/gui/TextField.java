@@ -160,6 +160,10 @@ public class TextField extends Component implements KeyListener {
         this.alignement = alignement;
     }
 
+    public boolean isEmpty() {
+        return value.isEmpty();
+    }
+
     @Override
     public void keyPressed(int key, char c) {
         if (key == KEY_BACK) {

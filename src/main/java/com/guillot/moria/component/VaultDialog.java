@@ -47,6 +47,8 @@ public class VaultDialog extends Window {
         itemTextBox.setWidth(WIDTH);
         itemTextBox.setDrawBox(false);
         itemTextBox.setVisible(false);
+
+        add(inventoryGrid, itemWindow, itemTextBox);
     }
 
     @Override
@@ -65,10 +67,6 @@ public class VaultDialog extends Window {
         }
 
         super.update();
-
-        inventoryGrid.update();
-        itemWindow.update();
-        itemTextBox.update();
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);
@@ -102,14 +100,5 @@ public class VaultDialog extends Window {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
-        inventoryGrid.paint(g);
-        // TODO Fix position with view
-        if (itemWindow.isVisible()) {
-            itemWindow.paint(g);
-        }
-        if (itemTextBox.isVisible()) {
-            itemTextBox.paint(g);
-        }
     }
 }

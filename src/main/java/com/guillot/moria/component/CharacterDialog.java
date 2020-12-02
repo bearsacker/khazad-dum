@@ -62,7 +62,7 @@ public class CharacterDialog extends Window {
         characterTextBox.setText(player.toString());
         height = characterTextBox.getHeight() + 160;
 
-        increaseStrengthButton = new Button("", 176, 248, 32, 32);
+        increaseStrengthButton = new Button("", 48, 152, 32, 32);
         increaseStrengthButton.setIcon(Images.LEVEL_UP.getImage());
         increaseStrengthButton.setEnabled(false);
         increaseStrengthButton.setEvent(new Event() {
@@ -74,7 +74,7 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseAgilityButton = new Button("", 176, 320, 32, 32);
+        increaseAgilityButton = new Button("", 48, 224, 32, 32);
         increaseAgilityButton.setIcon(Images.LEVEL_UP.getImage());
         increaseAgilityButton.setEnabled(false);
         increaseAgilityButton.setEvent(new Event() {
@@ -86,7 +86,7 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseSpiritButton = new Button("", 176, 400, 32, 32);
+        increaseSpiritButton = new Button("", 48, 304, 32, 32);
         increaseSpiritButton.setIcon(Images.LEVEL_UP.getImage());
         increaseSpiritButton.setEnabled(false);
         increaseSpiritButton.setEvent(new Event() {
@@ -98,7 +98,7 @@ public class CharacterDialog extends Window {
             }
         });
 
-        increaseDestinyButton = new Button("", 176, 472, 32, 32);
+        increaseDestinyButton = new Button("", 48, 376, 32, 32);
         increaseDestinyButton.setIcon(Images.LEVEL_UP.getImage());
         increaseDestinyButton.setEnabled(false);
         increaseDestinyButton.setEvent(new Event() {
@@ -125,7 +125,7 @@ public class CharacterDialog extends Window {
         cursorTextBox.setVisible(false);
 
         add(characterTextBox, nameText, damagesText, physicalDamagesText, fireDamagesText, frostDamagesText, lightningDamagesText,
-                armorText, cursorTextBox);
+                armorText, cursorTextBox, increaseAgilityButton, increaseDestinyButton, increaseSpiritButton, increaseStrengthButton);
     }
 
     @Override
@@ -149,11 +149,6 @@ public class CharacterDialog extends Window {
         increaseSpiritButton.setEnabled(player.getAttributesPoints() > 0);
         increaseDestinyButton.setEnabled(player.getAttributesPoints() > 0);
 
-        increaseStrengthButton.update();
-        increaseAgilityButton.update();
-        increaseSpiritButton.update();
-        increaseDestinyButton.update();
-
         cursorTextBox.setVisible(false);
         if (increaseAgilityButton.mouseOn() || increaseDestinyButton.mouseOn() || increaseSpiritButton.mouseOn()
                 || increaseStrengthButton.mouseOn()) {
@@ -164,11 +159,6 @@ public class CharacterDialog extends Window {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
-        increaseStrengthButton.paint(g);
-        increaseAgilityButton.paint(g);
-        increaseSpiritButton.paint(g);
-        increaseDestinyButton.paint(g);
 
         g.drawImage(Images.LONG_SWORD.getImage(), x + damagesText.getX() - 80, y + damagesText.getY() - 8, x + damagesText.getX() - 16,
                 y + damagesText.getY() + 56, 0, 0, 32, 32, filter);

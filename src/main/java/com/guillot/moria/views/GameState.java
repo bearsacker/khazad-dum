@@ -11,7 +11,6 @@ import org.newdawn.slick.SlickException;
 import com.guillot.engine.Game;
 import com.guillot.engine.utils.LinkedNonBlockingQueue;
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.character.Human;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
@@ -34,7 +33,7 @@ public class GameState {
 
     private LinkedNonBlockingQueue<String> messages;
 
-    public void init() {
+    public void init(AbstractCharacter player) {
         levels = new ArrayList<>();
         messages = new LinkedNonBlockingQueue<>(10);
         turn = Turn.PLAYER;
@@ -50,12 +49,12 @@ public class GameState {
             levels.add(dungeon);
         }
 
-        player = new Human("Jean");
-        player.setPosition(levels.get(currentLevel).getSpawnUpStairs());
+        this.player = player;
+        this.player.setPosition(levels.get(currentLevel).getSpawnUpStairs());
 
         // TODO remove this
         for (AbstractItem item : getDungeon().getItems()) {
-            player.pickUpItem(item);
+            // player.pickUpItem(item);
         }
     }
 

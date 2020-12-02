@@ -39,7 +39,7 @@ public class DoorDialog extends Window {
         this.game = game;
         this.player = game.getPlayer();
 
-        useKeyButton = new Button("Use a key", WIDTH / 2 - 144, y + 96, 288, 48);
+        useKeyButton = new Button("Use a key", width / 2 - 144, 96, 288, 48);
         useKeyButton.setIcon(Images.KEY.getImage());
         useKeyButton.setEvent(new Event() {
 
@@ -49,7 +49,7 @@ public class DoorDialog extends Window {
             }
         });
 
-        pickingLockButton = new Button("Pick the lock", WIDTH / 2 - 144, y + 160, 288, 48);
+        pickingLockButton = new Button("Pick the lock", width / 2 - 144, 160, 288, 48);
         pickingLockButton.setIcon(Images.LOCK_PICKING.getImage());
         pickingLockButton.setEvent(new Event() {
 
@@ -58,6 +58,8 @@ public class DoorDialog extends Window {
                 pickingLock();
             }
         });
+
+        add(useKeyButton, pickingLockButton);
     }
 
     @Override
@@ -78,10 +80,7 @@ public class DoorDialog extends Window {
             GUI.get().clearKeysPressed();
         }
 
-        useKeyButton.update();
         useKeyButton.setEnabled(player.hasItemType(ItemType.KEY));
-
-        pickingLockButton.update();
         pickingLockButton.setText("Pick the lock (" + player.getChanceLockPicking() + "%)");
         pickingLockButton.setEnabled(!door.isPicked());
     }
@@ -89,9 +88,6 @@ public class DoorDialog extends Window {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
-        useKeyButton.paint(g);
-        pickingLockButton.paint(g);
     }
 
     public void setDoor(Door door) {

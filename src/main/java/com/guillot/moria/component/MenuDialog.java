@@ -25,7 +25,7 @@ public class MenuDialog extends Window {
         super(parent, 256, 256, WIDTH - 512, 240, "Menu");
         setShowCloseButton(true);
 
-        saveAndBackToMenuButton = new Button("Save and Back to menu", WIDTH / 2 - 144, y + 80, 288, 48);
+        saveAndBackToMenuButton = new Button("Save and Back to menu", width / 2 - 144, 80, 288, 48);
         saveAndBackToMenuButton.setEvent(new Event() {
 
             @Override
@@ -35,7 +35,7 @@ public class MenuDialog extends Window {
             }
         });
 
-        saveAndQuitButton = new Button("Save and Quit", WIDTH / 2 - 144, y + 144, 288, 48);
+        saveAndQuitButton = new Button("Save and Quit", width / 2 - 144, 144, 288, 48);
         saveAndQuitButton.setEvent(new Event() {
 
             @Override
@@ -44,6 +44,8 @@ public class MenuDialog extends Window {
                 GUI.get().close();
             }
         });
+
+        add(saveAndBackToMenuButton, saveAndQuitButton);
     }
 
     @Override
@@ -60,17 +62,11 @@ public class MenuDialog extends Window {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }
-
-        saveAndBackToMenuButton.update();
-        saveAndQuitButton.update();
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
-        saveAndBackToMenuButton.paint(g);
-        saveAndQuitButton.paint(g);
     }
 
 }

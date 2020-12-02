@@ -24,8 +24,8 @@ public class Hobbit extends AbstractCharacter {
     }
 
     @Override
-    public String getClassName() {
-        return "Hobbit";
+    public String getRaceName() {
+        return Race.HOBBIT.getName();
     }
 
     @Override

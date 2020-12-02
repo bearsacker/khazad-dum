@@ -19,6 +19,11 @@ public class ProgressBar extends Component {
 
     private Color valueColor;
 
+    public ProgressBar(int x, int y, int width, int height, float value) throws Exception {
+        this(x, y, width, height, 0);
+        setValue(value);
+    }
+
     public ProgressBar(int x, int y, int width, int height, int value) throws Exception {
         super();
 

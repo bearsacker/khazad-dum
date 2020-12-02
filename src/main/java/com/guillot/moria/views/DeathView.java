@@ -61,7 +61,7 @@ public class DeathView extends View {
             }
         });
 
-        String text = "WHITE@@Unfortunately, you just died in the mines ...\n";
+        String text = "WHITE@@Unfortunately, you just died in the mines...\n";
         text += "YELLOW_PALE@@But you can hide an item in your vault before leaving this world.";
 
         deathText = new Text(text, 0, 64, GUI.get().getFont(1));

@@ -52,7 +52,7 @@ public abstract class SubView extends Component {
         super.update();
 
         for (Component c : components) {
-            c.update();
+            c.update(x, y);
         }
     }
 

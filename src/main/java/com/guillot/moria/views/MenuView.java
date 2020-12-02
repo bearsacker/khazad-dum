@@ -43,9 +43,7 @@ public class MenuView extends View {
 
             @Override
             public void perform() throws Exception {
-                GameState game = new GameState();
-                game.init();
-                GUI.get().switchView(new GameView(game));
+                GUI.get().switchView(new CharacterEditView());
             }
         });
 

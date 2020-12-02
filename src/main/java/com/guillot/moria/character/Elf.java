@@ -24,8 +24,8 @@ public class Elf extends AbstractCharacter {
     }
 
     @Override
-    public String getClassName() {
-        return "Elf";
+    public String getRaceName() {
+        return Race.ELF.getName();
     }
 
     @Override

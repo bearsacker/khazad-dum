@@ -24,8 +24,8 @@ public class Human extends AbstractCharacter {
     }
 
     @Override
-    public String getClassName() {
-        return "Human";
+    public String getRaceName() {
+        return Race.HUMAN.getName();
     }
 
     @Override

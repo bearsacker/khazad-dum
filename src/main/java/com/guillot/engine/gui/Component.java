@@ -90,8 +90,12 @@ public abstract class Component {
     }
 
     public void update() throws Exception {
-        int mX = GUI.get().getMouseX();
-        int mY = GUI.get().getMouseY();
+        update(0, 0);
+    }
+
+    public void update(int offsetX, int offsetY) throws Exception {
+        int mX = GUI.get().getMouseX() - offsetX;
+        int mY = GUI.get().getMouseY() - offsetY;
 
         if (mX >= x && mX <= (x + width) && mY >= y && mY <= (y + height)) {
             this.mouseOn = true;

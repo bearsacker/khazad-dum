@@ -42,4 +42,8 @@ public class Vault {
         this.limit = limit;
     }
 
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
 }
