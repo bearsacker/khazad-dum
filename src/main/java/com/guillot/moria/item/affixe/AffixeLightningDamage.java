@@ -23,7 +23,7 @@ public class AffixeLightningDamage extends AbstractAffixe {
 
     @Override
     public int[][] getValuesPerLevel() {
-        return new int[][] {{1, 1, 5}, {10, 5, 10}, {20, 10, 15}, {30, 15, 20}};
+        return new int[][] {{1, 1, 2}, {5, 3, 4}, {10, 5, 6}, {15, 7, 8}, {20, 9, 10}};
     }
 
     @Override

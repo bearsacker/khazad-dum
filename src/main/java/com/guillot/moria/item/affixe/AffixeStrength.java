@@ -14,7 +14,7 @@ public class AffixeStrength extends AbstractAffixe {
 
     @Override
     public int[][] getValuesPerLevel() {
-        return new int[][] {{1, 1, 5}, {5, 5, 10}, {10, 10, 15}, {15, 15, 20}, {20, 20, 25}};
+        return new int[][] {{1, 1, 2}, {5, 3, 4}, {10, 5, 6}, {15, 7, 8}, {20, 9, 10}};
     }
 
     @Override

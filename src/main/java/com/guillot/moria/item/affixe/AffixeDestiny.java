@@ -4,11 +4,11 @@ import static com.guillot.moria.item.affixe.AffixeRarity.LEGENDARY;
 
 import com.guillot.moria.character.AbstractCharacter;
 
-public class AffixeAllAttributes extends AbstractAffixe {
+public class AffixeDestiny extends AbstractAffixe {
 
-    private static final long serialVersionUID = -4565320136195088139L;
+    private static final long serialVersionUID = -7233240430294637766L;
 
-    public AffixeAllAttributes() {
+    public AffixeDestiny() {
         type = LEGENDARY;
     }
 
@@ -19,14 +19,12 @@ public class AffixeAllAttributes extends AbstractAffixe {
 
     @Override
     public void setPassiveEffect(AbstractCharacter character) {
-        character.setSpirit(character.getSpirit() + value);
-        character.setStrength(character.getStrength() + value);
-        character.setAgility(character.getAgility() + value);
         character.setDestiny(character.getDestiny() + value);
     }
 
     @Override
     public String getName() {
-        return "+%d to @@ITEM_LEGENDARY@@All Attributes";
+        return "+%d to @@BLUE_PALE@@Destiny";
     }
+
 }

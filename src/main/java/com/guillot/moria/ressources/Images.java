@@ -18,6 +18,7 @@ public enum Images {
 
     PILLAR("sprites/pillar.png"), //
     RUBBLE("sprites/rubble.png", 64, 96), //
+    FIRECAMP("sprites/firecamp.png"), //
 
     HUMAN("sprites/human.png", 64, 96), //
     ELF("sprites/elf.png", 64, 96), //

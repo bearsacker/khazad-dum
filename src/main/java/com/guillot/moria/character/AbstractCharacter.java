@@ -223,7 +223,7 @@ public abstract class AbstractCharacter implements Serializable {
         spirit += spiritBase;
         destiny += destinyBase;
 
-        physicalDamage += strength;
+        physicalDamage += strength / 2;
         inventoryLimit += getInventoryLimitMin() + strength / 2;
 
         chanceHit += getChanceHitMin() + agility / 2;

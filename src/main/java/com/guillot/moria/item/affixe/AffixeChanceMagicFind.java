@@ -24,7 +24,7 @@ public class AffixeChanceMagicFind extends AbstractAffixe {
 
     @Override
     public int[][] getValuesPerLevel() {
-        return new int[][] {{1, 1, 5}, {10, 5, 10}, {20, 10, 15}};
+        return new int[][] {{1, 1, 3}, {5, 3, 5}, {10, 5, 8}, {15, 8, 10}, {20, 10, 20}};
     }
 
     @Override

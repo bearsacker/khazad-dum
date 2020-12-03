@@ -14,7 +14,7 @@ public class AffixeLife extends AbstractAffixe {
 
     @Override
     public int[][] getValuesPerLevel() {
-        return new int[][] {{1, 1, 10}, {5, 10, 20}, {10, 20, 30}, {15, 30, 40}, {20, 40, 60}};
+        return new int[][] {{1, 1, 5}, {5, 5, 10}, {10, 10, 20}, {15, 20, 30}, {20, 30, 50}};
     }
 
     @Override

@@ -23,7 +23,7 @@ public class AffixeArmor extends AbstractAffixe {
 
     @Override
     public int[][] getValuesPerLevel() {
-        return new int[][] {{1, 1, 10}, {5, 5, 15}, {10, 10, 20}, {15, 15, 25}, {20, 20, 40}};
+        return new int[][] {{1, 1, 2}, {5, 3, 4}, {10, 5, 6}, {15, 7, 8}, {20, 9, 10}};
     }
 
     @Override

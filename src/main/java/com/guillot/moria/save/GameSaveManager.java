@@ -10,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import com.guillot.engine.particles.Generator;
+import com.guillot.engine.particles.Particles;
 import com.guillot.engine.utils.LinkedNonBlockingQueue;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.dungeon.Dungeon;
@@ -42,6 +44,7 @@ public class GameSaveManager {
         for (Dungeon dungeon : game.getLevels()) {
             DungeonEncoder.encode(stream, dungeon);
         }
+        stream.writeObject(Particles.get().getGenerators());
 
         stream.close();
         fos.close();
@@ -65,6 +68,8 @@ public class GameSaveManager {
             for (int i = 0; i < dungeonNumber; i++) {
                 game.getLevels().add(DungeonEncoder.decode(stream));
             }
+
+            Particles.get().setGenerators((ArrayList<Generator>) stream.readObject());
         }
 
         stream.close();

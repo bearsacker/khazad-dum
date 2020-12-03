@@ -57,4 +57,13 @@ public class Particles {
     public void removeAll() {
         generators.clear();
     }
+
+    public ArrayList<Generator> getGenerators() {
+        return generators;
+    }
+
+    public void setGenerators(ArrayList<Generator> generators) {
+        this.generators = generators;
+    }
+
 }

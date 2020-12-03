@@ -62,9 +62,9 @@ public class TextBox extends Component {
             GUI.drawTiledImage(image, filter, width, height, TEXTBOX_SPRITE_SIZE, TEXTBOX_SPRITE_SIZE, TEXTBOX_BORDER);
         }
 
-        for (String line : lines) {
-            drawColoredString(g, GUI.get().getFont(), TEXTBOX_PADDING,
-                    lines.indexOf(line) * GUI.get().getFont().getHeight() + TEXTBOX_PADDING, line, TEXTBOX_TEXT_COLOR);
+        for (int i = 0; i < lines.size(); i++) {
+            drawColoredString(g, GUI.get().getFont(), TEXTBOX_PADDING, i * GUI.get().getFont().getHeight() + TEXTBOX_PADDING, lines.get(i),
+                    TEXTBOX_TEXT_COLOR);
         }
 
         g.popTransform();

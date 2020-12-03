@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.Dungeon;
-import com.guillot.moria.dungeon.Entity;
 import com.guillot.moria.dungeon.Tile;
+import com.guillot.moria.dungeon.entity.AbstractEntity;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.utils.Point;
 
@@ -39,7 +38,7 @@ public class DungeonEncoder {
         dungeon.setSpawnUpStairs((Point) stream.readObject());
         dungeon.setFloor((Tile[][]) stream.readObject());
         dungeon.setDiscoveredTiles((Tile[][]) stream.readObject());
-        dungeon.setEntities((HashMap<Point, Entity>) stream.readObject());
+        dungeon.setEntities((ArrayList<AbstractEntity>) stream.readObject());
         dungeon.setItems((ArrayList<AbstractItem>) stream.readObject());
         dungeon.setDoors((ArrayList<Door>) stream.readObject());
         dungeon.setMonsters((ArrayList<Monster>) stream.readObject());

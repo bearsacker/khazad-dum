@@ -3,6 +3,7 @@ package com.guillot.moria.component;
 import static com.guillot.moria.ressources.Colors.BLUE_PALE;
 import static com.guillot.moria.ressources.Colors.GREEN_PALE;
 import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.ressources.Colors.LIGHT_GRAY;
 import static com.guillot.moria.ressources.Colors.RED_PALE;
 import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
@@ -163,6 +164,10 @@ public class RaceComponent extends SubView {
 
         if (parent.getSelectedRace() == race) {
             g.setColor(ITEM_LEGENDARY.getColor());
+            g.setLineWidth(2f);
+            g.drawRect(0, -16, width, height);
+        } else if (mouseOn) {
+            g.setColor(LIGHT_GRAY.getColor());
             g.setLineWidth(2f);
             g.drawRect(0, -16, width, height);
         }

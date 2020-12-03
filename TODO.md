@@ -1,7 +1,4 @@
-Verify affixe level
-
 Cursor
-Campfire
 Merchant
 Vault management when death
 Monster sprites

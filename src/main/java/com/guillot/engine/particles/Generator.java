@@ -2,13 +2,16 @@ package com.guillot.engine.particles;
 
 import static org.apache.commons.math3.util.FastMath.max;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.newdawn.slick.Graphics;
 
 
-public class Generator {
+public class Generator implements Serializable {
+
+    private static final long serialVersionUID = -3319704707528938138L;
 
     private float remainingDuration;
 
@@ -30,7 +33,7 @@ public class Generator {
 
     private Particle pattern;
 
-    private ArrayList<Particle> particles;
+    private transient ArrayList<Particle> particles;
 
     public Generator(int x, int y, int angle, int radius, int generationPerSeconds, float duration) {
         this.x = x;
@@ -110,6 +113,10 @@ public class Generator {
     }
 
     public void update(float delta) {
+        if (particles == null) {
+            particles = new ArrayList<>();
+        }
+
         if (remainingDuration != 0.0f && running) {
             timeWithoutGeneration += delta;
 
@@ -135,9 +142,16 @@ public class Generator {
     }
 
     public void draw(Graphics g) {
-        for (Particle particle : particles) {
-            particle.draw(g);
+        g.pushTransform();
+        g.translate(x, y);
+
+        if (particles != null) {
+            for (Particle particle : particles) {
+                particle.draw(g);
+            }
         }
+
+        g.popTransform();
     }
 
     public boolean isDead() {

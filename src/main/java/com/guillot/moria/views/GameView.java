@@ -28,6 +28,7 @@ import com.guillot.engine.gui.ProgressBar;
 import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
+import com.guillot.engine.particles.Particles;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
@@ -41,8 +42,8 @@ import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
-import com.guillot.moria.dungeon.Entity;
 import com.guillot.moria.dungeon.Tile;
+import com.guillot.moria.dungeon.entity.AbstractEntity;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Colors;
 import com.guillot.moria.ressources.Images;
@@ -174,6 +175,8 @@ public class GameView extends View {
     @Override
     public void update() throws Exception {
         super.update();
+
+        Particles.get().update();
 
         smallCharacterDialog.setVisible(false);
         cursorTextBox.setVisible(false);
@@ -334,12 +337,15 @@ public class GameView extends View {
                         }
                     }
 
-                    Entity entity = getDungeon().getEntityAt(new Point(j, i));
-                    float alpha =
-                            (float) (1.25f
-                                    - getPlayer().getPosition().distanceFrom(new Point(j, i)) / (float) getPlayer().getLightRadius());
+                    float alpha = (float) (1.25f
+                            - getPlayer().getPosition().distanceFrom(new Point(j, i)) / (float) getPlayer().getLightRadius());
                     Color shadow = new Color(alpha, alpha, alpha);
-                    drawTile(g, tile, i, j, alternate, door, entity, new Point(i, j), shadow);
+                    drawTile(g, tile, i, j, alternate, door, new Point(i, j), shadow);
+
+                    AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
+                    if (entity != null) {
+                        entity.draw(g, getPlayer().getPosition(), shadow);
+                    }
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(g, getPlayer().getPosition()));
 
@@ -370,8 +376,12 @@ public class GameView extends View {
                         }
                     }
 
-                    Entity entity = getDungeon().getEntityAt(new Point(j, i));
-                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, entity, null, DARK_GREY.getColor());
+                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, null, DARK_GREY.getColor());
+
+                    AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
+                    if (entity != null) {
+                        entity.draw(g, getPlayer().getPosition(), DARK_GREY.getColor());
+                    }
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(g, getPlayer().getPosition()));
                 }
@@ -437,7 +447,7 @@ public class GameView extends View {
         }
     }
 
-    private void drawTile(Graphics g, Tile tile, int px, int py, boolean alternate, Door door, Entity entity, Object value, Color filter) {
+    private void drawTile(Graphics g, Tile tile, int px, int py, boolean alternate, Door door, Object value, Color filter) {
         int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
@@ -456,10 +466,6 @@ public class GameView extends View {
                 } else if (door.getDirection() == Direction.WEST) {
                     g.drawImage(Images.DOOR.getSubImage(0, 0), x, y, filter);
                 }
-            }
-
-            if (entity != null) {
-                g.drawImage(entity.getImage(), x, y, filter);
             }
         }
     }

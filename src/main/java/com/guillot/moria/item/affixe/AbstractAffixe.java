@@ -20,6 +20,7 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
             new AffixeStrength(), //
             new AffixeAgility(), //
             new AffixeSpirit(), //
+            new AffixeDestiny(), //
             new AffixeArmor(), //
             new AffixeAllAttributes(), //
             new AffixeChanceDodge(), //

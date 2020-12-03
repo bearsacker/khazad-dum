@@ -92,8 +92,8 @@ public class Text extends Component {
         g.pushTransform();
         g.translate(x, y);
 
-        for (String line : lines) {
-            drawColoredString(g, font, 0, lines.indexOf(line) * font.getHeight(), line, filter);
+        for (int i = 0; i < lines.size(); i++) {
+            drawColoredString(g, font, 0, i * font.getHeight(), lines.get(i), filter);
         }
 
         g.popTransform();

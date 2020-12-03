@@ -4,6 +4,8 @@ import static org.apache.commons.math3.util.FastMath.cos;
 import static org.apache.commons.math3.util.FastMath.random;
 import static org.apache.commons.math3.util.FastMath.sin;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -11,7 +13,9 @@ import com.guillot.engine.configs.ParticlesConfig;
 import com.guillot.engine.utils.NumberGenerator;
 
 
-public class Fire implements Particle {
+public class Fire implements Particle, Serializable {
+
+    private static final long serialVersionUID = -3757856673705062231L;
 
     private final static int SIZE = ParticlesConfig.get().getInt("fire.size");
 
@@ -33,12 +37,13 @@ public class Fire implements Particle {
 
     private int speed;
 
+    private boolean cinder;
+
     public Fire(Generator generator, float duration, int speed) {
         this.generator = generator;
-        x = generator.getX() + NumberGenerator.get().randomInt(-2, 2);
-        y = generator.getY() + NumberGenerator.get().randomInt(-2, 2);
+        x = NumberGenerator.get().randomInt(-2, 2);
+        y = NumberGenerator.get().randomInt(-2, 2);
 
-        this.duration = duration;
         this.speed = speed;
 
         angle = generator.getAngle();
@@ -49,7 +54,10 @@ public class Fire implements Particle {
         }
         angle %= 360;
 
-        remainingDuration = (int) (random() * duration) + duration / 2;
+        remainingDuration = (int) (random() * duration / 2) + .75f * duration;
+        cinder = remainingDuration > duration;
+
+        this.duration = remainingDuration;
     }
 
     @Override
@@ -67,12 +75,18 @@ public class Fire implements Particle {
         remainingDuration -= delta;
         x += delta * speed * cos(RATIODEGRAD * angle);
         y += delta * speed * sin(RATIODEGRAD * angle);
+
+        angle += random() > .5f ? 1 : -1;
     }
 
     @Override
     public void draw(Graphics g) {
         float alpha = remainingDuration / duration;
-        g.setColor(new Color(COLOR.r, COLOR.g * alpha, COLOR.b, alpha));
+        if (cinder) {
+            g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
+        } else {
+            g.setColor(new Color(COLOR.r, COLOR.g * alpha, COLOR.b * alpha, .75f + alpha / 4f));
+        }
         g.fillRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
     }
 }

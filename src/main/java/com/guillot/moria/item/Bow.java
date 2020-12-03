@@ -40,7 +40,7 @@ public class Bow extends AbstractItem implements Equipable {
 
     @Override
     public String getRequirementName() {
-        return "Dexterity";
+        return "Agility";
     }
 
     @Override

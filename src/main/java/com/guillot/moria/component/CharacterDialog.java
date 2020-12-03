@@ -160,33 +160,38 @@ public class CharacterDialog extends Window {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.drawImage(Images.LONG_SWORD.getImage(), x + damagesText.getX() - 80, y + damagesText.getY() - 8, x + damagesText.getX() - 16,
-                y + damagesText.getY() + 56, 0, 0, 32, 32, filter);
-        g.drawImage(Images.LARGE_SHIELD.getImage(), x + armorText.getX() - 80, y + armorText.getY() - 8, x + armorText.getX() - 16,
-                y + armorText.getY() + 56, 0, 0, 32, 32, filter);
+        g.pushTransform();
+        g.translate(x, y);
 
-        g.drawImage(Images.PHYSICAL_DAMAGES.getImage(), x + physicalDamagesText.getX() - 48, y + physicalDamagesText.getY() - 8,
-                x + physicalDamagesText.getX() - 16, y + physicalDamagesText.getY() + 24, 0, 0, 32, 32, filter);
-        g.drawImage(Images.FIRE_DAMAGES.getImage(), x + fireDamagesText.getX() - 48, y + fireDamagesText.getY() - 8,
-                x + fireDamagesText.getX() - 16, y + fireDamagesText.getY() + 24, 0, 0, 32, 32, filter);
-        g.drawImage(Images.FROST_DAMAGES.getImage(), x + frostDamagesText.getX() - 48, y + frostDamagesText.getY() - 8,
-                x + frostDamagesText.getX() - 16, y + frostDamagesText.getY() + 24, 0, 0, 32, 32, filter);
-        g.drawImage(Images.LIGHTNING_DAMAGES.getImage(), x + lightningDamagesText.getX() - 48, y + lightningDamagesText.getY() - 8,
-                x + lightningDamagesText.getX() - 16, y + lightningDamagesText.getY() + 24, 0, 0, 32, 32, filter);
+        g.drawImage(Images.LONG_SWORD.getImage(), damagesText.getX() - 80, damagesText.getY() - 8, damagesText.getX() - 16,
+                damagesText.getY() + 56, 0, 0, 32, 32, filter);
+        g.drawImage(Images.LARGE_SHIELD.getImage(), armorText.getX() - 80, armorText.getY() - 8, armorText.getX() - 16,
+                armorText.getY() + 56, 0, 0, 32, 32, filter);
+
+        g.drawImage(Images.PHYSICAL_DAMAGES.getImage(), physicalDamagesText.getX() - 48, physicalDamagesText.getY() - 8,
+                physicalDamagesText.getX() - 16, physicalDamagesText.getY() + 24, 0, 0, 32, 32, filter);
+        g.drawImage(Images.FIRE_DAMAGES.getImage(), fireDamagesText.getX() - 48, fireDamagesText.getY() - 8,
+                fireDamagesText.getX() - 16, fireDamagesText.getY() + 24, 0, 0, 32, 32, filter);
+        g.drawImage(Images.FROST_DAMAGES.getImage(), frostDamagesText.getX() - 48, frostDamagesText.getY() - 8,
+                frostDamagesText.getX() - 16, frostDamagesText.getY() + 24, 0, 0, 32, 32, filter);
+        g.drawImage(Images.LIGHTNING_DAMAGES.getImage(), lightningDamagesText.getX() - 48, lightningDamagesText.getY() - 8,
+                lightningDamagesText.getX() - 16, lightningDamagesText.getY() + 24, 0, 0, 32, 32, filter);
 
         if (player.getAttributesPoints() > 0) {
             g.setColor(Colors.ITEM_LEGENDARY.getColor());
             g.setLineWidth(2f);
 
-            g.drawRect(increaseStrengthButton.getX() + 1, increaseStrengthButton.getY(), increaseStrengthButton.getWidth() - 2,
-                    increaseStrengthButton.getHeight() - 2);
-            g.drawRect(increaseAgilityButton.getX() + 1, increaseAgilityButton.getY(), increaseAgilityButton.getWidth() - 2,
-                    increaseAgilityButton.getHeight() - 2);
-            g.drawRect(increaseSpiritButton.getX() + 1, increaseSpiritButton.getY(), increaseSpiritButton.getWidth() - 2,
-                    increaseSpiritButton.getHeight() - 2);
-            g.drawRect(increaseDestinyButton.getX() + 1, increaseDestinyButton.getY(), increaseDestinyButton.getWidth() - 2,
-                    increaseDestinyButton.getHeight() - 2);
+            g.drawRect(increaseStrengthButton.getX(), increaseStrengthButton.getY(), increaseStrengthButton.getWidth(),
+                    increaseStrengthButton.getHeight());
+            g.drawRect(increaseAgilityButton.getX(), increaseAgilityButton.getY(), increaseAgilityButton.getWidth(),
+                    increaseAgilityButton.getHeight());
+            g.drawRect(increaseSpiritButton.getX(), increaseSpiritButton.getY(), increaseSpiritButton.getWidth(),
+                    increaseSpiritButton.getHeight());
+            g.drawRect(increaseDestinyButton.getX(), increaseDestinyButton.getY(), increaseDestinyButton.getWidth(),
+                    increaseDestinyButton.getHeight());
         }
+
+        g.popTransform();
     }
 
     private void loadCharacterInfo() {

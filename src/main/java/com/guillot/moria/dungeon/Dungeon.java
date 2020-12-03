@@ -50,7 +50,6 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -59,6 +58,10 @@ import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.character.MonsterRace;
+import com.guillot.moria.dungeon.entity.AbstractEntity;
+import com.guillot.moria.dungeon.entity.FireCamp;
+import com.guillot.moria.dungeon.entity.Pillar;
+import com.guillot.moria.dungeon.entity.Rubble;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
 import com.guillot.moria.item.ItemGenerator;
@@ -85,7 +88,7 @@ public class Dungeon {
 
     private ArrayList<Monster> monsters;
 
-    private HashMap<Point, Entity> entities;
+    private ArrayList<AbstractEntity> entities;
 
     private AStar astar;
 
@@ -109,7 +112,7 @@ public class Dungeon {
         doors = new ArrayList<>();
         items = new ArrayList<>();
         monsters = new ArrayList<>();
-        entities = new HashMap<>();
+        entities = new ArrayList<>();
     }
 
     // Cave logic flow for generation of new dungeon
@@ -212,11 +215,12 @@ public class Dungeon {
         cleaningDoors();
 
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
-        if (this.level == 1) {
+        if (level == 1) {
             this.floor[upStairs.y][upStairs.x] = ROOM_FLOOR;
+            entities.add(new FireCamp(new Point(upStairs)));
         }
 
-        int allocLevel = (this.level / 3);
+        int allocLevel = (level / 3);
         if (allocLevel < 2) {
             allocLevel = 2;
         } else if (allocLevel > 10) {
@@ -243,9 +247,11 @@ public class Dungeon {
             return false;
         }
 
-        path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), 300, false, true);
-        if (path == null || path.getLength() < 30) {
-            return false;
+        if (level > 1) {
+            path = astar.findPath(spawnDownStairs.inverseXY(), upStairs.inverseXY(), 300, false, true);
+            if (path == null || path.getLength() < 30) {
+                return false;
+            }
         }
 
         return true;
@@ -524,14 +530,14 @@ public class Dungeon {
         case 3:
             logger.info("Building room cross shaped at " + coord + "...");
             if (RNG.get().randomNumber(3) == 1) {
-                entities.put(new Point(coord.x - 2, coord.y - 1), Entity.PILLAR);
-                entities.put(new Point(coord.x - 2, coord.y + 1), Entity.PILLAR);
-                entities.put(new Point(coord.x + 2, coord.y - 1), Entity.PILLAR);
-                entities.put(new Point(coord.x + 2, coord.y + 1), Entity.PILLAR);
-                entities.put(new Point(coord.x - 1, coord.y - 2), Entity.PILLAR);
-                entities.put(new Point(coord.x + 1, coord.y - 2), Entity.PILLAR);
-                entities.put(new Point(coord.x - 1, coord.y + 2), Entity.PILLAR);
-                entities.put(new Point(coord.x + 1, coord.y + 2), Entity.PILLAR);
+                entities.add(new Pillar(new Point(coord.x - 2, coord.y - 1)));
+                entities.add(new Pillar(new Point(coord.x - 2, coord.y + 1)));
+                entities.add(new Pillar(new Point(coord.x + 2, coord.y - 1)));
+                entities.add(new Pillar(new Point(coord.x + 2, coord.y + 1)));
+                entities.add(new Pillar(new Point(coord.x - 1, coord.y - 2)));
+                entities.add(new Pillar(new Point(coord.x + 1, coord.y - 2)));
+                entities.add(new Pillar(new Point(coord.x - 1, coord.y + 2)));
+                entities.add(new Pillar(new Point(coord.x + 1, coord.y + 2)));
             } else if (RNG.get().randomNumber(3) == 1) {
                 this.floor[coord.y][coord.x] = TMP1_WALL;
                 this.floor[coord.y - 1][coord.x] = TMP1_WALL;
@@ -720,13 +726,13 @@ public class Dungeon {
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x - 5 - offset; x <= coord.x - 3 - offset; x++) {
-                entities.put(new Point(x, y), RNG.get().randomNumber(4) == 1 ? Entity.RUBBLE : Entity.PILLAR);
+                entities.add(RNG.get().randomNumber(4) == 1 ? new Rubble(new Point(x, y)) : new Pillar(new Point(x, y)));
             }
         }
 
         for (int y = coord.y - 1; y <= coord.y + 1; y++) {
             for (int x = coord.x + 3 + offset; x <= coord.x + 5 + offset; x++) {
-                entities.put(new Point(x, y), RNG.get().randomNumber(4) == 1 ? Entity.RUBBLE : Entity.PILLAR);
+                entities.add(RNG.get().randomNumber(4) == 1 ? new Rubble(new Point(x, y)) : new Pillar(new Point(x, y)));
             }
         }
     }
@@ -734,11 +740,11 @@ public class Dungeon {
     private void placeLargeMiddlePillar(Point coord) {
         logger.info("\t-> Placing large middle pillar at " + coord + "...");
 
-        entities.put(new Point(coord.x, coord.y - 1), Entity.PILLAR);
-        entities.put(new Point(coord.x, coord.y + 1), Entity.PILLAR);
+        entities.add(new Pillar(new Point(coord.x, coord.y - 1)));
+        entities.add(new Pillar(new Point(coord.x, coord.y + 1)));
         floor[coord.y][coord.x] = MAGMA_WALL;
-        entities.put(new Point(coord.x + 1, coord.y), Entity.PILLAR);
-        entities.put(new Point(coord.x - 1, coord.y), Entity.PILLAR);
+        entities.add(new Pillar(new Point(coord.x + 1, coord.y)));
+        entities.add(new Pillar(new Point(coord.x - 1, coord.y)));
     }
 
     private void placeDoor(Point coord, Direction direction) {
@@ -827,7 +833,7 @@ public class Dungeon {
         for (int y = height; y <= depth; y += 2) {
             for (int x = left; x <= right; x += 2) {
                 if ((0x1 & (x + y)) != 0) {
-                    entities.put(new Point(x, y), RNG.get().randomNumber(4) == 1 ? Entity.RUBBLE : Entity.PILLAR);
+                    entities.add(RNG.get().randomNumber(4) == 1 ? new Rubble(new Point(x, y)) : new Pillar(new Point(x, y)));
                 }
             }
         }
@@ -945,7 +951,7 @@ public class Dungeon {
     // Places rubble at location y, x
     private void placeRubble(Point coord) {
         logger.info("\t-> Placing rubble at " + coord + "...");
-        entities.put(new Point(coord.x, coord.y), Entity.RUBBLE);
+        entities.add(new Rubble(new Point(coord.x, coord.y)));
     }
 
     // Places door at y, x position if at least 2 walls found
@@ -1507,8 +1513,8 @@ public class Dungeon {
         return doors.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
     }
 
-    public Entity getEntityAt(Point coord) {
-        return entities.get(coord);
+    public AbstractEntity getEntityAt(Point coord) {
+        return entities.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
     }
 
     public Path findPath(Point start, Point end, int maxSearchDistance) {
@@ -1559,11 +1565,11 @@ public class Dungeon {
         this.monsters = monsters;
     }
 
-    public HashMap<Point, Entity> getEntities() {
+    public ArrayList<AbstractEntity> getEntities() {
         return entities;
     }
 
-    public void setEntities(HashMap<Point, Entity> entities) {
+    public void setEntities(ArrayList<AbstractEntity> entities) {
         this.entities = entities;
     }
 
