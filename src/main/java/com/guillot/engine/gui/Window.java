@@ -69,10 +69,10 @@ public class Window extends SubView {
     }
 
     @Override
-    public void update() throws Exception {
+    public void update(int offsetX, int offsetY) throws Exception {
         closeButton.setVisible(showHeader && isShowCloseButton());
 
-        super.update();
+        super.update(offsetX, offsetY);
     }
 
     @Override

@@ -30,11 +30,6 @@ public class SmallInventoryComponent extends Component {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
-    }
-
-    @Override
     public void paint(Graphics g) {
         g.pushTransform();
         g.translate(x, y);

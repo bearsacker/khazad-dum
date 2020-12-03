@@ -134,8 +134,8 @@ public class CharacterDialog extends Window {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
+    public void update(int offsetX, int offsetY) throws Exception {
+        super.update(offsetX, offsetY);
 
         height = characterTextBox.getHeight() + 160;
 
@@ -152,7 +152,7 @@ public class CharacterDialog extends Window {
         cursorTextBox.setVisible(false);
         if (increaseAgilityButton.mouseOn() || increaseDestinyButton.mouseOn() || increaseSpiritButton.mouseOn()
                 || increaseStrengthButton.mouseOn()) {
-            showTextBox("LIGHT_GREY@@Available points: @@ITEM_LEGENDARY@@" + player.getAttributesPoints());
+            showTextBox("LIGHT_GRAY@@Available points: @@ITEM_LEGENDARY@@" + player.getAttributesPoints());
         }
     }
 

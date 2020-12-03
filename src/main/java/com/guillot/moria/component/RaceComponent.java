@@ -7,6 +7,7 @@ import static com.guillot.moria.ressources.Colors.RED_PALE;
 import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Graphics;
 
@@ -104,7 +105,7 @@ public class RaceComponent extends SubView {
         agilityText = new Text("Agility", 24, 112, GUI.get().getFont(), WHITE.getColor());
         spiritText = new Text("Spirit", 24, 144, GUI.get().getFont(), WHITE.getColor());
         destinyText = new Text("Destiny", 24, 176, GUI.get().getFont(), WHITE.getColor());
-        itemsText = new Text("LIGHT_GREY@@Equipment", 24, 220, GUI.get().getFont(), WHITE.getColor());
+        itemsText = new Text("LIGHT_GRAY@@Equipment", 24, 220, GUI.get().getFont(), WHITE.getColor());
 
         strengthBar = new ProgressBar(128, 80, 96, 16, character.getStrength() / 40f);
         strengthBar.setValueColor(RED_PALE.getColor());
@@ -132,8 +133,12 @@ public class RaceComponent extends SubView {
     public void onHide() throws Exception {}
 
     @Override
-    public void update() throws Exception {
+    public void update(int offsetX, int offsetY) throws Exception {
         cursorTextBox.setVisible(false);
+
+        if (mouseOn && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+            parent.setSelectedRace(race);
+        }
 
         if (strengthText.mouseOn() || strengthBar.mouseOn()) {
             showTextBox("Physical damage\nInventory limit");
@@ -148,7 +153,7 @@ public class RaceComponent extends SubView {
         choseButton.setEnabled(parent.getSelectedRace() != race);
         raceNameText.setColor(parent.getSelectedRace() == race ? ITEM_LEGENDARY.getColor() : YELLOW_PALE.getColor());
 
-        super.update();
+        super.update(offsetX, offsetY);
     }
 
     @Override

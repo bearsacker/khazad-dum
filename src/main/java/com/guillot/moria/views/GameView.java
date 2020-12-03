@@ -4,6 +4,7 @@ import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.ressources.Colors.DARK_GREY;
 import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Images.CURSOR;
@@ -334,17 +335,21 @@ public class GameView extends View {
                     }
 
                     Entity entity = getDungeon().getEntityAt(new Point(j, i));
-                    drawTile(g, tile, i, j, alternate, door, entity, new Point(i, j), Color.white);
+                    float alpha =
+                            (float) (1.25f
+                                    - getPlayer().getPosition().distanceFrom(new Point(j, i)) / (float) getPlayer().getLightRadius());
+                    Color shadow = new Color(alpha, alpha, alpha);
+                    drawTile(g, tile, i, j, alternate, door, entity, new Point(i, j), shadow);
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(g, getPlayer().getPosition()));
 
                     if (getPlayer().getPosition().is(j, i)) {
-                        getPlayer().draw(g, getPlayer().getPosition());
+                        getPlayer().draw(g, getPlayer().getPosition(), shadow);
                     }
 
                     Monster monster = getDungeon().getMonsterAt(new Point(j, i));
                     if (monster != null) {
-                        monster.draw(g, getPlayer().getPosition());
+                        monster.draw(g, getPlayer().getPosition(), shadow);
                     }
                 } else if (getDungeon().getDiscoveredTiles()[i][j] != null) {
                     boolean alternate = false;
@@ -366,7 +371,7 @@ public class GameView extends View {
                     }
 
                     Entity entity = getDungeon().getEntityAt(new Point(j, i));
-                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, entity, null, Color.gray);
+                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, entity, null, DARK_GREY.getColor());
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(g, getPlayer().getPosition()));
                 }
@@ -390,13 +395,12 @@ public class GameView extends View {
         }
     }
 
-    // TODO Improve with diag movements
-    private void computeViewedTiles(HashMap<Point, Integer> depthList, Tile[][] grid, Point position, int length) {
+    private void computeViewedTiles(HashMap<Point, Float> depthList, Tile[][] grid, Point position, float length) {
         if (length >= getPlayer().getLightRadius()) {
             return;
         }
 
-        Integer depthValue = depthList.get(position);
+        Float depthValue = depthList.get(position);
         if (depthValue != null && depthValue < length) {
             return;
         }
@@ -407,11 +411,28 @@ public class GameView extends View {
             Tile dungeonTile = getDungeon().getFloor()[position.y][position.x];
             grid[position.y][position.x] = dungeonTile;
 
-            if (dungeonTile.isFloor || dungeonTile.isStairs) {
-                computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1);
-                computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y), length + 1);
-                computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1);
-                computeViewedTiles(depthList, grid, new Point(position.x, position.y + 1), length + 1);
+            if (!dungeonTile.isWall) {
+                computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1f);
+                computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y), length + 1f);
+                computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1f);
+                computeViewedTiles(depthList, grid, new Point(position.x, position.y + 1), length + 1f);
+
+                Tile north = getDungeon().getFloor()[position.y - 1][position.x];
+                Tile south = getDungeon().getFloor()[position.y + 1][position.x];
+                Tile west = getDungeon().getFloor()[position.y][position.x - 1];
+                Tile east = getDungeon().getFloor()[position.y][position.x + 1];
+                if (!north.isWall && !west.isWall) {
+                    computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y - 1), length + 1.41f);
+                }
+                if (!north.isWall && !east.isWall) {
+                    computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y - 1), length + 1.41f);
+                }
+                if (!south.isWall && !west.isWall) {
+                    computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y + 1), length + 1.41f);
+                }
+                if (!south.isWall && !east.isWall) {
+                    computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y + 1), length + 1.41f);
+                }
             }
         }
     }

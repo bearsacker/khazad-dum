@@ -74,11 +74,6 @@ public class SmallCharacterDialog extends Window {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
-    }
-
-    @Override
     public void paint(Graphics g) {
         super.paint(g);
 

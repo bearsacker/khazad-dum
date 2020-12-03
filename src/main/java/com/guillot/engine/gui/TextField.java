@@ -72,8 +72,8 @@ public class TextField extends Component implements KeyListener {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
+    public void update(int offsetX, int offsetY) throws Exception {
+        super.update(offsetX, offsetY);
 
         if (enabled) {
             if (GUI.get().getInput() != null && !added) {

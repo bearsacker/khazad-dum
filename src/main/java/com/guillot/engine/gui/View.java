@@ -41,7 +41,7 @@ public abstract class View {
     public void update() throws Exception {
         for (Component component : components) {
             if ((component.isVisible() && focused) || (!focused && component instanceof SubView && component.isVisible())) {
-                component.update();
+                component.update(0, 0);
             }
         }
     }

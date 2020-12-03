@@ -72,8 +72,8 @@ public class DoorDialog extends Window {
     public void onHide() throws Exception {}
 
     @Override
-    public void update() throws Exception {
-        super.update();
+    public void update(int offsetX, int offsetY) throws Exception {
+        super.update(offsetX, offsetY);
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);

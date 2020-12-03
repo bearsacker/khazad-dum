@@ -143,7 +143,7 @@ public class InventoryDialog extends Window {
     public void onHide() throws Exception {}
 
     @Override
-    public void update() throws Exception {
+    public void update(int offsetX, int offsetY) throws Exception {
         cursorTextBox.setVisible(false);
 
         if (!inventoryGrid.mouseOn() && !buttonAction.mouseOn() && !buttonDrop.mouseOn()
@@ -151,7 +151,7 @@ public class InventoryDialog extends Window {
             inventoryGrid.setSelectedItem(null);
         }
 
-        super.update();
+        super.update(offsetX, offsetY);
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
             setVisible(false);

@@ -22,11 +22,6 @@ public class Console extends Component {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
-    }
-
-    @Override
     public void paint(Graphics g) {
         float alpha = 1f;
         int line = 1;

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.configs.EngineConfig;
@@ -261,7 +262,7 @@ public abstract class AbstractCharacter implements Serializable {
                 new Point(position.x + 1, position.y));
 
         for (Point coord : coords) {
-            if (dungeon.getFloor()[coord.y][coord.x].isFloor && !dungeon.isItemAt(coord)) {
+            if (dungeon.getFloor()[coord.y][coord.x].isFloor) {
                 item.setPosition(coord);
                 dungeon.getItems().add(item);
                 return inventory.remove(item);
@@ -415,11 +416,11 @@ public abstract class AbstractCharacter implements Serializable {
         }
     }
 
-    public void draw(Graphics g, Point playerPosition) {
+    public void draw(Graphics g, Point playerPosition, Color filter) {
         int x = (position.y - playerPosition.y) * 32 + (position.x - playerPosition.x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        g.drawImage(this.image.getSubImage(direction.getValue() * 4 + currentFrame, 0), x, y);
+        g.drawImage(this.image.getSubImage(direction.getValue() * 4 + currentFrame, 0), x, y, filter);
     }
 
     public int getLevel() {
@@ -782,23 +783,23 @@ public abstract class AbstractCharacter implements Serializable {
     @Override
     public String toString() {
         String text = "RED_PALE@@Strength: @@WHITE@@" + strength + "\n";
-        text += "LIGHT_GREY@@     Physical damage: @@WHITE@@+ " + physicalDamage + "%\n";
-        text += "LIGHT_GREY@@     Inventory limit: @@WHITE@@" + inventoryLimit + " blocks\n\n";
+        text += "LIGHT_GRAY@@     Physical damage: @@WHITE@@+ " + physicalDamage + "%\n";
+        text += "LIGHT_GRAY@@     Inventory limit: @@WHITE@@" + inventoryLimit + " blocks\n\n";
 
         text += "GREEN_PALE@@Agility: @@WHITE@@" + agility + "\n";
-        text += "LIGHT_GREY@@     Chance to hit: @@WHITE@@" + chanceHit + "%\n";
-        text += "LIGHT_GREY@@     Chance to block/dodge: @@WHITE@@" + chanceDodge + "%\n";
-        text += "LIGHT_GREY@@     Movement: @@WHITE@@" + movement + "m\n\n";
+        text += "LIGHT_GRAY@@     Chance to hit: @@WHITE@@" + chanceHit + "%\n";
+        text += "LIGHT_GRAY@@     Chance to block/dodge: @@WHITE@@" + chanceDodge + "%\n";
+        text += "LIGHT_GRAY@@     Movement: @@WHITE@@" + movement + "m\n\n";
 
         text += "YELLOW_PALE@@Spirit: @@WHITE@@" + spirit + "\n";
-        text += "LIGHT_GREY@@     Life: @@WHITE@@" + currentLife + "/" + life + "\n";
-        text += "LIGHT_GREY@@     Light radius: @@WHITE@@" + lightRadius + "m\n\n";
+        text += "LIGHT_GRAY@@     Life: @@WHITE@@" + currentLife + "/" + life + "\n";
+        text += "LIGHT_GRAY@@     Light radius: @@WHITE@@" + lightRadius + "m\n\n";
 
         text += "BLUE_PALE@@Destiny: @@WHITE@@" + destiny + "\n";
-        text += "LIGHT_GREY@@     Chance to magic find: @@WHITE@@+ "
+        text += "LIGHT_GRAY@@     Chance to magic find: @@WHITE@@+ "
                 + (MAGIC.getProbability() + LEGENDARY.getProbability() + chanceMagicFind) + "%\n";
-        text += "LIGHT_GREY@@     Chance to pick a lock: @@WHITE@@" + chanceLockPicking + "%\n";
-        text += "LIGHT_GREY@@     Chance of critical hit: @@WHITE@@" + chanceCriticalHit + "%\n\n";
+        text += "LIGHT_GRAY@@     Chance to pick a lock: @@WHITE@@" + chanceLockPicking + "%\n";
+        text += "LIGHT_GRAY@@     Chance of critical hit: @@WHITE@@" + chanceCriticalHit + "%\n\n";
 
         return text;
     }

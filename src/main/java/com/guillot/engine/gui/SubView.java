@@ -48,8 +48,8 @@ public abstract class SubView extends Component {
     }
 
     @Override
-    public void update() throws Exception {
-        super.update();
+    public void update(int offsetX, int offsetY) throws Exception {
+        super.update(offsetX, offsetY);
 
         for (Component c : components) {
             c.update(x, y);

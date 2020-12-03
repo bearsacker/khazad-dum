@@ -2,7 +2,7 @@ package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.LIGHT_GREY;
+import static com.guillot.moria.ressources.Colors.LIGHT_GRAY;
 import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Images.LOGO;
 import static com.guillot.moria.ressources.Images.LOGO_TEXT;
@@ -98,7 +98,7 @@ public class MenuView extends View {
         g.translate(WIDTH / 2, 96);
 
         LOGO.getImage().draw(-LOGO.getImage().getWidth() / 2, 0, YELLOW.getColor());
-        LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, LIGHT_GREY.getColor());
+        LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, LIGHT_GRAY.getColor());
 
         g.popTransform();
 

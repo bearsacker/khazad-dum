@@ -4,13 +4,14 @@ Cursor
 Campfire
 Merchant
 Vault management when death
+Monster sprites
 
 Display
 	Bullets (arrow)
 	Effects (hit, miss, dodge)
 	Better walking animation
 	Menu
-	Monster sprites
+	Monster sprites (Troll, Gobling king, Balrog)
 Gameplay
 	Add level 10 and Balrog
 	Rooms and decorations

@@ -89,7 +89,7 @@ public class DeathView extends View {
     @Override
     public void update() throws Exception {
         validateButton.setText(inventoryGrid.getSelectedItem() != null
-                ? "DARK_GREY@@Hide @@" + inventoryGrid.getSelectedItem().getFormattedName().replace("LIGHT_", "DARK_")
+                ? "DARKER_GRAY@@Hide @@" + inventoryGrid.getSelectedItem().getFormattedName().replace("LIGHT_", "DARK_")
                 : "Hide no object");
         validateButton.setX(WIDTH - validateButton.getWidth() - 48);
 

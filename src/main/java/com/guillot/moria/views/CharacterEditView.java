@@ -22,6 +22,7 @@ import com.guillot.moria.character.Race;
 import com.guillot.moria.component.InventoryGridComponent;
 import com.guillot.moria.component.RaceComponent;
 import com.guillot.moria.dungeon.vault.Vault;
+import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.save.VaultSaveManager;
 
@@ -35,7 +36,7 @@ public class CharacterEditView extends View {
 
     private Vault vault;
 
-    private InventoryGridComponent inventoryGrid;
+    private InventoryGridComponent vaultGrid;
 
     private Button validateButton;
 
@@ -45,13 +46,13 @@ public class CharacterEditView extends View {
 
     private Text vaultText;
 
-    private RaceComponent choseHumanButton;
+    private RaceComponent humanComponent;
 
-    private RaceComponent choseElfButton;
+    private RaceComponent elfComponent;
 
-    private RaceComponent choseDwarfButton;
+    private RaceComponent dwarfComponent;
 
-    private RaceComponent choseHobbitButton;
+    private RaceComponent hobbitComponent;
 
     private Race selectedRace;
 
@@ -65,9 +66,9 @@ public class CharacterEditView extends View {
         nameText = new Text("Name", 80, 77, GUI.get().getFont(1), YELLOW_PALE.getColor());
         nameField = new TextField(176, 64, 256, 48);
 
-        inventoryGrid = new InventoryGridComponent(null, vault.getItems(), vault.getLimit(), vault.getLimit());
-        inventoryGrid.setX(WIDTH - inventoryGrid.getWidth() - 64);
-        inventoryGrid.setY(HEIGHT - 144);
+        vaultGrid = new InventoryGridComponent(null, vault.getItems(), vault.getLimit(), vault.getLimit());
+        vaultGrid.setX(WIDTH - vaultGrid.getWidth() - 64);
+        vaultGrid.setY(HEIGHT - 144);
 
         validateButton = new Button("Begin adventure", 0, 64, 48);
         validateButton.setX(WIDTH - validateButton.getWidth() - 64);
@@ -79,14 +80,14 @@ public class CharacterEditView extends View {
             }
         });
 
-        choseHumanButton = new RaceComponent(this, Race.HUMAN, 144, 192);
-        choseHumanButton.setVisible(true);
-        choseElfButton = new RaceComponent(this, Race.ELF, 144 + choseHumanButton.getWidth(), 192);
-        choseElfButton.setVisible(true);
-        choseDwarfButton = new RaceComponent(this, Race.DWARF, 144 + 2 * choseHumanButton.getWidth(), 192);
-        choseDwarfButton.setVisible(true);
-        choseHobbitButton = new RaceComponent(this, Race.HOBBIT, 144 + 3 * choseHumanButton.getWidth(), 192);
-        choseHobbitButton.setVisible(true);
+        humanComponent = new RaceComponent(this, Race.HUMAN, 144, 192);
+        humanComponent.setVisible(true);
+        elfComponent = new RaceComponent(this, Race.ELF, 144 + humanComponent.getWidth(), 192);
+        elfComponent.setVisible(true);
+        dwarfComponent = new RaceComponent(this, Race.DWARF, 144 + 2 * humanComponent.getWidth(), 192);
+        dwarfComponent.setVisible(true);
+        hobbitComponent = new RaceComponent(this, Race.HOBBIT, 144 + 3 * humanComponent.getWidth(), 192);
+        hobbitComponent.setVisible(true);
 
         String text = "WHITE@@This is your vault. You can take an item from it,\n";
         text += "RED_PALE@@but you can also lose it forever...";
@@ -106,10 +107,10 @@ public class CharacterEditView extends View {
         itemTextBox.setVisible(false);
 
         vaultText.setVisible(!vault.isEmpty());
-        inventoryGrid.setVisible(!vault.isEmpty());
+        vaultGrid.setVisible(!vault.isEmpty());
 
-        add(background, nameText, nameField, vaultText, itemWindow, itemTextBox, inventoryGrid, choseHobbitButton, choseDwarfButton,
-                choseElfButton, choseHumanButton, validateButton);
+        add(background, nameText, nameField, vaultText, hobbitComponent, dwarfComponent,
+                elfComponent, humanComponent, validateButton, itemWindow, itemTextBox, vaultGrid);
     }
 
     @Override
@@ -117,10 +118,10 @@ public class CharacterEditView extends View {
 
     @Override
     public void update() throws Exception {
-        if (!inventoryGrid.mouseOn() && !nameField.mouseOn() && !validateButton.mouseOn() && !choseDwarfButton.mouseOn()
-                && !choseElfButton.mouseOn() && !choseHobbitButton.mouseOn() && !choseHumanButton.mouseOn()
+        if (!vaultGrid.mouseOn() && !nameField.mouseOn() && !validateButton.mouseOn() && !dwarfComponent.mouseOn()
+                && !elfComponent.mouseOn() && !hobbitComponent.mouseOn() && !humanComponent.mouseOn()
                 && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-            inventoryGrid.setSelectedItem(null);
+            vaultGrid.setSelectedItem(null);
         }
 
         if (GUI.get().isKeyPressed(KEY_ESCAPE)) {
@@ -131,16 +132,16 @@ public class CharacterEditView extends View {
             validate();
         }
 
-        validateButton.setText(inventoryGrid.getSelectedItem() != null
-                ? "DARK_GREY@@Begin adventure with @@" + inventoryGrid.getSelectedItem().getFormattedName().replace("LIGHT_", "DARK_")
+        validateButton.setText(vaultGrid.getSelectedItem() != null
+                ? "DARKER_GRAY@@Begin adventure with @@" + vaultGrid.getSelectedItem().getFormattedName().replace("LIGHT_", "DARK_")
                 : "Begin adventure");
         validateButton.setX(WIDTH - validateButton.getWidth() - 64);
         validateButton.setEnabled(!nameField.isEmpty() && selectedRace != null);
 
         super.update();
 
-        if (inventoryGrid.getHoveredItem() != null) {
-            itemTextBox.setText(inventoryGrid.getHoveredItem().toString());
+        if (vaultGrid.getHoveredItem() != null) {
+            itemTextBox.setText(vaultGrid.getHoveredItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
@@ -148,8 +149,8 @@ public class CharacterEditView extends View {
             itemWindow.setHeight(itemTextBox.getHeight() + 64);
             itemWindow.setY(HEIGHT - itemWindow.getHeight());
             itemWindow.setVisible(true);
-        } else if (inventoryGrid.getSelectedItem() != null) {
-            itemTextBox.setText(inventoryGrid.getSelectedItem().toString());
+        } else if (vaultGrid.getSelectedItem() != null) {
+            itemTextBox.setText(vaultGrid.getSelectedItem().toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
             itemTextBox.setVisible(true);
@@ -167,25 +168,27 @@ public class CharacterEditView extends View {
         AbstractCharacter player = null;
         switch (selectedRace) {
         case DWARF:
-            player = choseDwarfButton.getCharacter();
+            player = dwarfComponent.getCharacter();
             player.setName(nameField.getValue());
             break;
         case ELF:
-            player = choseElfButton.getCharacter();
+            player = elfComponent.getCharacter();
             player.setName(nameField.getValue());
             break;
         case HOBBIT:
-            player = choseHobbitButton.getCharacter();
+            player = hobbitComponent.getCharacter();
             player.setName(nameField.getValue());
             break;
         case HUMAN:
-            player = choseHumanButton.getCharacter();
+            player = humanComponent.getCharacter();
             player.setName(nameField.getValue());
             break;
         }
 
-        if (inventoryGrid.getSelectedItem() != null) {
-            player.pickUpItem(inventoryGrid.getSelectedItem());
+        AbstractItem vaultItem = vaultGrid.getSelectedItem();
+        if (vaultItem != null && player.pickUpItem(vaultItem)) {
+            vault.getItems().remove(vaultItem);
+            VaultSaveManager.writeSaveFile(VAULT_SAVE_PATH, vault);
         }
 
         GameState game = new GameState();

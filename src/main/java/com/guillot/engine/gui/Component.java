@@ -89,10 +89,6 @@ public abstract class Component {
         return this.mouseOn;
     }
 
-    public void update() throws Exception {
-        update(0, 0);
-    }
-
     public void update(int offsetX, int offsetY) throws Exception {
         int mX = GUI.get().getMouseX() - offsetX;
         int mY = GUI.get().getMouseY() - offsetY;
