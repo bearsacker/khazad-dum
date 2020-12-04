@@ -1,4 +1,4 @@
-package com.guillot.moria.dungeon;
+package com.guillot.moria.dungeon.entity;
 
 
 public enum DoorState {

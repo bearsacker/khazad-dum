@@ -15,9 +15,9 @@ import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.Window;
-import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
+import com.guillot.moria.dungeon.entity.Door;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;

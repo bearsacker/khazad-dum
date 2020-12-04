@@ -1,4 +1,4 @@
-package com.guillot.moria.dungeon;
+package com.guillot.moria.dungeon.entity;
 
 import com.guillot.moria.utils.RNG;
 

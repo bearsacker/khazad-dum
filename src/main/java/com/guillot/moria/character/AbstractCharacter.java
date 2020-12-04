@@ -2,10 +2,10 @@ package com.guillot.moria.character;
 
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_POINTS_PER_LEVEL;
-import static com.guillot.moria.dungeon.Direction.EAST;
-import static com.guillot.moria.dungeon.Direction.NORTH;
-import static com.guillot.moria.dungeon.Direction.SOUTH;
-import static com.guillot.moria.dungeon.Direction.WEST;
+import static com.guillot.moria.dungeon.entity.Direction.EAST;
+import static com.guillot.moria.dungeon.entity.Direction.NORTH;
+import static com.guillot.moria.dungeon.entity.Direction.SOUTH;
+import static com.guillot.moria.dungeon.entity.Direction.WEST;
 import static com.guillot.moria.item.ItemRarity.LEGENDARY;
 import static com.guillot.moria.item.ItemRarity.MAGIC;
 import static java.lang.Math.max;
@@ -22,8 +22,8 @@ import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.moria.ai.Path;
-import com.guillot.moria.dungeon.Direction;
 import com.guillot.moria.dungeon.Dungeon;
+import com.guillot.moria.dungeon.entity.Direction;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;

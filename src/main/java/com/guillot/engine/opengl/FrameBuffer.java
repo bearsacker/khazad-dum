@@ -27,7 +27,14 @@ public class FrameBuffer {
 
     private int textureId;
 
+    private int width;
+
+    private int height;
+
     public FrameBuffer(int width, int height) {
+        this.width = width;
+        this.height = height;
+
         id = glGenFramebuffersEXT();
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 
@@ -57,5 +64,13 @@ public class FrameBuffer {
 
     public int getTextureId() {
         return textureId;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

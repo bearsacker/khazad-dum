@@ -8,6 +8,8 @@ import org.newdawn.slick.Graphics;
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.moria.ressources.Images;
 import com.guillot.moria.utils.Point;
+import com.guillot.moria.views.GameState;
+import com.guillot.moria.views.GameView;
 
 public class AbstractEntity implements Serializable {
 
@@ -17,10 +19,19 @@ public class AbstractEntity implements Serializable {
 
     protected Point position;
 
+    protected Direction direction;
+
     protected Images image;
 
     public AbstractEntity(Point position) {
         this.position = new Point(position);
+        this.direction = Direction.NORTH;
+    }
+
+    public void use(GameState game, GameView view) {}
+
+    public int usableRadius() {
+        return 1;
     }
 
     public void draw(Graphics g, Point playerPosition, Color filter) {
@@ -32,6 +43,10 @@ public class AbstractEntity implements Serializable {
 
     public Point getPosition() {
         return position;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public Entity getType() {

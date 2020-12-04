@@ -2,8 +2,8 @@ package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.LIGHT_GRAY;
-import static com.guillot.moria.ressources.Colors.YELLOW;
+import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
 import static com.guillot.moria.ressources.Images.LOGO;
 import static com.guillot.moria.ressources.Images.LOGO_TEXT;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
@@ -97,8 +97,8 @@ public class MenuView extends View {
         g.pushTransform();
         g.translate(WIDTH / 2, 96);
 
-        LOGO.getImage().draw(-LOGO.getImage().getWidth() / 2, 0, YELLOW.getColor());
-        LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, LIGHT_GRAY.getColor());
+        LOGO.getImage().draw(-LOGO.getImage().getWidth() / 2, 0, ITEM_LEGENDARY.getColor());
+        LOGO_TEXT.getImage().draw(-LOGO_TEXT.getImage().getWidth() / 2, 120, ITEM_MAGIC.getColor());
 
         g.popTransform();
 

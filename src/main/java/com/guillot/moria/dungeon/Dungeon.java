@@ -27,8 +27,6 @@ import static com.guillot.moria.configs.ScreenConfig.QUART_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.QUART_WIDTH;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_HEIGHT;
 import static com.guillot.moria.configs.ScreenConfig.SCREEN_WIDTH;
-import static com.guillot.moria.dungeon.Direction.NORTH;
-import static com.guillot.moria.dungeon.Direction.WEST;
 import static com.guillot.moria.dungeon.PlacedObject.GOLD;
 import static com.guillot.moria.dungeon.PlacedObject.RANDOM;
 import static com.guillot.moria.dungeon.PlacedObject.RUBBLE;
@@ -43,6 +41,8 @@ import static com.guillot.moria.dungeon.Tile.ROOM_FLOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
 import static com.guillot.moria.dungeon.Tile.TMP2_WALL;
 import static com.guillot.moria.dungeon.Tile.UP_STAIR;
+import static com.guillot.moria.dungeon.entity.Direction.NORTH;
+import static com.guillot.moria.dungeon.entity.Direction.WEST;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
@@ -59,6 +59,10 @@ import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.character.MonsterRace;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
+import com.guillot.moria.dungeon.entity.Direction;
+import com.guillot.moria.dungeon.entity.Door;
+import com.guillot.moria.dungeon.entity.DoorState;
+import com.guillot.moria.dungeon.entity.Entity;
 import com.guillot.moria.dungeon.entity.FireCamp;
 import com.guillot.moria.dungeon.entity.Pillar;
 import com.guillot.moria.dungeon.entity.Rubble;
@@ -81,8 +85,6 @@ public class Dungeon {
     private Tile[][] floor;
 
     private Tile[][] discoveredTiles;
-
-    private ArrayList<Door> doors;
 
     private ArrayList<AbstractItem> items;
 
@@ -109,7 +111,6 @@ public class Dungeon {
 
         discoveredTiles = new Tile[DUNGEON_MAX_HEIGHT][DUNGEON_MAX_WIDTH];
 
-        doors = new ArrayList<>();
         items = new ArrayList<>();
         monsters = new ArrayList<>();
         entities = new ArrayList<>();
@@ -127,7 +128,6 @@ public class Dungeon {
 
         discoveredTiles = new Tile[DUNGEON_MAX_HEIGHT][DUNGEON_MAX_WIDTH];
 
-        doors.clear();
         items.clear();
         monsters.clear();
         entities.clear();
@@ -769,21 +769,21 @@ public class Dungeon {
         logger.info("\t-> Placing open door at " + coord + "...");
         floor[coord.y][coord.x] = GRANITE_WALL;
 
-        doors.add(new Door(coord, DoorState.OPEN, direction));
+        entities.add(new Door(coord, DoorState.OPEN, direction));
     }
 
     private void placeLockedDoor(Point coord, Direction direction) {
         logger.info("\t-> Placing locked door at " + coord + "...");
         this.floor[coord.y][coord.x] = GRANITE_WALL;
 
-        doors.add(new Door(coord, DoorState.LOCKED, direction));
+        entities.add(new Door(coord, DoorState.LOCKED, direction));
     }
 
     private void placeStuckDoor(Point coord, Direction direction) {
         logger.info("\t-> Placing stuck door at " + coord + "...");
         this.floor[coord.y][coord.x] = GRANITE_WALL;
 
-        doors.add(new Door(coord, DoorState.STUCK, direction));
+        entities.add(new Door(coord, DoorState.STUCK, direction));
     }
 
     private void placeSecretDoor(Point coord) {
@@ -797,7 +797,7 @@ public class Dungeon {
         logger.info("\t-> Placing secret door at " + coord + "...");
         this.floor[coord.y][coord.x] = GRANITE_WALL;
 
-        doors.add(new Door(coord, DoorState.SECRET, direction));
+        entities.add(new Door(coord, DoorState.SECRET, direction));
     }
 
     private void placeRandomSecretDoor(Point coord, int depth, int height, int left, int right) {
@@ -1235,7 +1235,7 @@ public class Dungeon {
             for (int j = 0; j < this.width; j++) {
                 Door door = getDoorAt(new Point(j, i));
                 if (door != null && !this.floor[i][j].isWall) {
-                    doors.remove(door);
+                    entities.remove(door);
                 }
             }
         }
@@ -1510,7 +1510,7 @@ public class Dungeon {
     }
 
     public Door getDoorAt(Point coord) {
-        return doors.stream().filter(x -> x.getPosition().is(coord)).findFirst().orElse(null);
+        return (Door) entities.stream().filter(x -> x.getType() == Entity.DOOR && x.getPosition().is(coord)).findFirst().orElse(null);
     }
 
     public AbstractEntity getEntityAt(Point coord) {
@@ -1547,14 +1547,6 @@ public class Dungeon {
 
     public void setDiscoveredTiles(Tile[][] discoveredTiles) {
         this.discoveredTiles = discoveredTiles;
-    }
-
-    public ArrayList<Door> getDoors() {
-        return doors;
-    }
-
-    public void setDoors(ArrayList<Door> doors) {
-        this.doors = doors;
     }
 
     public ArrayList<Monster> getMonsters() {

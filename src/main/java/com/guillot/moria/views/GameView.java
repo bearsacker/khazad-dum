@@ -38,12 +38,11 @@ import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.component.MapDialog;
 import com.guillot.moria.component.MenuDialog;
 import com.guillot.moria.component.SmallCharacterDialog;
-import com.guillot.moria.dungeon.Direction;
-import com.guillot.moria.dungeon.Door;
-import com.guillot.moria.dungeon.DoorState;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
+import com.guillot.moria.dungeon.entity.Door;
+import com.guillot.moria.dungeon.entity.DoorState;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.ressources.Colors;
 import com.guillot.moria.ressources.Images;
@@ -206,27 +205,12 @@ public class GameView extends View {
 
             if (cursor != null) {
                 if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-                    Door door = getDungeon().getDoorAt(cursor);
+                    AbstractEntity entity = getDungeon().getEntityAt(cursor);
                     Monster monster = getDungeon().getMonsterAt(cursor);
 
-                    if (door != null) {
-                        if (getPlayer().getPosition().distanceFrom(cursor) == 1) {
-                            switch (door.getState()) {
-                            case LOCKED:
-                                GUI.get().getInput().clearMousePressedRecord();
-                                GUI.get().getInput().clearKeyPressedRecord();
-                                doorDialog.setDoor(door);
-                                doorDialog.setVisible(true);
-                                break;
-                            case SECRET:
-                                door.setState(DoorState.OPEN);
-                                game.addMessage("GREEN_PALE@@You@@WHITE@@ discover a secret door !");
-                            case OPEN:
-                                getPlayer().setPosition(door.getDirectionPosition(getPlayer().getPosition()));
-                                break;
-                            case STUCK:
-                                break;
-                            }
+                    if (entity != null) {
+                        if (getPlayer().getPosition().distanceFrom(cursor) <= entity.usableRadius()) {
+                            entity.use(game, this);
                         } else {
                             getPlayer().setPath(
                                     getDungeon().findPathNear(getPlayer().getPosition(), cursor, getPlayer().getLightRadius()));
@@ -340,7 +324,7 @@ public class GameView extends View {
                     float alpha = (float) (1.25f
                             - getPlayer().getPosition().distanceFrom(new Point(j, i)) / (float) getPlayer().getLightRadius());
                     Color shadow = new Color(alpha, alpha, alpha);
-                    drawTile(g, tile, i, j, alternate, door, new Point(i, j), shadow);
+                    drawTile(g, tile, i, j, alternate, new Point(i, j), shadow);
 
                     AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
                     if (entity != null) {
@@ -376,7 +360,7 @@ public class GameView extends View {
                         }
                     }
 
-                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, door, null, DARK_GREY.getColor());
+                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, null, DARK_GREY.getColor());
 
                     AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
                     if (entity != null) {
@@ -447,7 +431,7 @@ public class GameView extends View {
         }
     }
 
-    private void drawTile(Graphics g, Tile tile, int px, int py, boolean alternate, Door door, Object value, Color filter) {
+    private void drawTile(Graphics g, Tile tile, int px, int py, boolean alternate, Object value, Color filter) {
         int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
@@ -458,14 +442,6 @@ public class GameView extends View {
             } else {
                 depthBuffer.drawImageBuffer(new Point(py, px), tile.buffer, x, y);
                 g.drawImage(tile.image.getSubImage(0, 0, 64, 96), x, y, filter);
-            }
-
-            if (door != null && door.getState() != DoorState.SECRET) {
-                if (door.getDirection() == Direction.NORTH) {
-                    g.drawImage(Images.DOOR.getSubImage(1, 0), x, y, filter);
-                } else if (door.getDirection() == Direction.WEST) {
-                    g.drawImage(Images.DOOR.getSubImage(0, 0), x, y, filter);
-                }
             }
         }
     }
@@ -507,6 +483,10 @@ public class GameView extends View {
 
     public AbstractCharacter getPlayer() {
         return game.getPlayer();
+    }
+
+    public DoorDialog getDoorDialog() {
+        return doorDialog;
     }
 
 }

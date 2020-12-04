@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import com.guillot.moria.character.Monster;
-import com.guillot.moria.dungeon.Door;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
@@ -25,7 +24,6 @@ public class DungeonEncoder {
         stream.writeObject(dungeon.getDiscoveredTiles());
         stream.writeObject(dungeon.getEntities());
         stream.writeObject(dungeon.getItems());
-        stream.writeObject(dungeon.getDoors());
         stream.writeObject(dungeon.getMonsters());
     }
 
@@ -40,7 +38,6 @@ public class DungeonEncoder {
         dungeon.setDiscoveredTiles((Tile[][]) stream.readObject());
         dungeon.setEntities((ArrayList<AbstractEntity>) stream.readObject());
         dungeon.setItems((ArrayList<AbstractItem>) stream.readObject());
-        dungeon.setDoors((ArrayList<Door>) stream.readObject());
         dungeon.setMonsters((ArrayList<Monster>) stream.readObject());
         dungeon.initAStar();
 

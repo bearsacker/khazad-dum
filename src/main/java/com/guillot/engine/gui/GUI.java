@@ -133,7 +133,7 @@ public class GUI {
                 frameBuffer.unbind();
 
                 shaders.forEach(x -> x.bind());
-                OpenGL.drawRectangle(0, 0, WIDTH, HEIGHT, frameBuffer.getTextureId());
+                OpenGL.drawRectangle(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), frameBuffer.getTextureId());
                 shaders.forEach(x -> x.unbind());
             }
         } catch (Exception e) {
