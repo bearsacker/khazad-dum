@@ -48,7 +48,7 @@ public class CheckBox extends Component {
     public void update(int offsetX, int offsetY) throws Exception {
         super.update(offsetX, offsetY);
 
-        if (enabled && mouseOn && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+        if (enabled && mouseOn && GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
             value = !value;
         }
     }

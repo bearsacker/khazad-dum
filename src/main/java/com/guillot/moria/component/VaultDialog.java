@@ -62,7 +62,7 @@ public class VaultDialog extends Window {
 
     @Override
     public void update(int offsetX, int offsetY) throws Exception {
-        if (!inventoryGrid.mouseOn() && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+        if (!inventoryGrid.mouseOn() && GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
             inventoryGrid.setSelectedItem(null);
         }
 

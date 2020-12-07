@@ -130,7 +130,7 @@ public abstract class AbstractCharacter implements Serializable {
 
     // Equipment
 
-    protected int gold;
+    protected int coins;
 
     protected ArrayList<AbstractItem> inventory;
 
@@ -239,7 +239,7 @@ public abstract class AbstractCharacter implements Serializable {
     }
 
     public boolean pickUpItem(AbstractItem item) {
-        if (!inventory.contains(item) && inventory.size() < inventoryLimit) {
+        if (!inventory.contains(item) && !isInventoryFull()) {
             inventory.add(item);
             return true;
         }
@@ -248,6 +248,10 @@ public abstract class AbstractCharacter implements Serializable {
     }
 
     public boolean dropItem(AbstractItem item) {
+        if (isEquipedByItem(item)) {
+            unequipItem(item);
+        }
+
         return inventory.remove(item);
     }
 
@@ -262,7 +266,7 @@ public abstract class AbstractCharacter implements Serializable {
                 new Point(position.x + 1, position.y));
 
         for (Point coord : coords) {
-            if (dungeon.getFloor()[coord.y][coord.x].isFloor) {
+            if (dungeon.getFloor()[coord.y][coord.x].isTraversable) {
                 item.setPosition(coord);
                 dungeon.getItems().add(item);
                 return inventory.remove(item);
@@ -364,6 +368,10 @@ public abstract class AbstractCharacter implements Serializable {
 
     public AbstractItem getFirstItemOfType(ItemType type) {
         return inventory.stream().filter(x -> x.getType() == type).findAny().orElse(null);
+    }
+
+    public boolean isInventoryFull() {
+        return inventory.size() >= inventoryLimit;
     }
 
     public void update(GameState game) {
@@ -619,12 +627,12 @@ public abstract class AbstractCharacter implements Serializable {
         this.direction = direction;
     }
 
-    public int getGold() {
-        return gold;
+    public int getCoins() {
+        return coins;
     }
 
-    public void setGold(int gold) {
-        this.gold = gold;
+    public void setCoins(int coins) {
+        this.coins = coins;
     }
 
     public Equipable getHead() {
@@ -797,7 +805,7 @@ public abstract class AbstractCharacter implements Serializable {
 
         text += "BLUE_PALE@@Destiny: @@WHITE@@" + destiny + "\n";
         text += "LIGHT_GRAY@@     Chance to magic find: @@WHITE@@+ "
-                + (MAGIC.getProbability() + LEGENDARY.getProbability() + chanceMagicFind) + "%\n";
+                + ((int) (MAGIC.getProbability() / 10f + LEGENDARY.getProbability() / 10f) + chanceMagicFind) + "%\n";
         text += "LIGHT_GRAY@@     Chance to pick a lock: @@WHITE@@" + chanceLockPicking + "%\n";
         text += "LIGHT_GRAY@@     Chance of critical hit: @@WHITE@@" + chanceCriticalHit + "%\n\n";
 

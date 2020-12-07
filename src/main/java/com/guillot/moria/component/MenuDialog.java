@@ -4,8 +4,6 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
-import org.newdawn.slick.Graphics;
-
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
@@ -17,16 +15,16 @@ import com.guillot.moria.views.MenuView;
 
 public class MenuDialog extends Window {
 
-    private Button saveAndBackToMenuButton;
+    private Button backToMenuButton;
 
-    private Button saveAndQuitButton;
+    private Button quitButton;
 
     public MenuDialog(GameView parent, GameState game) throws Exception {
         super(parent, 256, 256, WIDTH - 512, 240, "Menu");
         setShowCloseButton(true);
 
-        saveAndBackToMenuButton = new Button("Save and Back to menu", width / 2 - 144, 80, 288, 48);
-        saveAndBackToMenuButton.setEvent(new Event() {
+        backToMenuButton = new Button("Back to menu", width / 2 - 144, 80, 288, 48);
+        backToMenuButton.setEvent(new Event() {
 
             @Override
             public void perform() throws Exception {
@@ -35,8 +33,8 @@ public class MenuDialog extends Window {
             }
         });
 
-        saveAndQuitButton = new Button("Save and Quit", width / 2 - 144, 144, 288, 48);
-        saveAndQuitButton.setEvent(new Event() {
+        quitButton = new Button("Quit", width / 2 - 144, 144, 288, 48);
+        quitButton.setEvent(new Event() {
 
             @Override
             public void perform() throws Exception {
@@ -45,7 +43,7 @@ public class MenuDialog extends Window {
             }
         });
 
-        add(saveAndBackToMenuButton, saveAndQuitButton);
+        add(backToMenuButton, quitButton);
     }
 
     @Override
@@ -62,11 +60,6 @@ public class MenuDialog extends Window {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
     }
 
 }

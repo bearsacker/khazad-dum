@@ -151,4 +151,17 @@ public class ItemGenerator {
 
         return item;
     }
+
+    public static AbstractItem generateItem(List<ItemType> types, int magicBonus, int qualityLevel) {
+        ItemType type = types.get(RNG.get().randomNumberBetween(0, types.size() - 1));
+
+        int tries = 0;
+        AbstractItem item = null;
+        do {
+            tries++;
+            item = generateItemOfType(type, magicBonus, qualityLevel);
+        } while (tries < 100 && (item == null || !item.isEligible()));
+
+        return item;
+    }
 }

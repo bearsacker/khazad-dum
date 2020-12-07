@@ -1,7 +1,5 @@
 package com.guillot.moria.views;
 
-import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
-import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import com.guillot.engine.utils.LinkedNonBlockingQueue;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.dungeon.Dungeon;
-import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.save.GameSaveManager;
 
@@ -93,19 +90,12 @@ public class GameState {
             player.update(this);
 
             if (!player.isMoving()) {
-                Tile tile = getDungeon().getFloor()[getPlayer().getPosition().y][getPlayer().getPosition().x];
-                if (tile == UP_STAIR) {
-                    toGoUpstairs();
-                } else if (tile == DOWN_STAIR) {
-                    toGoDownstairs();
-                } else {
-                    getDungeon().getItemsAt(getPlayer().getPosition()).forEach(x -> {
-                        if (getPlayer().pickUpItem(x)) {
-                            getDungeon().removeItem(x);
-                            addMessage("GREEN_PALE@@You@@WHITE@@ picked up @@" + x.getFormattedName());
-                        }
-                    });
-                }
+                getDungeon().getItemsAt(getPlayer().getPosition()).forEach(x -> {
+                    if (getPlayer().pickUpItem(x)) {
+                        getDungeon().removeItem(x);
+                        addMessage("GREEN_PALE@@You@@WHITE@@ picked up @@" + x.getFormattedName());
+                    }
+                });
 
                 if (player.isActing()) {
                     player.setActing(false);

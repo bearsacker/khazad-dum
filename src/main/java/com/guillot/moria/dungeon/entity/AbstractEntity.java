@@ -52,4 +52,9 @@ public class AbstractEntity implements Serializable {
     public Entity getType() {
         return type;
     }
+
+    public boolean isUsable() {
+        return false;
+    }
+
 }

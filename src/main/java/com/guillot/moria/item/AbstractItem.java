@@ -43,6 +43,8 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
 
     protected Point position;
 
+    protected int coinsValue;
+
     public void generateBase(int qualityLevel) {
         List<ItemRepresentation> representations = getValuesPerLevel().stream().filter(x -> x.getLevel() <= qualityLevel).collect(toList());
         if (!representations.isEmpty()) {
@@ -156,8 +158,23 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
         return image.getImage();
     }
 
-    public String geName() {
+    public String getName() {
         return name;
+    }
+
+    public int getCoinsValue() {
+        if (coinsValue == 0) {
+            coinsValue = qualityLevel * (rarity.getPoints() + 1);
+            for (AbstractAffixe affixe : affixes) {
+                coinsValue += affixe.getQuality() * affixe.getCost();
+            }
+        }
+
+        return coinsValue;
+    }
+
+    public int getCoinsValue(float margin) {
+        return (int) (Math.ceil(getCoinsValue() * margin));
     }
 
     public String getFormattedName() {
@@ -207,8 +224,8 @@ public abstract class AbstractItem implements Comparable<AbstractItem>, Serializ
 
     @Override
     public String toString() {
-        String text = getFormattedName() + " - " + type + "\n";
-        text += LIGHT_GRAY.name() + "@@Quality level " + qualityLevel + " (" + rarity + ")\n\n";
+        String text = getFormattedName() + "\n";
+        text += "YELLOW_PALE@@Quality level " + qualityLevel + " (" + rarity + ")\n\n";
         if (getValueName() != null) {
             text += "ROSE_PALE@@     " + getValueName() + ": @@LIGHT_GRAY@@" + value + "\n";
         }

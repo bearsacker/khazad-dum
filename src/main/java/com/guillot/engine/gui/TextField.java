@@ -81,7 +81,7 @@ public class TextField extends Component implements KeyListener {
                 added = true;
             }
 
-            if (GUI.get().isMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+            if (GUI.get().isMouseReleased(MOUSE_LEFT_BUTTON)) {
                 focus = mouseOn;
             }
         }

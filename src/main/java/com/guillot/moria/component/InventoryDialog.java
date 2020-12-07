@@ -2,7 +2,7 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.engine.configs.GUIConfig.DIALOG_OVERLAY_COLOR;
+import static com.guillot.moria.ressources.Colors.WHITE;
 import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_DELETE;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
@@ -16,6 +16,7 @@ import org.newdawn.slick.Graphics;
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
+import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
@@ -58,6 +59,8 @@ public class InventoryDialog extends Window {
     private ItemBlockComponent itemBlockRightHand;
 
     private ItemBlockComponent itemBlockFinger;
+
+    private Text coinsText;
 
     public InventoryDialog(GameView parent, GameState game) throws Exception {
         super(parent, 0, 0, WIDTH, HEIGHT, "Inventory");
@@ -130,8 +133,11 @@ public class InventoryDialog extends Window {
         itemBlockFinger.setX(WIDTH - 184);
         itemBlockFinger.setY(308);
 
+        coinsText = new Text("", inventoryGrid.getX() + 96, inventoryGrid.getY() + inventoryGrid.getHeight() + 64, GUI.get().getFont(3),
+                WHITE.getColor());
+
         add(itemWindow, buttonAction, buttonDrop, inventoryGrid, itemBlockHead, itemBlockNeck, itemBlockBody,
-                itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, itemTextBox, cursorTextBox);
+                itemBlockLeftHand, itemBlockRightHand, itemBlockFinger, coinsText, itemTextBox, cursorTextBox);
     }
 
     @Override
@@ -147,9 +153,11 @@ public class InventoryDialog extends Window {
         cursorTextBox.setVisible(false);
 
         if (!inventoryGrid.mouseOn() && !buttonAction.mouseOn() && !buttonDrop.mouseOn()
-                && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+                && GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
             inventoryGrid.setSelectedItem(null);
         }
+
+        coinsText.setText(Integer.toString(player.getCoins()));
 
         super.update(offsetX, offsetY);
 
@@ -158,7 +166,7 @@ public class InventoryDialog extends Window {
             GUI.get().clearKeysPressed();
         }
 
-        if (GUI.get().getInput().isMousePressed(MOUSE_RIGHT_BUTTON) && inventoryGrid.getHoveredItem() != null) {
+        if (GUI.get().isMousePressed(MOUSE_RIGHT_BUTTON) && inventoryGrid.getHoveredItem() != null) {
             useOrEquipeItem(getHoveredItem());
         }
 
@@ -166,22 +174,14 @@ public class InventoryDialog extends Window {
             dropItem(inventoryGrid.getSelectedItem());
         }
 
-        if (inventoryGrid.getHoveredItem() != null) {
-            itemTextBox.setText(inventoryGrid.getHoveredItem().toString());
+        AbstractItem displayingItem = nonNullFrom(inventoryGrid.getHoveredItem(), inventoryGrid.getHoveredItem());
+        if (displayingItem != null) {
+            itemTextBox.setText(displayingItem.toString());
             itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
             itemTextBox.setY(HEIGHT - itemTextBox.getHeight());
             itemTextBox.setVisible(true);
 
             itemWindow.setHeight(itemTextBox.getHeight() + 40);
-            itemWindow.setY(HEIGHT - itemWindow.getHeight());
-            itemWindow.setVisible(true);
-        } else if (inventoryGrid.getSelectedItem() != null) {
-            itemTextBox.setText(inventoryGrid.getSelectedItem().toString());
-            itemTextBox.setHeight(max(180, itemTextBox.getHeight()));
-            itemTextBox.setY(HEIGHT - itemTextBox.getHeight() - 16);
-            itemTextBox.setVisible(true);
-
-            itemWindow.setHeight(itemTextBox.getHeight() + 64);
             itemWindow.setY(HEIGHT - itemWindow.getHeight());
             itemWindow.setVisible(true);
         } else {
@@ -211,10 +211,10 @@ public class InventoryDialog extends Window {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(DIALOG_OVERLAY_COLOR);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
-
         super.paint(g);
+
+        g.drawImage(Images.GOLD_COST.getImage(), coinsText.getX() - 80, coinsText.getY() - 16, coinsText.getX() - 16,
+                coinsText.getY() + 56, 0, 0, 32, 32, filter);
     }
 
     public void useOrEquipeItem(AbstractItem item) {
@@ -267,5 +267,15 @@ public class InventoryDialog extends Window {
 
     public void setHoveredItem(AbstractItem hoveredItem) {
         inventoryGrid.setHoveredItem(hoveredItem);
+    }
+
+    private AbstractItem nonNullFrom(AbstractItem... items) {
+        for (AbstractItem item : items) {
+            if (item != null) {
+                return item;
+            }
+        }
+
+        return null;
     }
 }

@@ -9,6 +9,7 @@ import static com.guillot.engine.configs.GUIConfig.FONT_SIZES;
 import java.awt.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -42,9 +43,7 @@ public class GUI {
 
     private boolean[] keysPressed;
 
-    private boolean[] mouseButtonsDown;
-
-    private boolean[] mouseButtonsReleased;
+    private MouseButtonState[] mouseButtons;
 
     private View currentView;
 
@@ -77,8 +76,8 @@ public class GUI {
         }
 
         keysPressed = new boolean[256];
-        mouseButtonsDown = new boolean[Mouse.getButtonCount()];
-        mouseButtonsReleased = new boolean[Mouse.getButtonCount()];
+        mouseButtons = new MouseButtonState[Mouse.getButtonCount()];
+        Arrays.fill(mouseButtons, MouseButtonState.NONE);
     }
 
     public TrueTypeFont getFont() {
@@ -157,15 +156,28 @@ public class GUI {
             keysPressed[i] = input.isKeyPressed(i);
         }
 
-        for (int i = 0; i < mouseButtonsReleased.length; i++) {
-            mouseButtonsReleased[i] = false;
-
+        for (int i = 0; i < mouseButtons.length; i++) {
             if (input.isMouseButtonDown(i)) {
-                mouseButtonsDown[i] = true;
+                switch (mouseButtons[i]) {
+                case RELEASED:
+                case NONE:
+                    mouseButtons[i] = MouseButtonState.PRESSED;
+                    break;
+                case DOWN:
+                case PRESSED:
+                    mouseButtons[i] = MouseButtonState.DOWN;
+                    break;
+                }
             } else {
-                if (mouseButtonsDown[i]) {
-                    mouseButtonsReleased[i] = true;
-                    mouseButtonsDown[i] = false;
+                switch (mouseButtons[i]) {
+                case RELEASED:
+                case NONE:
+                    mouseButtons[i] = MouseButtonState.NONE;
+                    break;
+                case DOWN:
+                case PRESSED:
+                    mouseButtons[i] = MouseButtonState.RELEASED;
+                    break;
                 }
             }
         }
@@ -214,8 +226,17 @@ public class GUI {
         keysPressed = new boolean[256];
     }
 
-    public boolean isMouseButtonReleased(int button) {
-        return mouseButtonsReleased[button];
+    public boolean isMousePressed(int button) {
+        return mouseButtons[button] == MouseButtonState.PRESSED;
+    }
+
+    public boolean isMouseDown(int button) {
+        return mouseButtons[button] == MouseButtonState.DOWN;
+    }
+
+
+    public boolean isMouseReleased(int button) {
+        return mouseButtons[button] == MouseButtonState.RELEASED;
     }
 
     public GameContainer getContainer() {

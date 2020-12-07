@@ -2,7 +2,6 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
 import static com.guillot.moria.ressources.Colors.MAP_LOCKED_DOOR;
 import static com.guillot.moria.ressources.Colors.MAP_OPEN_DOOR;
 import static com.guillot.moria.ressources.Colors.TRANSPARENT;
@@ -18,6 +17,7 @@ import com.guillot.engine.gui.Window;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
 import com.guillot.moria.dungeon.entity.Door;
+import com.guillot.moria.ressources.Colors;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
@@ -79,10 +79,6 @@ public class MapDialog extends Window {
 
                 if (tile != null) {
                     switch (tile) {
-                    case UP_STAIR:
-                    case DOWN_STAIR:
-                        g.setColor(ITEM_MAGIC.getColor());
-                        break;
                     case GRANITE_WALL:
                     case MAGMA_WALL:
                     case QUARTZ_WALL:
@@ -120,7 +116,16 @@ public class MapDialog extends Window {
                         switch (entity.getType()) {
                         case PILLAR:
                         case RUBBLE:
+                        case FIRECAMP:
                             g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
+                            break;
+                        case MERCHANT:
+                            g.setColor(Colors.ITEM_LEGENDARY.getColor());
+                            break;
+                        case UPSTAIRS:
+                        case DOWNSTAIRS:
+                            g.setColor(Colors.ITEM_MAGIC.getColor());
+                        default:
                             break;
                         }
                     }

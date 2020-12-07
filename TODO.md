@@ -1,5 +1,4 @@
 Cursor
-Merchant
 Vault management when death
 Monster sprites
 
@@ -18,3 +17,4 @@ Gameplay
 
 Issues
 	Fix inventory limit and strenght
+	Fix bonus and requirement for item

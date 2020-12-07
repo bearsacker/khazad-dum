@@ -127,7 +127,7 @@ public class LinkButton extends Component {
     public void update(int offsetX, int offsetY) throws Exception {
         super.update(offsetX, offsetY);
 
-        if (enabled && mouseOn && GUI.get().isMouseButtonReleased(MOUSE_LEFT_BUTTON) && event != null) {
+        if (visible && enabled && mouseOn && GUI.get().isMouseReleased(MOUSE_LEFT_BUTTON) && event != null) {
             event.perform();
         }
     }

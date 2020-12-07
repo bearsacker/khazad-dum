@@ -93,7 +93,7 @@ public class DeathView extends View {
                 : "Hide no object");
         validateButton.setX(WIDTH - validateButton.getWidth() - 48);
 
-        if (!inventoryGrid.mouseOn() && !validateButton.mouseOn() && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+        if (!inventoryGrid.mouseOn() && !validateButton.mouseOn() && GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
             inventoryGrid.setSelectedItem(null);
         }
 

@@ -120,7 +120,7 @@ public class CharacterEditView extends View {
     public void update() throws Exception {
         if (!vaultGrid.mouseOn() && !nameField.mouseOn() && !validateButton.mouseOn() && !dwarfComponent.mouseOn()
                 && !elfComponent.mouseOn() && !hobbitComponent.mouseOn() && !humanComponent.mouseOn()
-                && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+                && GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
             vaultGrid.setSelectedItem(null);
         }
 

@@ -3,7 +3,6 @@ package com.guillot.moria.views;
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
-import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.ressources.Colors.DARK_GREY;
 import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
@@ -38,6 +37,7 @@ import com.guillot.moria.component.InventoryDialog;
 import com.guillot.moria.component.MapDialog;
 import com.guillot.moria.component.MenuDialog;
 import com.guillot.moria.component.SmallCharacterDialog;
+import com.guillot.moria.component.TradingDialog;
 import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
@@ -77,6 +77,8 @@ public class GameView extends View {
 
     private DoorDialog doorDialog;
 
+    private TradingDialog tradingDialog;
+
     private TextBox cursorTextBox;
 
     private Console console;
@@ -111,6 +113,7 @@ public class GameView extends View {
         smallCharacterDialog = new SmallCharacterDialog(this);
         doorDialog = new DoorDialog(this, game);
         mapDialog = new MapDialog(this, game);
+        tradingDialog = new TradingDialog(this, game);
 
         console = new Console(WIDTH, game.getMessages());
         console.setY(EngineConfig.HEIGHT - console.getHeight());
@@ -168,7 +171,7 @@ public class GameView extends View {
         });
 
         add(turnText, lifeBar, lifeText, xpBar, mapButton, inventoryButton, characterButton, menuButton, cursorTextBox, doorDialog, console,
-                menuDialog, inventoryDialog, characterDialog, mapDialog, smallCharacterDialog);
+                menuDialog, inventoryDialog, characterDialog, mapDialog, smallCharacterDialog, tradingDialog);
     }
 
     @Override
@@ -204,10 +207,10 @@ public class GameView extends View {
             cursor = depthBuffer.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
 
             if (cursor != null) {
-                if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
-                    AbstractEntity entity = getDungeon().getEntityAt(cursor);
-                    Monster monster = getDungeon().getMonsterAt(cursor);
+                AbstractEntity entity = getDungeon().getEntityAt(cursor);
+                Monster monster = getDungeon().getMonsterAt(cursor);
 
+                if (GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
                     if (entity != null) {
                         if (getPlayer().getPosition().distanceFrom(cursor) <= entity.usableRadius()) {
                             entity.use(game, this);
@@ -232,7 +235,11 @@ public class GameView extends View {
                     }
                 }
 
-                AbstractCharacter character = getPlayer().getPosition().is(cursor) ? getPlayer() : getDungeon().getMonsterAt(cursor);
+                if (entity != null && entity.isUsable()) {
+                    showTextBox(entity.toString());
+                }
+
+                AbstractCharacter character = getPlayer().getPosition().is(cursor) ? getPlayer() : monster;
                 if (character != null) {
                     smallCharacterDialog.setCharacter(character);
                     smallCharacterDialog.setPosition(64, 64);
@@ -251,6 +258,8 @@ public class GameView extends View {
                     }
                     showTextBox(itemsName);
                 }
+
+
             }
 
             if (mapButton.mouseOn()) {
@@ -309,14 +318,14 @@ public class GameView extends View {
                     boolean alternate = false;
 
                     Door door = getDungeon().getDoorAt(new Point(j, i));
-                    if (grid[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
+                    if (!grid[i][j].isTraversable && (door == null || door.getState() == DoorState.SECRET)) {
                         if (i + 1 < getDungeon().getHeight() && grid[i + 1][j] != null
-                                && (grid[i + 1][j].isFloor || getDungeon().isVisibleDoor(new Point(j, i + 1)))) {
+                                && (grid[i + 1][j].isTraversable || getDungeon().isVisibleDoor(new Point(j, i + 1)))) {
                             alternate = true;
-                        } else if (j - 1 >= 0 && grid[i][j - 1] != null && grid[i][j - 1].isFloor) {
+                        } else if (j - 1 >= 0 && grid[i][j - 1] != null && grid[i][j - 1].isTraversable) {
                             alternate = true;
                         } else if (i + 1 < getDungeon().getHeight() && j - 1 >= 0 && grid[i + 1][j - 1] != null
-                                && (grid[i + 1][j - 1].isFloor || getDungeon().isVisibleDoor(new Point(j - 1, i + 1)))) {
+                                && (grid[i + 1][j - 1].isTraversable || getDungeon().isVisibleDoor(new Point(j - 1, i + 1)))) {
                             alternate = true;
                         }
                     }
@@ -345,16 +354,16 @@ public class GameView extends View {
                     boolean alternate = false;
 
                     Door door = getDungeon().getDoorAt(new Point(j, i));
-                    if (getDungeon().getDiscoveredTiles()[i][j].isWall && (door == null || door.getState() == DoorState.SECRET)) {
+                    if (!getDungeon().getDiscoveredTiles()[i][j].isTraversable && (door == null || door.getState() == DoorState.SECRET)) {
                         if (i + 1 < getDungeon().getHeight() && getDungeon().getDiscoveredTiles()[i + 1][j] != null
-                                && (getDungeon().getDiscoveredTiles()[i + 1][j].isFloor
+                                && (getDungeon().getDiscoveredTiles()[i + 1][j].isTraversable
                                         || getDungeon().isVisibleDoor(new Point(j, i + 1)))) {
                             alternate = true;
                         } else if (j - 1 >= 0 && getDungeon().getDiscoveredTiles()[i][j - 1] != null
-                                && (getDungeon().getDiscoveredTiles()[i][j - 1].isFloor)) {
+                                && (getDungeon().getDiscoveredTiles()[i][j - 1].isTraversable)) {
                             alternate = true;
                         } else if (i + 1 < getDungeon().getHeight() && j - 1 >= 0 && getDungeon().getDiscoveredTiles()[i + 1][j - 1] != null
-                                && (getDungeon().getDiscoveredTiles()[i + 1][j - 1].isFloor
+                                && (getDungeon().getDiscoveredTiles()[i + 1][j - 1].isTraversable
                                         || getDungeon().isVisibleDoor(new Point(j - 1, i + 1)))) {
                             alternate = true;
                         }
@@ -405,7 +414,7 @@ public class GameView extends View {
             Tile dungeonTile = getDungeon().getFloor()[position.y][position.x];
             grid[position.y][position.x] = dungeonTile;
 
-            if (!dungeonTile.isWall) {
+            if (dungeonTile.isTraversable) {
                 computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y), length + 1f);
                 computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y), length + 1f);
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1f);
@@ -415,16 +424,16 @@ public class GameView extends View {
                 Tile south = getDungeon().getFloor()[position.y + 1][position.x];
                 Tile west = getDungeon().getFloor()[position.y][position.x - 1];
                 Tile east = getDungeon().getFloor()[position.y][position.x + 1];
-                if (!north.isWall && !west.isWall) {
+                if (north.isTraversable && west.isTraversable) {
                     computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y - 1), length + 1.41f);
                 }
-                if (!north.isWall && !east.isWall) {
+                if (north.isTraversable && east.isTraversable) {
                     computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y - 1), length + 1.41f);
                 }
-                if (!south.isWall && !west.isWall) {
+                if (south.isTraversable && west.isTraversable) {
                     computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y + 1), length + 1.41f);
                 }
-                if (!south.isWall && !east.isWall) {
+                if (south.isTraversable && east.isTraversable) {
                     computeViewedTiles(depthList, grid, new Point(position.x + 1, position.y + 1), length + 1.41f);
                 }
             }
@@ -451,21 +460,11 @@ public class GameView extends View {
             int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + EngineConfig.WIDTH / 2 - 32;
             int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-            Door door = getDungeon().getDoorAt(new Point(py, px));
-            if (tile.isFloor) {
-                g.drawImage(CURSOR.getSubImage(4, 0), x, y);
-            } else if (door != null && door.getState() != DoorState.SECRET) {
+            AbstractEntity entity = getDungeon().getEntityAt(new Point(py, px));
+            if (entity != null && entity.isUsable()) {
                 g.drawImage(CURSOR.getSubImage(3, 0), x, y);
-
-                showTextBox(door.toString());
-            } else if (tile.isStairs) {
-                if (tile == UP_STAIR) {
-                    g.drawImage(CURSOR.getSubImage(3, 0), x, y);
-                    showTextBox("Back to level " + (getDungeon().getLevel() - 1));
-                } else {
-                    g.drawImage(CURSOR.getSubImage(5, 0), x, y);
-                    showTextBox("Go to level " + (getDungeon().getLevel() + 1));
-                }
+            } else if (tile.isTraversable) {
+                g.drawImage(CURSOR.getSubImage(4, 0), x, y);
             }
         }
     }
@@ -487,6 +486,10 @@ public class GameView extends View {
 
     public DoorDialog getDoorDialog() {
         return doorDialog;
+    }
+
+    public TradingDialog getTradingDialog() {
+        return tradingDialog;
     }
 
 }

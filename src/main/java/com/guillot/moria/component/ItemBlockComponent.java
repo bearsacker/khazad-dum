@@ -69,11 +69,11 @@ public class ItemBlockComponent extends Component {
         if (mouseOn()) {
             inventory.setHoveredItem(item);
 
-            if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+            if (GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
                 inventory.setSelectedItem(item);
             }
 
-            if (GUI.get().getInput().isMousePressed(MOUSE_RIGHT_BUTTON) && item != null) {
+            if (GUI.get().isMousePressed(MOUSE_RIGHT_BUTTON) && item != null) {
                 player.unequipItem(item);
             }
 

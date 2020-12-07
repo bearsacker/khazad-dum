@@ -104,6 +104,11 @@ public class Door extends AbstractEntity implements Serializable {
     }
 
     @Override
+    public boolean isUsable() {
+        return state != DoorState.SECRET;
+    }
+
+    @Override
     public String toString() {
         switch (state) {
         case LOCKED:

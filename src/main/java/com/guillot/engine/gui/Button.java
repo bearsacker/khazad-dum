@@ -164,7 +164,7 @@ public class Button extends Component {
 
         int frame = 0;
 
-        if (mouseOn && enabled && GUI.get().getInput().isMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        if (mouseOn && enabled && GUI.get().isMouseDown(MOUSE_LEFT_BUTTON)) {
             frame = 1;
         }
 
@@ -204,7 +204,7 @@ public class Button extends Component {
     public void update(int offsetX, int offsetY) throws Exception {
         super.update(offsetX, offsetY);
 
-        if (enabled && mouseOn && GUI.get().isMouseButtonReleased(MOUSE_LEFT_BUTTON) && event != null) {
+        if (visible && enabled && mouseOn && GUI.get().isMouseReleased(MOUSE_LEFT_BUTTON) && event != null) {
             event.perform();
         }
     }

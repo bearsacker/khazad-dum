@@ -15,10 +15,10 @@ public enum Images {
     STAIRS("sprites/stairs.png", 64, 96), //
 
     DOOR("sprites/door.png", 64, 96), //
-
     PILLAR("sprites/pillar.png"), //
     RUBBLE("sprites/rubble.png", 64, 96), //
     FIRECAMP("sprites/firecamp.png"), //
+    MERCHANT("sprites/merchant.png", 64, 96), //
 
     HUMAN("sprites/human.png", 64, 96), //
     ELF("sprites/elf.png", 64, 96), //
@@ -53,6 +53,9 @@ public enum Images {
     FIRE_DAMAGES("sprites/skill.png", 32, 32, 0, 0), //
     FROST_DAMAGES("sprites/skill.png", 32, 32, 8, 0), //
     LIGHTNING_DAMAGES("sprites/skill.png", 32, 32, 12, 4), //
+
+    GOLD_COST("sprites/material.png", 32, 32, 1, 6), //
+    SMALL_GOLD_COST("sprites/material.png", 32, 32, 2, 6),
 
     COPPER_1("sprites/material.png", 32, 32, 5, 3), //
     COPPER_2("sprites/material.png", 32, 32, 4, 3), //

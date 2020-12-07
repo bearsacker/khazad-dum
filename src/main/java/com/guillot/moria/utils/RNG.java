@@ -57,6 +57,10 @@ public class RNG {
         return max((int) distribution.sample(), 0);
     }
 
+    public float random() {
+        return random.nextFloat();
+    }
+
     private RNG() {
         seed = System.currentTimeMillis();
 

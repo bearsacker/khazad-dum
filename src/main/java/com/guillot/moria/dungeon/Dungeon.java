@@ -32,7 +32,6 @@ import static com.guillot.moria.dungeon.PlacedObject.RANDOM;
 import static com.guillot.moria.dungeon.PlacedObject.RUBBLE;
 import static com.guillot.moria.dungeon.PlacedObject.TRAP;
 import static com.guillot.moria.dungeon.Tile.CORRIDOR_FLOOR;
-import static com.guillot.moria.dungeon.Tile.DOWN_STAIR;
 import static com.guillot.moria.dungeon.Tile.GRANITE_WALL;
 import static com.guillot.moria.dungeon.Tile.MAGMA_WALL;
 import static com.guillot.moria.dungeon.Tile.NULL;
@@ -40,7 +39,6 @@ import static com.guillot.moria.dungeon.Tile.QUARTZ_WALL;
 import static com.guillot.moria.dungeon.Tile.ROOM_FLOOR;
 import static com.guillot.moria.dungeon.Tile.TMP1_WALL;
 import static com.guillot.moria.dungeon.Tile.TMP2_WALL;
-import static com.guillot.moria.dungeon.Tile.UP_STAIR;
 import static com.guillot.moria.dungeon.entity.Direction.NORTH;
 import static com.guillot.moria.dungeon.entity.Direction.WEST;
 import static java.lang.Math.max;
@@ -62,10 +60,13 @@ import com.guillot.moria.dungeon.entity.AbstractEntity;
 import com.guillot.moria.dungeon.entity.Direction;
 import com.guillot.moria.dungeon.entity.Door;
 import com.guillot.moria.dungeon.entity.DoorState;
+import com.guillot.moria.dungeon.entity.DownStairs;
 import com.guillot.moria.dungeon.entity.Entity;
 import com.guillot.moria.dungeon.entity.FireCamp;
+import com.guillot.moria.dungeon.entity.Merchant;
 import com.guillot.moria.dungeon.entity.Pillar;
 import com.guillot.moria.dungeon.entity.Rubble;
+import com.guillot.moria.dungeon.entity.UpStairs;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
 import com.guillot.moria.item.ItemGenerator;
@@ -217,7 +218,9 @@ public class Dungeon {
         // Set up the character coords, used by monsterPlaceNewWithinDistance, monsterPlaceWinning
         if (level == 1) {
             this.floor[upStairs.y][upStairs.x] = ROOM_FLOOR;
+            entities.remove(getEntityAt(upStairs));
             entities.add(new FireCamp(new Point(upStairs)));
+            entities.add(new Merchant(new Point(upStairs.x, upStairs.y + 1), 2, 0));
         }
 
         int allocLevel = (level / 3);
@@ -918,7 +921,7 @@ public class Dungeon {
 
             do {
                 do {
-                    if (!this.floor[coord1.y][coord1.x].isWall && coordWallsNextTo(coord1, true) == walls) {
+                    if (this.floor[coord1.y][coord1.x].isTraversable && coordWallsNextTo(coord1, true) == walls) {
                         if (stairType == 1) {
                             placeUpStairs(coord1);
                         } else {
@@ -939,13 +942,13 @@ public class Dungeon {
     // Place an up staircase at given y, x
     private void placeUpStairs(Point coord) {
         logger.info("\t-> Placing up stairs at " + coord + "...");
-        this.floor[coord.y][coord.x] = UP_STAIR;
+        entities.add(new UpStairs(coord, level - 1));
     }
 
     // Place a down staircase at given y, x
     private void placeDownStairs(Point coord) {
         logger.info("\t-> Placing down stairs at " + coord + "...");
-        this.floor[coord.y][coord.x] = DOWN_STAIR;
+        entities.add(new DownStairs(coord, level + 1));
     }
 
     // Places rubble at location y, x
@@ -1013,7 +1016,7 @@ public class Dungeon {
                 spot.y = coord.y - displacement.y - 1 + RNG.get().randomNumber(2 * displacement.y + 1);
                 spot.x = coord.x - displacement.x - 1 + RNG.get().randomNumber(2 * displacement.x + 1);
 
-                if (this.floor[spot.y][spot.x] != NULL && this.floor[spot.y][spot.x].isFloor && !isItemAt(spot)) {
+                if (this.floor[spot.y][spot.x] != NULL && this.floor[spot.y][spot.x].isTraversable && !isItemAt(spot)) {
                     // TODO
                     // setTrap(spot, RNG.get().randomNumber(MAX_TRAPS) - 1);
                     placed = true;
@@ -1023,41 +1026,41 @@ public class Dungeon {
     }
 
     // Checks points north, south, east, and west for a wall
-    // note that y,x is always coordInBounds(), i.e. 0 < y < dg.height-1,
-    // and 0 < x < dg.width-1
+    // note that y,x is always coordInBounds(), i.e. 0 < y < height - 1,
+    // and 0 < x < width - 1
     private int coordWallsNextTo(Point coord, boolean allowDiag) {
         int walls = 0;
 
-        if (this.floor[coord.y - 1][coord.x].isWall) {
+        if (!this.floor[coord.y - 1][coord.x].isTraversable) {
             walls++;
         }
 
-        if (this.floor[coord.y + 1][coord.x].isWall) {
+        if (!this.floor[coord.y + 1][coord.x].isTraversable) {
             walls++;
         }
 
-        if (this.floor[coord.y][coord.x - 1].isWall) {
+        if (!this.floor[coord.y][coord.x - 1].isTraversable) {
             walls++;
         }
 
-        if (this.floor[coord.y][coord.x + 1].isWall) {
+        if (!this.floor[coord.y][coord.x + 1].isTraversable) {
             walls++;
         }
 
         if (allowDiag) {
-            if (this.floor[coord.y - 1][coord.x - 1].isWall) {
+            if (!this.floor[coord.y - 1][coord.x - 1].isTraversable) {
                 walls++;
             }
 
-            if (this.floor[coord.y + 1][coord.x + 1].isWall) {
+            if (!this.floor[coord.y + 1][coord.x + 1].isTraversable) {
                 walls++;
             }
 
-            if (this.floor[coord.y + 1][coord.x - 1].isWall) {
+            if (!this.floor[coord.y + 1][coord.x - 1].isTraversable) {
                 walls++;
             }
 
-            if (this.floor[coord.y - 1][coord.x + 1].isWall) {
+            if (!this.floor[coord.y - 1][coord.x + 1].isTraversable) {
                 walls++;
             }
         }
@@ -1074,10 +1077,10 @@ public class Dungeon {
 
     private Direction isNextTo(Point coord) {
         if (coordCorridorWallsNextTo(coord) > 2) {
-            boolean north = this.floor[coord.y - 1][coord.x].isWall;
-            boolean south = this.floor[coord.y + 1][coord.x].isWall;
-            boolean west = this.floor[coord.y][coord.x - 1].isWall;
-            boolean east = this.floor[coord.y][coord.x + 1].isWall;
+            boolean north = !this.floor[coord.y - 1][coord.x].isTraversable;
+            boolean south = !this.floor[coord.y + 1][coord.x].isTraversable;
+            boolean west = !this.floor[coord.y][coord.x - 1].isTraversable;
+            boolean east = !this.floor[coord.y][coord.x + 1].isTraversable;
 
             boolean vertical = north && south;
             boolean horizontal = west && east;
@@ -1234,7 +1237,7 @@ public class Dungeon {
         for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
                 Door door = getDoorAt(new Point(j, i));
-                if (door != null && !this.floor[i][j].isWall) {
+                if (door != null && this.floor[i][j].isTraversable) {
                     entities.remove(door);
                 }
             }
@@ -1258,7 +1261,7 @@ public class Dungeon {
             for (int i = 0; i <= 10; i++) {
                 Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
 
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && !isItemAt(at)) {
+                if (coordInBounds(at) && this.floor[at.y][at.x].isTraversable && !isItemAt(at)) {
                     if (RNG.get().randomNumber(100) < 75) {
                         placeRandomObjectAt(at);
                     } else {
@@ -1278,7 +1281,7 @@ public class Dungeon {
             for (int i = 0; i <= 10; i++) {
                 Point at = new Point(coord.x - 4 + RNG.get().randomNumber(7), coord.y - 3 + RNG.get().randomNumber(5));
 
-                if (coordInBounds(at) && this.floor[at.y][at.x].isFloor && !isItemAt(at)) {
+                if (coordInBounds(at) && this.floor[at.y][at.x].isTraversable && !isItemAt(at)) {
                     placeGold(at);
                     i = 9;
                 }
@@ -1348,7 +1351,7 @@ public class Dungeon {
             do {
                 position.y = RNG.get().randomNumber(height - 2);
                 position.x = RNG.get().randomNumber(width - 2);
-            } while (!floor[position.y][position.x].isFloor || getMonsterAt(position) != null
+            } while (!floor[position.y][position.x].isTraversable || getMonsterAt(position) != null
                     || position.distanceFrom(playerPosition) <= distanceFromSource);
 
             MonsterRace race = monsterGetOneSuitableForLevel(level);
@@ -1372,7 +1375,7 @@ public class Dungeon {
             position.x = coord.x - 2 + RNG.get().randomNumber(3);
 
             if (coordInBounds(position)) {
-                if (floor[position.y][position.x].isFloor && getMonsterAt(coord) == null) {
+                if (floor[position.y][position.x].isTraversable && getMonsterAt(coord) == null) {
                     monsterPlaceNew(position, race, sleeping);
 
                     coord.y = position.y;
@@ -1415,7 +1418,7 @@ public class Dungeon {
             for (int j = -1; j <= 1; j++) {
                 if (i != 0 || j != 0) {
                     Point at = new Point(coord.x + i, coord.y + j);
-                    if (coordInBounds(at) && this.floor[at.y][at.x].isFloor) {
+                    if (coordInBounds(at) && this.floor[at.y][at.x].isTraversable) {
                         return at;
                     }
                 }
@@ -1437,7 +1440,7 @@ public class Dungeon {
                 new Point(y + 1, x - 1));
 
         for (Point coord : coords) {
-            if (coordInBounds(coord) && (this.floor[coord.y][coord.x].isFloor || getDoorAt(coord) != null)) {
+            if (coordInBounds(coord) && (this.floor[coord.y][coord.x].isTraversable || getDoorAt(coord) != null)) {
                 return true;
             }
         }
@@ -1578,14 +1581,17 @@ public class Dungeon {
     }
 
     public boolean isNotTraversable(Point coord, boolean allowObstacle) {
+        AbstractEntity entity = getEntityAt(coord);
+
         if (allowObstacle) {
-            return floor[coord.y][coord.x] == NULL || getEntityAt(coord) != null
-                    || !(floor[coord.y][coord.x].isFloor || floor[coord.y][coord.x].isStairs || isOpenDoor(coord));
+            return floor[coord.y][coord.x] == NULL
+                    || (entity != null && entity.getType() != Entity.UPSTAIRS && entity.getType() != Entity.DOWNSTAIRS)
+                    || !(floor[coord.y][coord.x].isTraversable || isOpenDoor(coord));
         }
 
-        return floor[coord.y][coord.x] == NULL || getEntityAt(coord) != null
-                || !(floor[coord.y][coord.x].isFloor || floor[coord.y][coord.x].isStairs)
-                || getMonsterAt(coord) != null;
+        return floor[coord.y][coord.x] == NULL
+                || (entity != null && entity.getType() != Entity.UPSTAIRS && entity.getType() != Entity.DOWNSTAIRS)
+                || !floor[coord.y][coord.x].isTraversable || getMonsterAt(coord) != null;
     }
 
     public boolean isOpenDoor(Point coord) {

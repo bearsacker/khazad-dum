@@ -137,7 +137,7 @@ public class RaceComponent extends SubView {
     public void update(int offsetX, int offsetY) throws Exception {
         cursorTextBox.setVisible(false);
 
-        if (mouseOn && GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+        if (mouseOn && GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
             parent.setSelectedRace(race);
         }
 

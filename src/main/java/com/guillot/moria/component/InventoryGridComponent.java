@@ -40,6 +40,14 @@ public class InventoryGridComponent extends Component {
 
     private AbstractItem hoveredItem;
 
+    public InventoryGridComponent(int limit, int blocksWidth) {
+        this.limit = limit;
+        this.blocksWidth = blocksWidth;
+
+        width = blocksWidth * BLOCK_SIZE;
+        height = (int) (Math.ceil(limit / (float) blocksWidth) * BLOCK_SIZE);
+    }
+
     public InventoryGridComponent(AbstractCharacter player) {
         this(player, player.getInventory(), player.getInventoryLimit(), INVENTORY_BLOCKS_WIDTH);
     }
@@ -51,7 +59,7 @@ public class InventoryGridComponent extends Component {
         this.blocksWidth = blocksWidth;
 
         width = blocksWidth * BLOCK_SIZE;
-        height = (limit / blocksWidth + 1) * BLOCK_SIZE;
+        height = (int) (Math.ceil(limit / (float) blocksWidth) * BLOCK_SIZE);
     }
 
     @Override
@@ -69,7 +77,7 @@ public class InventoryGridComponent extends Component {
                 hoveredItem = null;
             }
 
-            if (GUI.get().getInput().isMousePressed(MOUSE_LEFT_BUTTON)) {
+            if (GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
                 selectedItem = hoveredItem;
             }
         } else {
@@ -153,6 +161,10 @@ public class InventoryGridComponent extends Component {
 
     public void setHoveredItem(AbstractItem hoveredItem) {
         this.hoveredItem = hoveredItem;
+    }
+
+    public void setItems(ArrayList<AbstractItem> items) {
+        this.items = items;
     }
 
 }

@@ -41,6 +41,8 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
 
     protected int value;
 
+    protected float quality;
+
     public int getCost() {
         return type != null ? type.getCost() : 0;
     }
@@ -51,6 +53,10 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
 
     public AffixeRarity getType() {
         return type;
+    }
+
+    public float getQuality() {
+        return quality;
     }
 
     @Override
@@ -68,7 +74,8 @@ public abstract class AbstractAffixe implements Cloneable, Serializable {
             max = values[i][2];
         }
 
-        value = RNG.get().randomNumberBetween(min, max);
+        quality = RNG.get().random();
+        value = (int) (min + quality * (max - min));
     }
 
     public int[][] getValuesPerLevel() {
