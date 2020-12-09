@@ -12,6 +12,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import com.guillot.engine.gui.GUI;
@@ -20,6 +21,8 @@ import com.guillot.engine.gui.View;
 public class Game extends BasicGame {
 
     private View initialView;
+
+    private Image cursor;
 
     public Game(View initialView) throws SlickException {
         super(TITLE);
@@ -50,6 +53,11 @@ public class Game extends BasicGame {
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException {
+        if (GUI.get().getCursor() != cursor) {
+            container.setMouseCursor(GUI.get().getCursor(), 0, 0);
+            cursor = GUI.get().getCursor();
+        }
+
         GUI.get().update(container);
     }
 

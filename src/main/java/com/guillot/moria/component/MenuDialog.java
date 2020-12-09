@@ -23,7 +23,7 @@ public class MenuDialog extends Window {
         super(parent, 256, 256, WIDTH - 512, 240, "Menu");
         setShowCloseButton(true);
 
-        backToMenuButton = new Button("Back to menu", width / 2 - 144, 80, 288, 48);
+        backToMenuButton = new Button("Save and Back to menu", width / 2 - 144, 80, 288, 48);
         backToMenuButton.setEvent(new Event() {
 
             @Override
@@ -33,7 +33,7 @@ public class MenuDialog extends Window {
             }
         });
 
-        quitButton = new Button("Quit", width / 2 - 144, 144, 288, 48);
+        quitButton = new Button("Save and Quit", width / 2 - 144, 144, 288, 48);
         quitButton.setEvent(new Event() {
 
             @Override

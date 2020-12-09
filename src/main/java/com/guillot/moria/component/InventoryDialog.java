@@ -213,8 +213,11 @@ public class InventoryDialog extends Window {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.drawImage(Images.GOLD_COST.getImage(), coinsText.getX() - 80, coinsText.getY() - 16, coinsText.getX() - 16,
-                coinsText.getY() + 56, 0, 0, 32, 32, filter);
+        g.drawImage(Images.GOLD_PURSE.getImage(), coinsText.getX() - 80, coinsText.getY() - 16, coinsText.getX() - 16,
+                coinsText.getY() + 48, 0, 0, 32, 32, filter);
+
+        g.drawImage(Images.GOLD_1.getImage(), coinsText.getX() - 64, coinsText.getY(), coinsText.getX(),
+                coinsText.getY() + 64, 0, 0, 32, 32, filter);
     }
 
     public void useOrEquipeItem(AbstractItem item) {

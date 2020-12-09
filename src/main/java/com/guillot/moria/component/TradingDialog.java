@@ -98,9 +98,9 @@ public class TradingDialog extends Window {
                 new Text("", playerInventoryGrid.getX() + 92, playerInventoryGrid.getY() - 72, GUI.get().getFont(3), WHITE.getColor());
         merchantCoinsText =
                 new Text("", merchantInventoryGrid.getX() + 92, merchantInventoryGrid.getY() - 72, GUI.get().getFont(3), WHITE.getColor());
-        itemCoinsText = new Text("", WIDTH - 80, HEIGHT - 80, GUI.get().getFont(1), WHITE.getColor());
+        itemCoinsText = new Text("", WIDTH - 96, HEIGHT - 80, GUI.get().getFont(2), WHITE.getColor());
 
-        add(itemWindow, playerInventoryGrid, merchantInventoryGrid, buyButton, sellButton, itemTextBox, itemCoinsText, playerCoinsText,
+        add(playerInventoryGrid, merchantInventoryGrid, itemWindow, itemTextBox, buyButton, sellButton, itemCoinsText, playerCoinsText,
                 merchantCoinsText);
     }
 
@@ -183,16 +183,22 @@ public class TradingDialog extends Window {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.drawImage(Images.GOLD_COST.getImage(), playerCoinsText.getX() - 80, playerCoinsText.getY() - 16, playerCoinsText.getX() - 16,
-                playerCoinsText.getY() + 56, 0, 0, 32, 32, filter);
+        g.drawImage(Images.GOLD_PURSE.getImage(), playerCoinsText.getX() - 80, playerCoinsText.getY() - 16, playerCoinsText.getX() - 16,
+                playerCoinsText.getY() + 48, 0, 0, 32, 32, filter);
 
-        g.drawImage(Images.GOLD_COST.getImage(), merchantCoinsText.getX() - 80, merchantCoinsText.getY() - 16,
+        g.drawImage(Images.GOLD_1.getImage(), playerCoinsText.getX() - 64, playerCoinsText.getY(), playerCoinsText.getX(),
+                playerCoinsText.getY() + 64, 0, 0, 32, 32, filter);
+
+        g.drawImage(Images.GOLD_PURSE.getImage(), merchantCoinsText.getX() - 80, merchantCoinsText.getY() - 16,
                 merchantCoinsText.getX() - 16,
-                merchantCoinsText.getY() + 56, 0, 0, 32, 32, filter);
+                merchantCoinsText.getY() + 48, 0, 0, 32, 32, filter);
+
+        g.drawImage(Images.GOLD_1.getImage(), merchantCoinsText.getX() - 64, merchantCoinsText.getY(), merchantCoinsText.getX(),
+                merchantCoinsText.getY() + 64, 0, 0, 32, 32, filter);
 
         if (itemCoinsText.isVisible()) {
-            g.drawImage(Images.SMALL_GOLD_COST.getImage(), itemCoinsText.getX() - 40, itemCoinsText.getY() - 8, itemCoinsText.getX() - 8,
-                    itemCoinsText.getY() + 24, 0, 0, 32, 32, filter);
+            g.drawImage(Images.GOLD_2.getImage(), itemCoinsText.getX() - 64, itemCoinsText.getY() - 16, itemCoinsText.getX(),
+                    itemCoinsText.getY() + 48, 0, 0, 32, 32, filter);
         }
     }
 

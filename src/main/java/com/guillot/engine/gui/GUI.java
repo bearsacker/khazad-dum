@@ -49,11 +49,15 @@ public class GUI {
 
     private ArrayList<TrueTypeFont> fonts;
 
-    private ArrayList<Bindable> shaders;
+    private Bindable postProcessingShader;
 
     private FrameBuffer frameBuffer;
 
+    private FrameBuffer layerFrameBuffer;
+
     private HashMap<String, Color> colors;
+
+    private Image cursor;
 
     public static GUI get() {
         return instance;
@@ -61,8 +65,8 @@ public class GUI {
 
     private GUI() {
         frameBuffer = new FrameBuffer(WIDTH, HEIGHT);
+        layerFrameBuffer = new FrameBuffer(WIDTH, HEIGHT);
 
-        shaders = new ArrayList<>();
         colors = new HashMap<>();
         fonts = new ArrayList<>();
         for (String size : FONT_SIZES) {
@@ -131,9 +135,17 @@ public class GUI {
                 currentView.paint(g);
                 frameBuffer.unbind();
 
-                shaders.forEach(x -> x.bind());
-                OpenGL.drawRectangle(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), frameBuffer.getTextureId());
-                shaders.forEach(x -> x.unbind());
+                if (postProcessingShader != null) {
+                    layerFrameBuffer.bind();
+                    currentView.paintIntoLayer(g);
+                    layerFrameBuffer.unbind();
+
+                    postProcessingShader.bind(layerFrameBuffer);
+                    OpenGL.drawRectangle(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), frameBuffer.getTextureId());
+                    postProcessingShader.unbind();
+                } else {
+                    OpenGL.drawRectangle(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), frameBuffer.getTextureId());
+                }
             }
         } catch (Exception e) {
             switchView(new ViewException(e));
@@ -247,16 +259,12 @@ public class GUI {
         return input;
     }
 
-    public void addShader(Bindable shader) {
-        shaders.add(shader);
+    public void setPostProcessingShader(Bindable postProcessingShader) {
+        this.postProcessingShader = postProcessingShader;
     }
 
-    public boolean containsShader(String name) {
-        return shaders.stream().anyMatch(x -> x.getName().equals(name));
-    }
-
-    public ArrayList<Bindable> getShaders() {
-        return shaders;
+    public boolean hasPostProcessingShader() {
+        return postProcessingShader != null;
     }
 
     public void registerColor(String name, Color color) {
@@ -269,6 +277,14 @@ public class GUI {
         }
 
         return null;
+    }
+
+    public Image getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(Image cursor) {
+        this.cursor = cursor;
     }
 
     public static void drawTiledImage(Image image, Color filter, int width, int height, int spriteWidth, int spriteHeight, int borderSize) {

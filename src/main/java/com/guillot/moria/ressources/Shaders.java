@@ -3,8 +3,7 @@ package com.guillot.moria.ressources;
 import com.guillot.engine.opengl.Shader;
 
 public enum Shaders {
-    MAGICAL("shaders/magical.vert", "shaders/magical.frag"), //
-    GLOW("shaders/glow.vert", "shaders/glow.frag");
+    MAGICAL("shaders/postprocess.vert", "shaders/postprocess.frag");
 
     private Shader shader;
 

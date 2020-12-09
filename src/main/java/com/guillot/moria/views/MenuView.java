@@ -17,6 +17,7 @@ import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.component.VaultDialog;
+import com.guillot.moria.ressources.Images;
 import com.guillot.moria.save.VaultSaveManager;
 
 public class MenuView extends View {
@@ -33,9 +34,11 @@ public class MenuView extends View {
 
     @Override
     public void start() throws Exception {
-        if (!GUI.get().containsShader("magicalShader")) {
-            GUI.get().addShader(new MagicalShader());
+        if (!GUI.get().hasPostProcessingShader()) {
+            GUI.get().setPostProcessingShader(new PostProcessingShader());
         }
+
+        GUI.get().setCursor(Images.CURSOR_POINTER.getImage());
 
         newGameButton = new LinkButton("New game", 64, HEIGHT - 244, 256);
         newGameButton.setFont(GUI.get().getFont(1));

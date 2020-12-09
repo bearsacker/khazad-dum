@@ -760,6 +760,10 @@ public abstract class AbstractCharacter implements Serializable {
         currentStep = 0;
     }
 
+    public Path getPath() {
+        return path;
+    }
+
     public Point getDestination() {
         return path != null ? path.getDestination().inverseXY() : position;
     }

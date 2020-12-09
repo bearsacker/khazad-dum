@@ -103,11 +103,11 @@ public class Shader {
         setUniform(name, unit);
     }
 
-    public void setUniform(String name, FrameBuffer buffer) {
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+    public void setUniform(String name, FrameBuffer buffer, int unit) {
+        GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
 
         glBindTexture(GL_TEXTURE_2D, buffer.getTextureId());
-        setUniform(name, 0);
+        setUniform(name, unit);
     }
 
     public void setUniform(String name, Vector2f object) {

@@ -28,6 +28,7 @@ import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
 import com.guillot.engine.particles.Particles;
+import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.component.CharacterDialog;
@@ -58,6 +59,8 @@ public class GameView extends View {
     private DepthBuffer<Point> depthBuffer;
 
     private Point cursor;
+
+    private Path hoverPath;
 
     private long lastStep;
 
@@ -190,7 +193,7 @@ public class GameView extends View {
         lifeBar.setValue(getPlayer().getCurrentLife() / (float) getPlayer().getLife());
         xpBar.setValue(getPlayer().getXp() / (float) LEVELING_LEVELS[getPlayer().getLevel() - 1]);
 
-        turnText.setText(game.getTurn() == Turn.PLAYER ? "Your turn" : "GameMaster's turn");
+        turnText.setText(game.getTurn() == Turn.PLAYER ? "Your turn" : "WHITE@@GameMaster's turn");
         turnText.setX(WIDTH / 2 - turnText.getWidth() / 2);
 
         if (getPlayer().isDead()) {
@@ -206,9 +209,25 @@ public class GameView extends View {
         if (isFocused()) {
             cursor = depthBuffer.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
 
-            if (cursor != null) {
+            if (cursor != null && !getPlayer().isActing()) {
                 AbstractEntity entity = getDungeon().getEntityAt(cursor);
                 Monster monster = getDungeon().getMonsterAt(cursor);
+
+                if (monster != null || entity != null) {
+                    hoverPath = getDungeon().findPathNear(getPlayer().getPosition(), cursor, getPlayer().getMovement());
+                } else {
+                    hoverPath = getDungeon().findPath(getPlayer().getPosition(), cursor, getPlayer().getMovement());
+                }
+
+                if (monster != null && getPlayer().canAttack(cursor)) {
+                    if (getPlayer().getPosition().distanceFrom(cursor) <= 1) {
+                        GUI.get().setCursor(Images.CURSOR_ATTACK.getImage());
+                    } else {
+                        GUI.get().setCursor(Images.CURSOR_ATTACK_DISTANCE.getImage());
+                    }
+                } else {
+                    GUI.get().setCursor(Images.CURSOR_POINTER.getImage());
+                }
 
                 if (GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
                     if (entity != null) {
@@ -258,8 +277,6 @@ public class GameView extends View {
                     }
                     showTextBox(itemsName);
                 }
-
-
             }
 
             if (mapButton.mouseOn()) {
@@ -335,6 +352,11 @@ public class GameView extends View {
                     Color shadow = new Color(alpha, alpha, alpha);
                     drawTile(g, tile, i, j, alternate, new Point(i, j), shadow);
 
+                    if ((getPlayer().getPath() != null && getPlayer().getPath().contains(i, j))
+                            || (hoverPath != null && hoverPath.contains(i, j))) {
+                        drawPath(g, i, j);
+                    }
+
                     AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
                     if (entity != null) {
                         entity.draw(g, getPlayer().getPosition(), shadow);
@@ -396,6 +418,11 @@ public class GameView extends View {
             g.drawRect(characterButton.getX() + 2, characterButton.getY() + 2, characterButton.getWidth() - 6,
                     characterButton.getHeight() - 6);
         }
+    }
+
+    @Override
+    public void paintIntoLayer(Graphics g) throws Exception {
+        Particles.get().draw(g);
     }
 
     private void computeViewedTiles(HashMap<Point, Float> depthList, Tile[][] grid, Point position, float length) {
@@ -467,6 +494,13 @@ public class GameView extends View {
                 g.drawImage(CURSOR.getSubImage(4, 0), x, y);
             }
         }
+    }
+
+    private void drawPath(Graphics g, int px, int py) {
+        int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + EngineConfig.WIDTH / 2 - 32;
+        int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + EngineConfig.HEIGHT / 2 - 48;
+
+        g.drawImage(CURSOR.getSubImage(0, 0), x, y, new Color(1f, 1f, 1f, .5f));
     }
 
     private void showTextBox(String text) {

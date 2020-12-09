@@ -7,6 +7,11 @@ public enum Images {
     LOGO("sprites/logo.png"), //
     LOGO_TEXT("sprites/logo-text.png"), //
 
+    CURSOR("sprites/cursor.png", 64, 96), //
+    CURSOR_POINTER("sprites/cursor_pointer.png", 64, 64, 0, 0), //
+    CURSOR_ATTACK("sprites/cursor_pointer.png", 64, 64, 2, 0), //
+    CURSOR_ATTACK_DISTANCE("sprites/cursor_pointer.png", 64, 64, 1, 0), //
+
     GRANITE_WALL("sprites/granite_wall.png", 64, 96), //
     MAGMA_WALL("sprites/magma_wall.png", 64, 96), //
     QUARTZ_WALL("sprites/quartz_wall.png", 64, 96), //
@@ -26,7 +31,15 @@ public enum Images {
     HOBBIT("sprites/hobbit.png", 64, 96), //
     MONSTER("sprites/elf.png", 64, 96), //
 
-    CURSOR("sprites/cursor.png", 64, 96), //
+    GOBLIN("sprites/goblin.png", 64, 96), //
+    ORC("sprites/orc.png", 64, 96), //
+    HILL_ORC("sprites/hill_orc.png", 64, 96), //
+    MORDOR_ORC("sprites/mordor_orc.png", 64, 96), //
+    URUK_HAI("sprites/uruk_hai.png", 64, 96), //
+    ORC_CAPTAIN("sprites/orc_captain.png", 64, 96), //
+    WAR_ORC("sprites/war_orc.png", 64, 96), //
+    GREAT_ORC("sprites/great_orc.png", 64, 96), //
+
     PARCHMENT("sprites/parchment.png"), //
     MAP_CURSOR("sprites/map_cursor.png"), //
 
@@ -40,6 +53,7 @@ public enum Images {
     GREATER_HEALTH_POTION("sprites/potion.png", 32, 32, 0, 0), //
     MAJOR_HEALTH_POTION("sprites/potion.png", 32, 32, 0, 11), //
 
+    GOLD_PURSE("sprites/quest.png", 32, 32, 11, 17), //
     BAG("sprites/quest.png", 32, 32, 10, 16), //
     MAP("sprites/quest.png", 32, 32, 1, 17), //
     INVENTORY("sprites/quest.png", 32, 32, 11, 16), //
@@ -53,9 +67,6 @@ public enum Images {
     FIRE_DAMAGES("sprites/skill.png", 32, 32, 0, 0), //
     FROST_DAMAGES("sprites/skill.png", 32, 32, 8, 0), //
     LIGHTNING_DAMAGES("sprites/skill.png", 32, 32, 12, 4), //
-
-    GOLD_COST("sprites/material.png", 32, 32, 1, 6), //
-    SMALL_GOLD_COST("sprites/material.png", 32, 32, 2, 6),
 
     COPPER_1("sprites/material.png", 32, 32, 5, 3), //
     COPPER_2("sprites/material.png", 32, 32, 4, 3), //

@@ -52,6 +52,8 @@ public abstract class View {
         components.stream().filter(x -> x.isVisible()).forEach(x -> x.paint(g));
     }
 
+    public void paintIntoLayer(Graphics g) throws Exception {}
+
     public boolean isFocused() {
         return focused;
     }

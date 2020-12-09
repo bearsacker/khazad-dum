@@ -8,9 +8,10 @@ import static java.lang.Math.random;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.guillot.engine.gui.Bindable;
+import com.guillot.engine.opengl.FrameBuffer;
 import com.guillot.moria.ressources.Shaders;
 
-public class MagicalShader implements Bindable {
+public class PostProcessingShader implements Bindable {
 
     private Vector2f shaderPosition;
 
@@ -22,7 +23,7 @@ public class MagicalShader implements Bindable {
 
     private long lastShader;
 
-    public MagicalShader() {
+    public PostProcessingShader() {
         resolution = new Vector2f(WIDTH, HEIGHT);
         overlayDimension = new Vector2f(MAGICAL_OVERLAY.getImage().getWidth(), MAGICAL_OVERLAY.getImage().getHeight());
         shaderPosition = new Vector2f();
@@ -30,12 +31,7 @@ public class MagicalShader implements Bindable {
     }
 
     @Override
-    public String getName() {
-        return "magicalShader";
-    }
-
-    @Override
-    public void bind() {
+    public void bind(FrameBuffer layerFrameBuffer) {
         long time = System.currentTimeMillis();
         if (time - lastShader > 10) {
             shaderPosition.x += shaderVelocity.x;
@@ -58,6 +54,7 @@ public class MagicalShader implements Bindable {
 
         Shaders.MAGICAL.get().bind();
         Shaders.MAGICAL.get().setUniform("overlay", MAGICAL_OVERLAY.getImage(), 1);
+        Shaders.MAGICAL.get().setUniform("layer", layerFrameBuffer, 2);
         Shaders.MAGICAL.get().setUniform("position", new Vector2f(shaderPosition.x, shaderPosition.y));
         Shaders.MAGICAL.get().setUniform("resolution", resolution);
         Shaders.MAGICAL.get().setUniform("dimension", overlayDimension);

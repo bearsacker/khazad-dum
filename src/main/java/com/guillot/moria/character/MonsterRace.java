@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.guillot.moria.item.ItemType;
+import com.guillot.moria.ressources.Images;
 
 public class MonsterRace implements Serializable {
 
     private static final long serialVersionUID = -7167073544202458260L;
 
     private String name;
+
+    private Images image;
 
     private int level;
 
@@ -28,8 +31,9 @@ public class MonsterRace implements Serializable {
     private List<ItemType> equipedItemsType;
 
     public MonsterRace(String name, int level, int strength, int agility, int life, int lightRadius, int chanceHit,
-            int chanceCriticalHit, List<ItemType> equipedItemsType) {
+            int chanceCriticalHit, List<ItemType> equipedItemsType, Images image) {
         this.name = name;
+        this.image = image;
         this.level = level;
         this.strength = strength;
         this.agility = agility;
@@ -110,6 +114,10 @@ public class MonsterRace implements Serializable {
 
     public void setEquipedItemsType(List<ItemType> equipedItemsType) {
         this.equipedItemsType = equipedItemsType;
+    }
+
+    public Images getImage() {
+        return image;
     }
 
 }
