@@ -1,6 +1,6 @@
 package com.guillot.moria.dungeon.entity;
 
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.Point;
 
 public class Barrel extends AbstractEntity {

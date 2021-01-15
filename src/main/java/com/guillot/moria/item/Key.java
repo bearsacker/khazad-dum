@@ -6,7 +6,7 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 
 
 public class Key extends AbstractItem {

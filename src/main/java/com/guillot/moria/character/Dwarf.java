@@ -12,7 +12,7 @@ import static com.guillot.moria.configs.DwarfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.DwarfConfig.SPIRIT;
 import static com.guillot.moria.configs.DwarfConfig.STRENGTH;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
-import static com.guillot.moria.ressources.Images.DWARF;
+import static com.guillot.moria.resources.Images.DWARF;
 
 import java.util.ArrayList;
 

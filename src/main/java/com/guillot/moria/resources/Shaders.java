@@ -1,4 +1,4 @@
-package com.guillot.moria.ressources;
+package com.guillot.moria.resources;
 
 import com.guillot.engine.opengl.Shader;
 

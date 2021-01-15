@@ -2,14 +2,14 @@ package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Images.MAGICAL_OVERLAY;
+import static com.guillot.moria.resources.Images.MAGICAL_OVERLAY;
 import static java.lang.Math.random;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import com.guillot.engine.gui.Bindable;
 import com.guillot.engine.opengl.FrameBuffer;
-import com.guillot.moria.ressources.Shaders;
+import com.guillot.moria.resources.Shaders;
 
 public class PostProcessingShader implements Bindable {
 

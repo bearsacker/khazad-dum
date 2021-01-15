@@ -4,7 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.configs.EngineConfig;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.Point;
 
 public class Table extends AbstractEntity {

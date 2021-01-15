@@ -21,7 +21,7 @@ import com.guillot.moria.ai.role.Patroller;
 import com.guillot.moria.ai.role.Rolable;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameState;
 

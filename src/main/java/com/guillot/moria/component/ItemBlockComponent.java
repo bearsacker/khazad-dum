@@ -1,10 +1,10 @@
 package com.guillot.moria.component;
 
 
-import static com.guillot.moria.ressources.Colors.ITEM_BLOCK;
-import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
-import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
-import static com.guillot.moria.ressources.Colors.ITEM_SELECTED;
+import static com.guillot.moria.resources.Colors.ITEM_BLOCK;
+import static com.guillot.moria.resources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.resources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.resources.Colors.ITEM_SELECTED;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 import static org.newdawn.slick.Input.MOUSE_RIGHT_BUTTON;
 

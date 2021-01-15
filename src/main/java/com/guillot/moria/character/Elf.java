@@ -12,7 +12,7 @@ import static com.guillot.moria.configs.ElfConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.ElfConfig.SPIRIT;
 import static com.guillot.moria.configs.ElfConfig.STRENGTH;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
-import static com.guillot.moria.ressources.Images.ELF;
+import static com.guillot.moria.resources.Images.ELF;
 
 import java.util.ArrayList;
 

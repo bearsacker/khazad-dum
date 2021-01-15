@@ -2,7 +2,7 @@ package com.guillot.moria.dungeon;
 
 import org.newdawn.slick.Image;
 
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.ImageBuffer;
 
 public enum Tile {

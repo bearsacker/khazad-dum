@@ -27,7 +27,7 @@ import com.guillot.moria.dungeon.entity.Direction;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Equipable;
 import com.guillot.moria.item.ItemType;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameState;

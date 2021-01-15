@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 
 
 public class HealthPotion extends AbstractItem implements Usable {

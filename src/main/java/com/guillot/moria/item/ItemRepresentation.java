@@ -1,6 +1,6 @@
 package com.guillot.moria.item;
 
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.RNG;
 
 public class ItemRepresentation {

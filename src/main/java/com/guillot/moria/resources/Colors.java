@@ -1,4 +1,4 @@
-package com.guillot.moria.ressources;
+package com.guillot.moria.resources;
 
 import org.newdawn.slick.Color;
 

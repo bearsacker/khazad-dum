@@ -12,7 +12,7 @@ import static com.guillot.moria.configs.HobbitConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HobbitConfig.SPIRIT;
 import static com.guillot.moria.configs.HobbitConfig.STRENGTH;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
-import static com.guillot.moria.ressources.Images.HOBBIT;
+import static com.guillot.moria.resources.Images.HOBBIT;
 
 import java.util.ArrayList;
 

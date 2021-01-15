@@ -22,7 +22,7 @@ import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.configs.EngineConfig;
 import com.guillot.moria.item.AbstractItem;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameState;

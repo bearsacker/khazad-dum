@@ -1,8 +1,8 @@
 package com.guillot.moria.item;
 
-import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
-import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
-import static com.guillot.moria.ressources.Colors.LIGHT_GRAY;
+import static com.guillot.moria.resources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.resources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.resources.Colors.LIGHT_GRAY;
 import static java.util.stream.Collectors.toList;
 
 import java.io.Serializable;
@@ -16,7 +16,7 @@ import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.utils.RandomCollection;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.item.affixe.AbstractAffixe;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.Point;
 
 public abstract class AbstractItem implements Comparable<AbstractItem>, Serializable {

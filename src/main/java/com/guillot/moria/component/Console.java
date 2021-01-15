@@ -1,7 +1,7 @@
 package com.guillot.moria.component;
 
 import static com.guillot.engine.gui.GUI.drawColoredString;
-import static com.guillot.moria.ressources.Colors.WHITE;
+import static com.guillot.moria.resources.Colors.WHITE;
 
 import org.newdawn.slick.Graphics;
 

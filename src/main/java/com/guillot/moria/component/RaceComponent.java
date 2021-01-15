@@ -1,13 +1,13 @@
 package com.guillot.moria.component;
 
-import static com.guillot.moria.ressources.Colors.BLUE_PALE;
-import static com.guillot.moria.ressources.Colors.GREEN_PALE;
-import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
-import static com.guillot.moria.ressources.Colors.LIGHT_GRAY;
-import static com.guillot.moria.ressources.Colors.RED_PALE;
-import static com.guillot.moria.ressources.Colors.WHITE;
-import static com.guillot.moria.ressources.Colors.YELLOW;
-import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static com.guillot.moria.resources.Colors.BLUE_PALE;
+import static com.guillot.moria.resources.Colors.GREEN_PALE;
+import static com.guillot.moria.resources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.resources.Colors.LIGHT_GRAY;
+import static com.guillot.moria.resources.Colors.RED_PALE;
+import static com.guillot.moria.resources.Colors.WHITE;
+import static com.guillot.moria.resources.Colors.YELLOW;
+import static com.guillot.moria.resources.Colors.YELLOW_PALE;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
 import org.newdawn.slick.Graphics;
@@ -25,7 +25,7 @@ import com.guillot.moria.character.Elf;
 import com.guillot.moria.character.Hobbit;
 import com.guillot.moria.character.Human;
 import com.guillot.moria.character.Race;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.views.CharacterEditView;
 
 public class RaceComponent extends SubView {

@@ -10,7 +10,7 @@ import com.guillot.moria.item.affixe.AbstractAffixe;
 import com.guillot.moria.item.affixe.AffixeFireDamage;
 import com.guillot.moria.item.affixe.AffixeFrostDamage;
 import com.guillot.moria.item.affixe.AffixeLightningDamage;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 
 public class OneHandedWeapon extends AbstractItem implements Equipable {
 

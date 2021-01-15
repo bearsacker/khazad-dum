@@ -15,7 +15,7 @@ import com.guillot.moria.dungeon.entity.Door;
 import com.guillot.moria.dungeon.entity.DoorState;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.ItemType;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.RNG;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;

@@ -1,8 +1,8 @@
 package com.guillot.moria.component;
 
-import static com.guillot.moria.ressources.Colors.ROSE_PALE;
-import static com.guillot.moria.ressources.Colors.WHITE;
-import static com.guillot.moria.ressources.Colors.YELLOW;
+import static com.guillot.moria.resources.Colors.ROSE_PALE;
+import static com.guillot.moria.resources.Colors.WHITE;
+import static com.guillot.moria.resources.Colors.YELLOW;
 
 import org.newdawn.slick.Graphics;
 
@@ -11,7 +11,7 @@ import com.guillot.engine.gui.ProgressBar;
 import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.views.GameView;
 
 public class SmallCharacterDialog extends Window {

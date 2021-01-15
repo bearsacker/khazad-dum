@@ -1,7 +1,7 @@
 package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.WHITE;
+import static com.guillot.moria.resources.Colors.WHITE;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import org.newdawn.slick.Graphics;
@@ -13,8 +13,8 @@ import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
-import com.guillot.moria.ressources.Colors;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Colors;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 

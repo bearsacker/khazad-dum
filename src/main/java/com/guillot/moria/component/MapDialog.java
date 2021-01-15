@@ -2,11 +2,11 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.MAP_LOCKED_DOOR;
-import static com.guillot.moria.ressources.Colors.MAP_OPEN_DOOR;
-import static com.guillot.moria.ressources.Colors.TRANSPARENT;
-import static com.guillot.moria.ressources.Images.MAP_CURSOR;
-import static com.guillot.moria.ressources.Images.PARCHMENT;
+import static com.guillot.moria.resources.Colors.MAP_LOCKED_DOOR;
+import static com.guillot.moria.resources.Colors.MAP_OPEN_DOOR;
+import static com.guillot.moria.resources.Colors.TRANSPARENT;
+import static com.guillot.moria.resources.Images.MAP_CURSOR;
+import static com.guillot.moria.resources.Images.PARCHMENT;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 
 import org.newdawn.slick.Color;
@@ -17,7 +17,7 @@ import com.guillot.engine.gui.Window;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
 import com.guillot.moria.dungeon.entity.Door;
-import com.guillot.moria.ressources.Colors;
+import com.guillot.moria.resources.Colors;
 import com.guillot.moria.utils.Point;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;

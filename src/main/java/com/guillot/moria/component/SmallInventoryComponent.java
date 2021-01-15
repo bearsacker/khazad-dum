@@ -1,9 +1,9 @@
 package com.guillot.moria.component;
 
 
-import static com.guillot.moria.ressources.Colors.ITEM_BLOCK;
-import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
-import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.resources.Colors.ITEM_BLOCK;
+import static com.guillot.moria.resources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.resources.Colors.ITEM_MAGIC;
 
 import java.util.HashSet;
 

@@ -2,7 +2,7 @@ package com.guillot.moria.component;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.WHITE;
+import static com.guillot.moria.resources.Colors.WHITE;
 import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
@@ -20,7 +20,7 @@ import com.guillot.engine.gui.Window;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.dungeon.entity.Merchant;
 import com.guillot.moria.item.AbstractItem;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.views.GameState;
 import com.guillot.moria.views.GameView;
 

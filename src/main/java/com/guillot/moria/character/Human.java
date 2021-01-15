@@ -12,7 +12,7 @@ import static com.guillot.moria.configs.HumanConfig.LIGHT_RADIUS;
 import static com.guillot.moria.configs.HumanConfig.SPIRIT;
 import static com.guillot.moria.configs.HumanConfig.STRENGTH;
 import static com.guillot.moria.item.ItemRarity.NORMAL;
-import static com.guillot.moria.ressources.Images.HUMAN;
+import static com.guillot.moria.resources.Images.HUMAN;
 
 import java.util.ArrayList;
 

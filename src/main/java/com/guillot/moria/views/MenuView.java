@@ -2,11 +2,11 @@ package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
-import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
-import static com.guillot.moria.ressources.Images.LOGO;
-import static com.guillot.moria.ressources.Images.LOGO_TEXT;
-import static com.guillot.moria.ressources.Images.MENU;
+import static com.guillot.moria.resources.Colors.ITEM_LEGENDARY;
+import static com.guillot.moria.resources.Colors.ITEM_MAGIC;
+import static com.guillot.moria.resources.Images.LOGO;
+import static com.guillot.moria.resources.Images.LOGO_TEXT;
+import static com.guillot.moria.resources.Images.MENU;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static com.guillot.moria.save.GameSaveManager.isSaveFilePresent;
 import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
@@ -18,7 +18,7 @@ import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
 import com.guillot.moria.component.VaultDialog;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.save.VaultSaveManager;
 
 public class MenuView extends View {

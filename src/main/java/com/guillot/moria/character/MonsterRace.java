@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.guillot.moria.item.ItemType;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 
 public class MonsterRace implements Serializable {
 

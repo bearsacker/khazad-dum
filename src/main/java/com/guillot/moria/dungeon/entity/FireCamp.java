@@ -7,7 +7,7 @@ import com.guillot.engine.configs.EngineConfig;
 import com.guillot.engine.particles.Fire;
 import com.guillot.engine.particles.Generator;
 import com.guillot.engine.particles.Particles;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.utils.Point;
 
 

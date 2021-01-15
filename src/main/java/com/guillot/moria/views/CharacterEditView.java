@@ -2,7 +2,7 @@ package com.guillot.moria.views;
 
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
-import static com.guillot.moria.ressources.Colors.YELLOW_PALE;
+import static com.guillot.moria.resources.Colors.YELLOW_PALE;
 import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
 import static java.lang.Math.max;
 import static org.newdawn.slick.Input.KEY_ENTER;
@@ -23,7 +23,7 @@ import com.guillot.moria.component.InventoryGridComponent;
 import com.guillot.moria.component.RaceComponent;
 import com.guillot.moria.dungeon.vault.Vault;
 import com.guillot.moria.item.AbstractItem;
-import com.guillot.moria.ressources.Images;
+import com.guillot.moria.resources.Images;
 import com.guillot.moria.save.VaultSaveManager;
 
 public class CharacterEditView extends View {
