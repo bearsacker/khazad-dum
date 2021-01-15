@@ -179,7 +179,6 @@ public class GameState {
         this.player = player;
     }
 
-
     public static void main(String[] args) throws SlickException {
         new Game(new MenuView());
     }

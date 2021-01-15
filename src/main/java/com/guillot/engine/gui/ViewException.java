@@ -5,11 +5,12 @@ import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.engine.configs.GUIConfig.DIALOG_BUTTON_TEXT;
 import static com.guillot.engine.configs.GUIConfig.EXCEPTION_TEXT_COLOR;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ViewException extends View {
 
-    private final static Logger logger = Logger.getLogger(ViewException.class);
+    private final static Logger logger = LogManager.getLogger(ViewException.class);
 
     private Exception exception;
 

@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -29,7 +30,7 @@ import com.guillot.engine.utils.FileLoader;
 
 public class GUI {
 
-    private final static Logger logger = Logger.getLogger(GUI.class);
+    private final static Logger logger = LogManager.getLogger(GUI.class);
 
     private static GUI instance = new GUI();
 

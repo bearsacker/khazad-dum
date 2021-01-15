@@ -50,7 +50,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.guillot.moria.ai.AStar;
 import com.guillot.moria.ai.Path;
@@ -78,7 +79,7 @@ import com.guillot.moria.utils.RNG;
 
 public class Dungeon {
 
-    private final static Logger logger = Logger.getLogger(Dungeon.class);
+    private final static Logger logger = LogManager.getLogger(Dungeon.class);
 
     private int level;
 

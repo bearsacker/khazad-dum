@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="src/main/resources/sprites/logo.png" alt="Khazad-dum" />
+    <img src="src/main/resources/sprites/logo.png" alt="Khazad-dum" style="filter: brightness(0.30);" />
 </p>
 
 ---

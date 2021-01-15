@@ -34,7 +34,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Vector2f;
@@ -44,7 +45,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Shader {
 
-    private final static Logger logger = Logger.getLogger(Shader.class);
+    private final static Logger logger = LogManager.getLogger(Shader.class);
 
     private int program;
 
