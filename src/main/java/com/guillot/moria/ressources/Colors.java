@@ -8,8 +8,8 @@ public enum Colors {
     WHITE("WHITE", new Color(255, 255, 255)), //
     BLACK("BLACK", new Color(0, 0, 0)), //
     GRAY("GRAY", new Color(128, 128, 128)), //
-    DARK_GREY("DARK_GRAY", new Color(64, 64, 64)), //
-    DARKER_GREY("DARKER_GRAY", new Color(38, 38, 38)), //
+    DARK_GRAY("DARK_GRAY", new Color(64, 64, 64)), //
+    DARKER_GRAY("DARKER_GRAY", new Color(38, 38, 38)), //
     LIGHT_GRAY("LIGHT_GRAY", new Color(220, 220, 220)), //
     YELLOW("YELLOW", new Color(223, 207, 134)), //
     ROSE_PALE("ROSE_PALE", new Color(240, 220, 220)), //

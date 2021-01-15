@@ -11,6 +11,6 @@ public interface Particle {
 
     public void update(float delta);
 
-    public void draw(Graphics g);
+    public void draw(Graphics g, boolean alternate);
 
 }

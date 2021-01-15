@@ -46,9 +46,9 @@ public class Particles {
         }
     }
 
-    public void draw(Graphics g) {
+    public void draw(Graphics g, boolean alternate) {
         for (Generator generator : generators) {
-            generator.draw(g);
+            generator.draw(g, alternate);
         }
 
         g.setColor(Color.white);

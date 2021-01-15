@@ -7,9 +7,9 @@ uniform vec2 dimension;
 uniform vec2 position;
 uniform vec2 resolution;
 
-vec4 blur5(vec4 color, sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
+vec4 blur5(vec4 color, sampler2D image, vec2 uv, vec2 resolution, vec2 direction, float glow) {
 	vec2 off1 = vec2(1.3333333333333333) * direction;
-	color += texture2D(image, uv) * 1.29411764705882354;
+	color += texture2D(image, uv) * glow * 0.29411764705882354;
 	color += texture2D(image, uv + (off1 / resolution)) * 0.35294117647058826;
 	color += texture2D(image, uv - (off1 / resolution)) * 0.35294117647058826;
 	return color; 
@@ -80,13 +80,11 @@ void main(void)
 	
 	vec4 overlayColor = texture2D(overlay, positionIntoOverlay / dimension);
 	vec4 color = texture2D(texture, gl_TexCoord[0].st);
+	vec4 layerColor = texture2D(layer, gl_TexCoord[0].st);
 	
-	if (isLayered(texture2D(layer, gl_TexCoord[0].st))) {
-		color = blur5(vec4(0.0), texture, gl_TexCoord[0].st, resolution, vec2(1, 0));
-		color = blur5(vec4(0.0), texture, gl_TexCoord[0].st, resolution, vec2(0, 1));
-	} else if (isLayeredNear(layer, gl_TexCoord[0].st, 3)) {
-		color = blur13(vec4(0.0), texture, gl_TexCoord[0].st, resolution, vec2(1, 0));
-		color = blur13(vec4(0.0), texture, gl_TexCoord[0].st, resolution, vec2(0, 1));
+	if (isLayered(layerColor)) {
+		color = blur5(vec4(0.0), texture, gl_TexCoord[0].st, resolution, vec2(1, 0), (1 + layerColor.r));
+		color = blur5(vec4(0.0), texture, gl_TexCoord[0].st, resolution, vec2(0, 1), (1 + layerColor.r));
 	} else if (isMagicalNear(texture, gl_TexCoord[0].st, 1)) {
 		color = vec4(color.rgb + overlayColor.rgb, color.a);
 		

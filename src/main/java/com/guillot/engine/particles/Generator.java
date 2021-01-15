@@ -141,13 +141,13 @@ public class Generator implements Serializable {
         }
     }
 
-    public void draw(Graphics g) {
+    public void draw(Graphics g, boolean alternate) {
         g.pushTransform();
         g.translate(x, y);
 
         if (particles != null) {
             for (Particle particle : particles) {
-                particle.draw(g);
+                particle.draw(g, alternate);
             }
         }
 

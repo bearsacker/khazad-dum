@@ -7,5 +7,9 @@ public enum Entity {
     PILLAR, //
     RUBBLE, //
     FIRECAMP, //
-    MERCHANT;
+    MERCHANT, //
+    CHAIR, //
+    TABLE, //
+    CHEST, //
+    BARREL;
 }

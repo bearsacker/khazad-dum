@@ -3,7 +3,7 @@ package com.guillot.moria.views;
 import static com.guillot.engine.configs.EngineConfig.HEIGHT;
 import static com.guillot.engine.configs.EngineConfig.WIDTH;
 import static com.guillot.moria.configs.LevelingConfig.LEVELING_LEVELS;
-import static com.guillot.moria.ressources.Colors.DARK_GREY;
+import static com.guillot.moria.ressources.Colors.DARK_GRAY;
 import static com.guillot.moria.ressources.Colors.WHITE;
 import static com.guillot.moria.ressources.Colors.YELLOW;
 import static com.guillot.moria.ressources.Images.CURSOR;
@@ -164,7 +164,7 @@ public class GameView extends View {
         });
 
         menuButton = new Button("", WIDTH / 2 + 172, EngineConfig.HEIGHT - 56, 48, 48);
-        menuButton.setIcon(Images.MENU.getImage());
+        menuButton.setIcon(Images.ESCAPE.getImage());
         menuButton.setEvent(new Event() {
 
             @Override
@@ -221,12 +221,12 @@ public class GameView extends View {
 
                 if (monster != null && getPlayer().canAttack(cursor)) {
                     if (getPlayer().getPosition().distanceFrom(cursor) <= 1) {
-                        GUI.get().setCursor(Images.CURSOR_ATTACK.getImage());
+                        GUI.get().setCursor(Images.POINTER_ATTACK.getImage());
                     } else {
-                        GUI.get().setCursor(Images.CURSOR_ATTACK_DISTANCE.getImage());
+                        GUI.get().setCursor(Images.POINTER_ATTACK_DISTANCE.getImage());
                     }
                 } else {
-                    GUI.get().setCursor(Images.CURSOR_POINTER.getImage());
+                    GUI.get().setCursor(Images.POINTER.getImage());
                 }
 
                 if (GUI.get().isMousePressed(MOUSE_LEFT_BUTTON)) {
@@ -391,11 +391,11 @@ public class GameView extends View {
                         }
                     }
 
-                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, null, DARK_GREY.getColor());
+                    drawTile(g, getDungeon().getDiscoveredTiles()[i][j], i, j, alternate, null, DARK_GRAY.getColor());
 
                     AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
                     if (entity != null) {
-                        entity.draw(g, getPlayer().getPosition(), DARK_GREY.getColor());
+                        entity.draw(g, getPlayer().getPosition(), DARK_GRAY.getColor());
                     }
 
                     getDungeon().getItemsAt(new Point(j, i)).forEach(x -> x.draw(g, getPlayer().getPosition()));
@@ -422,7 +422,9 @@ public class GameView extends View {
 
     @Override
     public void paintIntoLayer(Graphics g) throws Exception {
-        Particles.get().draw(g);
+        if (focused) {
+            Particles.get().draw(g, true);
+        }
     }
 
     private void computeViewedTiles(HashMap<Point, Float> depthList, Tile[][] grid, Point position, float length) {

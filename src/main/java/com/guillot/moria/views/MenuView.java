@@ -6,6 +6,7 @@ import static com.guillot.moria.ressources.Colors.ITEM_LEGENDARY;
 import static com.guillot.moria.ressources.Colors.ITEM_MAGIC;
 import static com.guillot.moria.ressources.Images.LOGO;
 import static com.guillot.moria.ressources.Images.LOGO_TEXT;
+import static com.guillot.moria.ressources.Images.MENU;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static com.guillot.moria.save.GameSaveManager.isSaveFilePresent;
 import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
@@ -38,7 +39,7 @@ public class MenuView extends View {
             GUI.get().setPostProcessingShader(new PostProcessingShader());
         }
 
-        GUI.get().setCursor(Images.CURSOR_POINTER.getImage());
+        GUI.get().setCursor(Images.POINTER.getImage());
 
         newGameButton = new LinkButton("New game", 64, HEIGHT - 244, 256);
         newGameButton.setFont(GUI.get().getFont(1));
@@ -97,6 +98,8 @@ public class MenuView extends View {
 
     @Override
     public void paint(Graphics g) throws Exception {
+        MENU.getImage().draw(0, 0, 10);
+
         g.pushTransform();
         g.translate(WIDTH / 2, 96);
 

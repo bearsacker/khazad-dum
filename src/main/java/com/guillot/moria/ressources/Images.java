@@ -6,11 +6,13 @@ import org.newdawn.slick.SlickException;
 public enum Images {
     LOGO("sprites/logo.png"), //
     LOGO_TEXT("sprites/logo-text.png"), //
+    MENU("sprites/menu.png"), //
+    BLUR("sprites/blur.png"), //
 
     CURSOR("sprites/cursor.png", 64, 96), //
-    CURSOR_POINTER("sprites/cursor_pointer.png", 64, 64, 0, 0), //
-    CURSOR_ATTACK("sprites/cursor_pointer.png", 64, 64, 2, 0), //
-    CURSOR_ATTACK_DISTANCE("sprites/cursor_pointer.png", 64, 64, 1, 0), //
+    POINTER("sprites/pointer.png", 48, 48, 0, 0), //
+    POINTER_ATTACK("sprites/pointer.png", 48, 48, 2, 0), //
+    POINTER_ATTACK_DISTANCE("sprites/pointer.png", 48, 48, 1, 0), //
 
     GRANITE_WALL("sprites/granite_wall.png", 64, 96), //
     MAGMA_WALL("sprites/magma_wall.png", 64, 96), //
@@ -24,6 +26,10 @@ public enum Images {
     RUBBLE("sprites/rubble.png", 64, 96), //
     FIRECAMP("sprites/firecamp.png"), //
     MERCHANT("sprites/merchant.png", 64, 96), //
+    CHAIR("sprites/chair.png", 64, 96), //
+    TABLE("sprites/table.png", 64, 96), //
+    CHEST("sprites/chest.png", 64, 96), //
+    BARREL("sprites/barrel.png", 64, 96), //
 
     HUMAN("sprites/human.png", 64, 96), //
     ELF("sprites/elf.png", 64, 96), //
@@ -59,7 +65,7 @@ public enum Images {
     INVENTORY("sprites/quest.png", 32, 32, 11, 16), //
     CHARACTER("sprites/skill.png", 32, 32, 15, 7), //
     LEVEL_UP("sprites/skill.png", 32, 32, 11, 10), //
-    MENU("sprites/quest.png", 32, 32, 10, 13), //
+    ESCAPE("sprites/quest.png", 32, 32, 10, 13), //
     LOCK_PICKING("sprites/skill.png", 32, 32, 12, 3), //
     KEY("sprites/material.png", 32, 32, 7, 3), //
 

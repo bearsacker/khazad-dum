@@ -11,7 +11,6 @@ import com.guillot.engine.utils.LinkedNonBlockingQueue;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.dungeon.Dungeon;
-import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.save.GameSaveManager;
 
 public class GameState {
@@ -46,11 +45,6 @@ public class GameState {
 
         this.player = player;
         this.player.setPosition(levels.get(currentLevel).getSpawnUpStairs());
-
-        // TODO remove this
-        for (AbstractItem item : getDungeon().getItems()) {
-            player.pickUpItem(item);
-        }
 
         GameSaveManager.writeSaveFile(GAME_SAVE_PATH, this);
     }

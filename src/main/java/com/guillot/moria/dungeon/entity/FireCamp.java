@@ -17,11 +17,15 @@ public class FireCamp extends AbstractEntity {
 
     private Generator fire;
 
+    private boolean light;
+
     public FireCamp(Point position) {
         super(position);
 
         type = Entity.FIRECAMP;
         image = Images.FIRECAMP;
+
+        light = true;
 
         fire = new Generator(25, 16);
         fire.setPattern(new Fire(fire, 3f, 16));
@@ -36,9 +40,20 @@ public class FireCamp extends AbstractEntity {
         int y = (position.x - playerPosition.x) * 16 - (position.y - playerPosition.y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
         g.drawImage(image.getImage(), x, y, filter);
-        fire.setX(x + 32);
-        fire.setY(y + 40);
-        fire.draw(g);
+
+        if (light) {
+            fire.setX(x + 32);
+            fire.setY(y + 40);
+            fire.draw(g, false);
+        }
+    }
+
+    public boolean isLight() {
+        return light;
+    }
+
+    public void setLight(boolean light) {
+        this.light = light;
     }
 
 }

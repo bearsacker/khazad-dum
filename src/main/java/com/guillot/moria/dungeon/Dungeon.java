@@ -57,6 +57,8 @@ import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.Monster;
 import com.guillot.moria.character.MonsterRace;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
+import com.guillot.moria.dungeon.entity.Barrel;
+import com.guillot.moria.dungeon.entity.Chair;
 import com.guillot.moria.dungeon.entity.Direction;
 import com.guillot.moria.dungeon.entity.Door;
 import com.guillot.moria.dungeon.entity.DoorState;
@@ -66,6 +68,7 @@ import com.guillot.moria.dungeon.entity.FireCamp;
 import com.guillot.moria.dungeon.entity.Merchant;
 import com.guillot.moria.dungeon.entity.Pillar;
 import com.guillot.moria.dungeon.entity.Rubble;
+import com.guillot.moria.dungeon.entity.Table;
 import com.guillot.moria.dungeon.entity.UpStairs;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.item.Gold;
@@ -581,6 +584,17 @@ public class Dungeon {
             this.floor[height - 1][x] = GRANITE_WALL;
             this.floor[depth + 1][x] = GRANITE_WALL;
         }
+
+        entities.add(new Chair(new Point(coord.x, coord.y), Direction.NORTH));
+        entities.add(new Chair(new Point(coord.x + 1, coord.y), Direction.NORTH));
+
+        entities.add(new Table(new Point(coord.x, coord.y + 1), Direction.EAST));
+        entities.add(new Table(new Point(coord.x + 1, coord.y + 1), Direction.WEST));
+
+        entities.add(new Chair(new Point(coord.x, coord.y + 2), Direction.SOUTH));
+        entities.add(new Chair(new Point(coord.x + 1, coord.y + 2), Direction.SOUTH));
+
+        entities.add(new Barrel(new Point(coord.x + 2, coord.y + 2)));
     }
 
     // Constructs a tunnel between two points

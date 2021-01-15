@@ -114,18 +114,17 @@ public class MapDialog extends Window {
                     AbstractEntity entity = game.getDungeon().getEntityAt(new Point(j, i));
                     if (entity != null) {
                         switch (entity.getType()) {
-                        case PILLAR:
-                        case RUBBLE:
-                        case FIRECAMP:
-                            g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
-                            break;
+                        case CHEST:
                         case MERCHANT:
                             g.setColor(Colors.ITEM_LEGENDARY.getColor());
+                            break;
+                        case DOOR:
                             break;
                         case UPSTAIRS:
                         case DOWNSTAIRS:
                             g.setColor(Colors.ITEM_MAGIC.getColor());
                         default:
+                            g.setColor(Colors.GRAY.getColor());
                             break;
                         }
                     }
