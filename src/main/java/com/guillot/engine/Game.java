@@ -54,7 +54,7 @@ public class Game extends BasicGame {
     @Override
     public void update(GameContainer container, int delta) throws SlickException {
         if (GUI.get().getCursor() != cursor) {
-            container.setMouseCursor(GUI.get().getCursor(), 0, 0);
+            container.setMouseCursor(GUI.get().getCursor(), 0, 16);
             cursor = GUI.get().getCursor();
         }
 
