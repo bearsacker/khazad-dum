@@ -404,7 +404,7 @@ public class GameView extends View {
         }
 
         if (cursor != null) {
-            drawCursor(g, cursor.y, cursor.x, getDungeon().getFloor()[cursor.y][cursor.x]);
+            drawCursor(g, cursor.y, cursor.x, getDungeon().getTiles()[cursor.y][cursor.x]);
         }
 
         g.drawImage(Images.STONE.getImage(), WIDTH / 2 - Images.STONE.getImage().getWidth() / 2, HEIGHT - 64);
@@ -440,7 +440,7 @@ public class GameView extends View {
         depthList.put(position, length);
 
         if (position.x >= 0 && position.y >= 0 && position.x < getDungeon().getWidth() && position.y < getDungeon().getHeight()) {
-            Tile dungeonTile = getDungeon().getFloor()[position.y][position.x];
+            Tile dungeonTile = getDungeon().getTiles()[position.y][position.x];
             grid[position.y][position.x] = dungeonTile;
 
             if (dungeonTile.isTraversable) {
@@ -449,10 +449,10 @@ public class GameView extends View {
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y - 1), length + 1f);
                 computeViewedTiles(depthList, grid, new Point(position.x, position.y + 1), length + 1f);
 
-                Tile north = getDungeon().getFloor()[position.y - 1][position.x];
-                Tile south = getDungeon().getFloor()[position.y + 1][position.x];
-                Tile west = getDungeon().getFloor()[position.y][position.x - 1];
-                Tile east = getDungeon().getFloor()[position.y][position.x + 1];
+                Tile north = getDungeon().getTiles()[position.y - 1][position.x];
+                Tile south = getDungeon().getTiles()[position.y + 1][position.x];
+                Tile west = getDungeon().getTiles()[position.y][position.x - 1];
+                Tile east = getDungeon().getTiles()[position.y][position.x + 1];
                 if (north.isTraversable && west.isTraversable) {
                     computeViewedTiles(depthList, grid, new Point(position.x - 1, position.y - 1), length + 1.41f);
                 }

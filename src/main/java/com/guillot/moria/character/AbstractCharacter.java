@@ -266,7 +266,7 @@ public abstract class AbstractCharacter implements Serializable {
                 new Point(position.x + 1, position.y));
 
         for (Point coord : coords) {
-            if (dungeon.getFloor()[coord.y][coord.x].isTraversable) {
+            if (dungeon.getTiles()[coord.y][coord.x].isTraversable) {
                 item.setPosition(coord);
                 dungeon.getItems().add(item);
                 return inventory.remove(item);

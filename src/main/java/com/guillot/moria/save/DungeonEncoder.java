@@ -20,7 +20,7 @@ public class DungeonEncoder {
         stream.writeInt(dungeon.getHeight());
         stream.writeObject(dungeon.getSpawnDownStairs());
         stream.writeObject(dungeon.getSpawnUpStairs());
-        stream.writeObject(dungeon.getFloor());
+        stream.writeObject(dungeon.getTiles());
         stream.writeObject(dungeon.getDiscoveredTiles());
         stream.writeObject(dungeon.getEntities());
         stream.writeObject(dungeon.getItems());
@@ -34,7 +34,7 @@ public class DungeonEncoder {
         dungeon.setHeight(stream.readInt());
         dungeon.setSpawnDownStairs((Point) stream.readObject());
         dungeon.setSpawnUpStairs((Point) stream.readObject());
-        dungeon.setFloor((Tile[][]) stream.readObject());
+        dungeon.setTiles((Tile[][]) stream.readObject());
         dungeon.setDiscoveredTiles((Tile[][]) stream.readObject());
         dungeon.setEntities((ArrayList<AbstractEntity>) stream.readObject());
         dungeon.setItems((ArrayList<AbstractItem>) stream.readObject());

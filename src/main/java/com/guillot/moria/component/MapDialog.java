@@ -72,7 +72,7 @@ public class MapDialog extends Window {
 
         for (int i = 0; i < game.getDungeon().getHeight(); i++) {
             for (int j = 0; j < game.getDungeon().getWidth(); j++) {
-                Tile tile = game.getDungeon().getDiscoveredTiles()[i][j];
+                Tile tile = game.getDungeon().getTiles()[i][j];
 
                 float alpha = .2f;
                 g.setColor(TRANSPARENT.getColor());

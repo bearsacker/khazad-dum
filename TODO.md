@@ -1,9 +1,9 @@
 ### Display
 * Bullets (arrow)
 * Effects (hit, miss, dodge)
-* Walking animation
 * Menu image
 * Better monster sprites (Troll, Gobling king, Balrog)
+* Map dialog with all levels
 
 ### Gameplay
 * Vault management when death (can drop item)
