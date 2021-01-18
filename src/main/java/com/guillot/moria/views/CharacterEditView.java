@@ -9,6 +9,8 @@ import static org.newdawn.slick.Input.KEY_ENTER;
 import static org.newdawn.slick.Input.KEY_ESCAPE;
 import static org.newdawn.slick.Input.MOUSE_LEFT_BUTTON;
 
+import java.io.IOException;
+
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
@@ -25,6 +27,7 @@ import com.guillot.moria.dungeon.vault.Vault;
 import com.guillot.moria.item.AbstractItem;
 import com.guillot.moria.resources.Images;
 import com.guillot.moria.save.VaultSaveManager;
+import com.guillot.moria.utils.Scheduler;
 
 public class CharacterEditView extends View {
 
@@ -55,6 +58,8 @@ public class CharacterEditView extends View {
     private RaceComponent hobbitComponent;
 
     private Race selectedRace;
+
+    private Scheduler scheduler;
 
     public CharacterEditView() throws Exception {
         vault = VaultSaveManager.loadSaveFile(VAULT_SAVE_PATH);
@@ -109,8 +114,10 @@ public class CharacterEditView extends View {
         vaultText.setVisible(!vault.isEmpty());
         vaultGrid.setVisible(!vault.isEmpty());
 
+        scheduler = new Scheduler();
+
         add(background, nameText, nameField, vaultText, hobbitComponent, dwarfComponent,
-                elfComponent, humanComponent, validateButton, itemWindow, itemTextBox, vaultGrid);
+                elfComponent, humanComponent, validateButton, itemWindow, itemTextBox, vaultGrid, scheduler);
     }
 
     @Override
@@ -165,36 +172,54 @@ public class CharacterEditView extends View {
     }
 
     private void validate() throws Exception {
-        AbstractCharacter player = null;
-        switch (selectedRace) {
-        case DWARF:
-            player = dwarfComponent.getCharacter();
-            player.setName(nameField.getValue());
-            break;
-        case ELF:
-            player = elfComponent.getCharacter();
-            player.setName(nameField.getValue());
-            break;
-        case HOBBIT:
-            player = hobbitComponent.getCharacter();
-            player.setName(nameField.getValue());
-            break;
-        case HUMAN:
-            player = humanComponent.getCharacter();
-            player.setName(nameField.getValue());
-            break;
-        }
+        remove(nameText, nameField, vaultText, hobbitComponent, dwarfComponent,
+                elfComponent, humanComponent, validateButton, itemTextBox, vaultGrid);
 
-        AbstractItem vaultItem = vaultGrid.getSelectedItem();
-        if (vaultItem != null && player.pickUpItem(vaultItem)) {
-            vault.getItems().remove(vaultItem);
-            VaultSaveManager.writeSaveFile(VAULT_SAVE_PATH, vault);
-        }
+        add(new Text("Entering the depths of Khazad-dum...", 80, 77, GUI.get().getFont(1), YELLOW_PALE.getColor()));
 
-        GameState game = new GameState();
-        game.init(player);
+        scheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                AbstractCharacter player = null;
+                switch (selectedRace) {
+                case DWARF:
+                    player = dwarfComponent.getCharacter();
+                    player.setName(nameField.getValue());
+                    break;
+                case ELF:
+                    player = elfComponent.getCharacter();
+                    player.setName(nameField.getValue());
+                    break;
+                case HOBBIT:
+                    player = hobbitComponent.getCharacter();
+                    player.setName(nameField.getValue());
+                    break;
+                case HUMAN:
+                    player = humanComponent.getCharacter();
+                    player.setName(nameField.getValue());
+                    break;
+                }
 
-        GUI.get().switchView(new GameView(game));
+                AbstractItem vaultItem = vaultGrid.getSelectedItem();
+                if (vaultItem != null && player.pickUpItem(vaultItem)) {
+                    vault.getItems().remove(vaultItem);
+                    try {
+                        VaultSaveManager.writeSaveFile(VAULT_SAVE_PATH, vault);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                GameState game = new GameState();
+                try {
+                    game.init(player);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                GUI.get().switchView(new GameView(game));
+            }
+        }, 1);
     }
 
     public Race getSelectedRace() {
