@@ -40,7 +40,8 @@ public class MenuView extends View {
 
         GUI.get().setCursor(Images.POINTER.getImage());
 
-        newGameButton = new LinkButton("New game", 64, HEIGHT - 244, 256);
+        newGameButton = new LinkButton("New game", WIDTH / 2, HEIGHT - 204, 256);
+        newGameButton.setX(newGameButton.getX() - newGameButton.getText().length() * 7);
         newGameButton.setFont(GUI.get().getFont(1));
         newGameButton.setEvent(new Event() {
 
@@ -50,7 +51,8 @@ public class MenuView extends View {
             }
         });
 
-        continueGameButton = new LinkButton("Continue game", 64, HEIGHT - 204, 256);
+        continueGameButton = new LinkButton("Continue game", WIDTH / 2, HEIGHT - 164, 256);
+        continueGameButton.setX(continueGameButton.getX() - continueGameButton.getText().length() * 7);
         continueGameButton.setFont(GUI.get().getFont(1));
         continueGameButton.setEvent(new Event() {
 
@@ -62,7 +64,8 @@ public class MenuView extends View {
             }
         });
 
-        viewVaultButton = new LinkButton("Vault", 64, HEIGHT - 164, 256);
+        viewVaultButton = new LinkButton("Vault", WIDTH / 2, HEIGHT - 124, 256);
+        viewVaultButton.setX(viewVaultButton.getX() - viewVaultButton.getText().length() * 7);
         viewVaultButton.setFont(GUI.get().getFont(1));
         viewVaultButton.setEvent(new Event() {
 
@@ -72,7 +75,8 @@ public class MenuView extends View {
             }
         });
 
-        quitButton = new LinkButton("Quit", 64, HEIGHT - 88, 256);
+        quitButton = new LinkButton("Quit", WIDTH / 2, HEIGHT - 64, 256);
+        quitButton.setX(quitButton.getX() - quitButton.getText().length() * 7);
         quitButton.setFont(GUI.get().getFont(1));
         quitButton.setEvent(new Event() {
 
