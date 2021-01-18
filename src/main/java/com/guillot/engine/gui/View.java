@@ -38,6 +38,12 @@ public abstract class View {
         }
     }
 
+    public void remove(Component... components) {
+        for (Component component : components) {
+            this.components.remove(component);
+        }
+    }
+
     public void update() throws Exception {
         for (Component component : components) {
             if ((component.isVisible() && focused) || (!focused && component instanceof SubView && component.isVisible())) {
