@@ -112,6 +112,14 @@ public class Generator implements Serializable {
         return name;
     }
 
+    public int getGenerationPerSeconds() {
+        return generationPerSeconds;
+    }
+
+    public void setGenerationPerSeconds(int generationPerSeconds) {
+        this.generationPerSeconds = generationPerSeconds;
+    }
+
     public void update(float delta) {
         if (particles == null) {
             particles = new ArrayList<>();

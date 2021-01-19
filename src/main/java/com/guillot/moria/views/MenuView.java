@@ -6,6 +6,7 @@ import static com.guillot.moria.resources.Colors.ITEM_LEGENDARY;
 import static com.guillot.moria.resources.Images.LOGO;
 import static com.guillot.moria.resources.Images.LOGO_TEXT;
 import static com.guillot.moria.resources.Images.MENU;
+import static com.guillot.moria.resources.Images.MENU_OVERLAY;
 import static com.guillot.moria.save.GameSaveManager.GAME_SAVE_PATH;
 import static com.guillot.moria.save.GameSaveManager.isSaveFilePresent;
 import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
@@ -16,6 +17,9 @@ import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
+import com.guillot.engine.particles.Generator;
+import com.guillot.engine.particles.Lava;
+import com.guillot.engine.particles.Particles;
 import com.guillot.moria.component.VaultDialog;
 import com.guillot.moria.resources.Images;
 import com.guillot.moria.save.VaultSaveManager;
@@ -31,6 +35,8 @@ public class MenuView extends View {
     private LinkButton quitButton;
 
     private VaultDialog vaultDialog;
+
+    private Generator lava;
 
     @Override
     public void start() throws Exception {
@@ -91,17 +97,31 @@ public class MenuView extends View {
 
         vaultDialog = new VaultDialog(this);
 
+        lava = new Generator(0, 20);
+        lava.setPattern(new Lava(lava, 4f, 48, WIDTH));
+        lava.setX(0);
+        lava.setY(HEIGHT - 164);
+        lava.setRunning(true);
+        lava.setAngle(-90);
+        Particles.get().add(lava);
+
         add(newGameButton, continueGameButton, quitButton, viewVaultButton, vaultDialog);
     }
 
     @Override
     public void update() throws Exception {
         super.update();
+
+        Particles.get().update();
     }
 
     @Override
     public void paint(Graphics g) throws Exception {
         MENU.getImage().draw(0, 0, 10);
+
+        Particles.get().draw(g, false);
+
+        MENU_OVERLAY.getImage().draw(0, 0, 10);
 
         g.pushTransform();
         g.translate(WIDTH / 2, 96);
