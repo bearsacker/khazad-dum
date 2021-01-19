@@ -239,11 +239,21 @@ public class Dungeon {
         // Place merchant
         boolean merchantPlaced = false;
         for (Room room : rooms) {
-            if (astar.findPath(room.getPosition().inverseXY(), spawnDownStairs.inverseXY(), 300, false, true) != null) {
-                entities.add(new FireCamp(room.getPosition()));
-                entities.add(new Merchant(new Point(room.getPosition().x, room.getPosition().y + 1), level + 1));
-                merchantPlaced = true;
-                break;
+            if (tiles[room.getPosition().y][room.getPosition().x].isTraversable
+                    && tiles[room.getPosition().y + 1][room.getPosition().x].isTraversable) {
+                FireCamp firecamp = new FireCamp(room.getPosition());
+                Merchant merchant = new Merchant(new Point(room.getPosition().x, room.getPosition().y + 1), level + 1);
+
+                entities.add(firecamp);
+                entities.add(merchant);
+
+                if (astar.findPath(room.getPosition().inverseXY(), spawnDownStairs.inverseXY(), 300, false, true) != null) {
+                    merchantPlaced = true;
+                    break;
+                } else {
+                    entities.remove(firecamp);
+                    entities.remove(merchant);
+                }
             }
         }
 

@@ -12,8 +12,11 @@ import static org.newdawn.slick.Input.KEY_ESCAPE;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
+import com.guillot.engine.gui.Button;
+import com.guillot.engine.gui.Event;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.Window;
+import com.guillot.moria.dungeon.Dungeon;
 import com.guillot.moria.dungeon.Tile;
 import com.guillot.moria.dungeon.entity.AbstractEntity;
 import com.guillot.moria.dungeon.entity.Door;
@@ -28,15 +31,37 @@ public class MapDialog extends Window {
 
     private GameState game;
 
+    private int viewedLevel;
+
+    private Button[] levelButtons;
+
     public MapDialog(GameView parent, GameState game) throws Exception {
         super(parent, 0, 0, WIDTH, HEIGHT, "Maps");
         setShowCloseButton(true);
 
         this.game = game;
+        viewedLevel = 1;
+
+        levelButtons = new Button[9];
+        for (int i = 0; i < levelButtons.length; i++) {
+            levelButtons[i] = new Button("Level " + (i + 1), WIDTH - 372, 96 + i * 64, 288, 48);
+            final int level = i;
+            levelButtons[i].setEvent(new Event() {
+
+                @Override
+                public void perform() throws Exception {
+                    viewedLevel = level;
+                }
+            });
+        }
+
+        add(levelButtons);
     }
 
     @Override
-    public void onShow() throws Exception {}
+    public void onShow() throws Exception {
+        viewedLevel = game.getCurrentLevel();
+    }
 
     @Override
     public void onHide() throws Exception {}
@@ -49,13 +74,19 @@ public class MapDialog extends Window {
             setVisible(false);
             GUI.get().clearKeysPressed();
         }
+
+        for (int i = 0; i < levelButtons.length; i++) {
+            levelButtons[i].setEnabled(viewedLevel != i);
+        }
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
 
+        Dungeon dungeon = game.getLevels().get(viewedLevel);
         int width = PARCHMENT.getImage().getWidth() * (HEIGHT - 80) / PARCHMENT.getImage().getHeight();
+        int mapHeight = dungeon.getHeight() * PIXEL_SIZE;
 
         g.pushTransform();
         g.translate(16, 48);
@@ -65,14 +96,12 @@ public class MapDialog extends Window {
 
         g.popTransform();
 
-        int mapHeight = game.getDungeon().getHeight() * PIXEL_SIZE;
-
         g.pushTransform();
         g.translate(48, y + (HEIGHT - mapHeight) / 2);
 
-        for (int i = 0; i < game.getDungeon().getHeight(); i++) {
-            for (int j = 0; j < game.getDungeon().getWidth(); j++) {
-                Tile tile = game.getDungeon().getTiles()[i][j];
+        for (int i = 0; i < dungeon.getHeight(); i++) {
+            for (int j = 0; j < dungeon.getWidth(); j++) {
+                Tile tile = dungeon.getDiscoveredTiles()[i][j];
 
                 float alpha = .2f;
                 g.setColor(TRANSPARENT.getColor());
@@ -94,7 +123,7 @@ public class MapDialog extends Window {
                         break;
                     }
 
-                    Door door = game.getDungeon().getDoorAt(new Point(j, i));
+                    Door door = dungeon.getDoorAt(new Point(j, i));
                     if (door != null) {
                         switch (door.getState()) {
                         case LOCKED:
@@ -111,7 +140,7 @@ public class MapDialog extends Window {
                         }
                     }
 
-                    AbstractEntity entity = game.getDungeon().getEntityAt(new Point(j, i));
+                    AbstractEntity entity = dungeon.getEntityAt(new Point(j, i));
                     if (entity != null) {
                         switch (entity.getType()) {
                         case CHEST:
@@ -123,6 +152,7 @@ public class MapDialog extends Window {
                         case UPSTAIRS:
                         case DOWNSTAIRS:
                             g.setColor(Colors.ITEM_MAGIC.getColor());
+                            break;
                         default:
                             g.setColor(Colors.GRAY.getColor());
                             break;
@@ -134,8 +164,10 @@ public class MapDialog extends Window {
             }
         }
 
-        Point playerPosition = game.getPlayer().getPosition();
-        g.drawImage(MAP_CURSOR.getImage(), playerPosition.x * PIXEL_SIZE - 4, mapHeight - playerPosition.y * PIXEL_SIZE - 4);
+        if (viewedLevel == game.getCurrentLevel()) {
+            Point playerPosition = game.getPlayer().getPosition();
+            g.drawImage(MAP_CURSOR.getImage(), playerPosition.x * PIXEL_SIZE - 4, mapHeight - playerPosition.y * PIXEL_SIZE - 4);
+        }
 
         g.popTransform();
     }
