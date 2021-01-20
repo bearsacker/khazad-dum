@@ -8,7 +8,6 @@ public enum Images {
     LOGO_TEXT("sprites/logo-text.png"), //
     MENU("sprites/menu.png"), //
     MENU_OVERLAY("sprites/menu_overlay.png"), //
-    BLUR("sprites/blur.png"), //
 
     CURSOR("sprites/cursor.png", 64, 96), //
     POINTER("sprites/pointer.png", 48, 48, 0, 0), //

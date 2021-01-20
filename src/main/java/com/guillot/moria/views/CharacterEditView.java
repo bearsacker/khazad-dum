@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import com.guillot.engine.gui.Button;
 import com.guillot.engine.gui.Event;
+import com.guillot.engine.gui.FadeTransition;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
@@ -178,6 +179,7 @@ public class CharacterEditView extends View {
         add(new Text("Entering the depths of Khazad-dum...", 80, 77, GUI.get().getFont(1), YELLOW_PALE.getColor()));
 
         scheduler.schedule(new Runnable() {
+
             @Override
             public void run() {
                 AbstractCharacter player = null;
@@ -217,7 +219,7 @@ public class CharacterEditView extends View {
                     throw new RuntimeException(e);
                 }
 
-                GUI.get().switchView(new GameView(game));
+                GUI.get().switchView(new FadeTransition(new GameView(game), 1500));
             }
         }, 1);
     }

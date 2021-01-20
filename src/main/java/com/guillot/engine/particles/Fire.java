@@ -88,16 +88,9 @@ public class Fire implements Particle, Serializable {
             } else {
                 g.setColor(new Color(COLOR.r, COLOR.g * alpha, COLOR.b * alpha, .75f + alpha / 4f));
             }
-            g.fillRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
-        } else {
-            if (!cinder) {
-                g.setColor(new Color(.2f, .2f, .2f));
-                g.fillOval(x - SIZE * 2, y - SIZE * 2, SIZE * 4, SIZE * 4);
-                g.setColor(new Color(.4f, .4f, .4f));
-                g.fillOval(x - SIZE, y - SIZE, SIZE * 2, SIZE * 2);
-                g.setColor(new Color(1f, 1f, 1f));
-                g.fillRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
-            }
+
+            float particleSize = Math.min(SIZE, remainingDuration * 20);
+            g.fillRect(x - particleSize / 2, y - particleSize / 2, particleSize, particleSize);
         }
     }
 }

@@ -14,6 +14,7 @@ import static com.guillot.moria.save.VaultSaveManager.VAULT_SAVE_PATH;
 import org.newdawn.slick.Graphics;
 
 import com.guillot.engine.gui.Event;
+import com.guillot.engine.gui.FadeTransition;
 import com.guillot.engine.gui.GUI;
 import com.guillot.engine.gui.LinkButton;
 import com.guillot.engine.gui.View;
@@ -53,7 +54,7 @@ public class MenuView extends View {
 
             @Override
             public void perform() throws Exception {
-                GUI.get().switchView(new CharacterEditView());
+                GUI.get().switchView(new FadeTransition(new CharacterEditView(), 1500));
             }
         });
 
@@ -66,7 +67,7 @@ public class MenuView extends View {
             public void perform() throws Exception {
                 GameState game = new GameState();
                 game.initFromSave();
-                GUI.get().switchView(new GameView(game));
+                GUI.get().switchView(new FadeTransition(new GameView(game), 1500));
             }
         });
 
@@ -106,6 +107,13 @@ public class MenuView extends View {
         Particles.get().add(lava);
 
         add(newGameButton, continueGameButton, quitButton, viewVaultButton, vaultDialog);
+    }
+
+    @Override
+    public void stop(boolean closingWindow) throws Exception {
+        super.stop(closingWindow);
+
+        Particles.get().getGenerators().remove(0);
     }
 
     @Override
