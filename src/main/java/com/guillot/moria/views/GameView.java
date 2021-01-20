@@ -207,7 +207,7 @@ public class GameView extends View {
         }
 
         if (isFocused()) {
-            cursor = depthBuffer.getDepth(GUI.get().getMouseX(), GUI.get().getMouseY());
+            cursor = depthBuffer.getDepth((GUI.get().getMouseX() + WIDTH / 2) / 2, (GUI.get().getMouseY() + HEIGHT / 2) / 2);
 
             if (cursor != null && !getPlayer().isActing()) {
                 AbstractEntity entity = getDungeon().getEntityAt(cursor);
@@ -322,6 +322,9 @@ public class GameView extends View {
     @Override
     public void paint(Graphics g) throws Exception {
         depthBuffer.clear();
+        g.pushTransform();
+        g.translate(-WIDTH / 2, -HEIGHT / 2);
+        g.scale(2, 2);
 
         Tile[][] grid = new Tile[getDungeon().getHeight()][getDungeon().getWidth()];
         computeViewedTiles(new HashMap<>(), grid, getPlayer().getPosition(), 0);
@@ -407,6 +410,8 @@ public class GameView extends View {
             drawCursor(g, cursor.y, cursor.x, getDungeon().getTiles()[cursor.y][cursor.x]);
         }
 
+        g.popTransform();
+
         g.drawImage(Images.STONE.getImage(), WIDTH / 2 - Images.STONE.getImage().getWidth() / 2, HEIGHT - 64);
 
         super.paint(g);
@@ -418,6 +423,7 @@ public class GameView extends View {
             g.drawRect(characterButton.getX() + 2, characterButton.getY() + 2, characterButton.getWidth() - 6,
                     characterButton.getHeight() - 6);
         }
+
     }
 
     @Override
