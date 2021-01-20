@@ -27,6 +27,7 @@ import com.guillot.engine.gui.ProgressBar;
 import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
+import com.guillot.engine.particles.Particles;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Monster;

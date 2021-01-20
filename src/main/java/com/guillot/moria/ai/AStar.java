@@ -147,7 +147,7 @@ public class AStar {
 
         // since we'e've run out of search
         // there was no path. Just return null
-        if (nodes[end.x][end.y].getParent() == null) {
+        if (nodes[end.x][end.y].getParent() == null && !start.equals(end)) {
             return null;
         }
 
