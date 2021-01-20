@@ -93,6 +93,10 @@ public class Path {
         return steps.contains(new Point(x, y));
     }
 
+    public int getStepDistance(int x, int y) {
+        return steps.indexOf(new Point(x, y));
+    }
+
     public ArrayList<Point> getSteps() {
         return this.steps;
     }

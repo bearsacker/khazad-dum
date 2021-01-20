@@ -27,7 +27,6 @@ import com.guillot.engine.gui.ProgressBar;
 import com.guillot.engine.gui.Text;
 import com.guillot.engine.gui.TextBox;
 import com.guillot.engine.gui.View;
-import com.guillot.engine.particles.Particles;
 import com.guillot.moria.ai.Path;
 import com.guillot.moria.character.AbstractCharacter;
 import com.guillot.moria.character.Monster;
@@ -214,9 +213,9 @@ public class GameView extends View {
                 Monster monster = getDungeon().getMonsterAt(cursor);
 
                 if (monster != null || entity != null) {
-                    hoverPath = getDungeon().findPathNear(getPlayer().getPosition(), cursor, getPlayer().getMovement());
+                    hoverPath = getDungeon().findPathNear(getPlayer().getPosition(), cursor, getPlayer().getMovement() * 2);
                 } else {
-                    hoverPath = getDungeon().findPath(getPlayer().getPosition(), cursor, getPlayer().getMovement());
+                    hoverPath = getDungeon().findPath(getPlayer().getPosition(), cursor, getPlayer().getMovement() * 2);
                 }
 
                 if (monster != null && getPlayer().canAttack(cursor)) {
@@ -244,7 +243,7 @@ public class GameView extends View {
                             getPlayer().setPath(
                                     getDungeon().findPathNear(getPlayer().getPosition(), cursor, getPlayer().getLightRadius()));
                         }
-                    } else {
+                    } else if (hoverPath == null || hoverPath.getStepDistance(cursor.x, cursor.y) <= getPlayer().getMovement()) {
                         getPlayer().setPath(
                                 getDungeon().findPath(getPlayer().getPosition(), cursor, getPlayer().getLightRadius()));
                     }
@@ -355,9 +354,10 @@ public class GameView extends View {
                     Color shadow = new Color(alpha, alpha, alpha);
                     drawTile(g, tile, i, j, alternate, new Point(i, j), shadow);
 
-                    if ((getPlayer().getPath() != null && getPlayer().getPath().contains(i, j))
-                            || (hoverPath != null && hoverPath.contains(i, j))) {
-                        drawPath(g, i, j);
+                    if ((getPlayer().getPath() != null && getPlayer().getPath().contains(i, j))) {
+                        drawPath(g, i, j, 0);
+                    } else if (hoverPath != null && hoverPath.contains(i, j)) {
+                        drawPath(g, i, j, hoverPath.getStepDistance(i, j) <= getPlayer().getMovement() ? 1 : 2);
                     }
 
                     AbstractEntity entity = getDungeon().getEntityAt(new Point(j, i));
@@ -504,11 +504,11 @@ public class GameView extends View {
         }
     }
 
-    private void drawPath(Graphics g, int px, int py) {
+    private void drawPath(Graphics g, int px, int py, int colorIndex) {
         int x = (px - getPlayer().getPosition().y) * 32 + (py - getPlayer().getPosition().x) * 32 + EngineConfig.WIDTH / 2 - 32;
         int y = (py - getPlayer().getPosition().x) * 16 - (px - getPlayer().getPosition().y) * 16 + EngineConfig.HEIGHT / 2 - 48;
 
-        g.drawImage(CURSOR.getSubImage(0, 0), x, y, new Color(1f, 1f, 1f, .5f));
+        g.drawImage(CURSOR.getSubImage(colorIndex, 0), x, y, new Color(1f, 1f, 1f, 1f));
     }
 
     private void showTextBox(String text) {
