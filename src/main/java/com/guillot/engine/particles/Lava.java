@@ -79,6 +79,9 @@ public class Lava implements Particle, Serializable {
     @Override
     public void draw(Graphics g, boolean alternate) {
         g.setColor(color);
-        g.fillRect(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
+
+        float particleSize = Math.min(SIZE, remainingDuration * 20);
+        g.fillRect(x - particleSize / 2, y - particleSize / 2, particleSize, particleSize);
     }
+
 }
