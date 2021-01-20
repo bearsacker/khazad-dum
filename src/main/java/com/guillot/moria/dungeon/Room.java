@@ -1,38 +1,24 @@
 package com.guillot.moria.dungeon;
 
-import static com.guillot.moria.configs.DungeonConfig.DUNGEON_UNUSUAL_ROOMS;
-import static com.guillot.moria.configs.ScreenConfig.QUART_HEIGHT;
-import static com.guillot.moria.configs.ScreenConfig.QUART_WIDTH;
-import static com.guillot.moria.configs.ScreenConfig.SCREEN_HEIGHT;
-import static com.guillot.moria.configs.ScreenConfig.SCREEN_WIDTH;
-
 import com.guillot.moria.utils.Point;
-import com.guillot.moria.utils.RNG;
 
 public class Room {
 
-    private RoomType type;
+    protected Dungeon dungeon;
 
-    private Point position;
+    protected Point position;
 
-    public Room(int level, Point position) {
-        if (level + RNG.get().randomNumberNormalDistribution(1, 2) > RNG.get().randomNumber(DUNGEON_UNUSUAL_ROOMS)) {
-            type = RoomType.randomSpecialRooms();
-        } else {
-            type = RoomType.NORMAL;
-        }
+    protected int height;
 
-        this.position = new Point();
-        this.position.y = (position.x * (SCREEN_HEIGHT >> 1) + QUART_HEIGHT);
-        this.position.x = (position.y * (SCREEN_WIDTH >> 1) + QUART_WIDTH);
-    }
+    protected int depth;
 
-    public RoomType getType() {
-        return type;
-    }
+    protected int left;
 
-    public void setType(RoomType type) {
-        this.type = type;
+    protected int right;
+
+    public Room(Dungeon dungeon, Point position) {
+        this.dungeon = dungeon;
+        this.position = position;
     }
 
     public Point getPosition() {
