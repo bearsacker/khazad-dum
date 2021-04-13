@@ -13,13 +13,13 @@ import com.guillot.engine.configs.ParticlesConfig;
 import com.guillot.engine.utils.NumberGenerator;
 
 
-public class Fire implements Particle, Serializable {
+public class Lava implements Particle, Serializable {
 
     private static final long serialVersionUID = -3757856673705062231L;
 
-    private final static int SIZE = ParticlesConfig.get().getInt("fire.size");
+    private final static int SIZE = ParticlesConfig.get().getInt("lava.size");
 
-    private final static Color COLOR = ParticlesConfig.getColor("fire.color");
+    private final static Color COLOR = ParticlesConfig.getColor("lava.color");
 
     private final static double RATIODEGRAD = 0.0174533;
 
@@ -29,7 +29,9 @@ public class Fire implements Particle, Serializable {
 
     private float y;
 
-    private int angle;
+    private float angle;
+
+    private int length;
 
     private float remainingDuration;
 
@@ -37,32 +39,27 @@ public class Fire implements Particle, Serializable {
 
     private int speed;
 
-    private boolean cinder;
+    private Color color;
 
-    public Fire(Generator generator, float duration, int speed) {
+    public Lava(Generator generator, float duration, int speed, int length) {
         this.generator = generator;
-        x = NumberGenerator.get().randomInt(-2, 2);
-        y = NumberGenerator.get().randomInt(-2, 2);
+        x = NumberGenerator.get().randomInt(0, length);
+        y = 0;
+        angle = -90f;
 
         this.speed = speed;
-
-        angle = generator.getAngle();
-        if (random() < 0.5) {
-            angle += (int) (random() * generator.getRadius() / 2);
-        } else {
-            angle -= (int) (random() * generator.getRadius() / 2);
-        }
-        angle %= 360;
-
+        this.length = length;
         remainingDuration = (int) (random() * duration / 2) + .75f * duration;
-        cinder = remainingDuration > duration;
-
         this.duration = remainingDuration;
+
+        color = new Color((int) (COLOR.r * 255),
+                (int) (COLOR.g * 255) + NumberGenerator.get().randomInt(-32, 64),
+                (int) (COLOR.b * 255) + NumberGenerator.get().randomInt(-16, 32));
     }
 
     @Override
     public Particle create() {
-        return new Fire(generator, duration, speed);
+        return new Lava(generator, duration, speed, length);
     }
 
     @Override
@@ -76,21 +73,15 @@ public class Fire implements Particle, Serializable {
         x += delta * speed * cos(RATIODEGRAD * angle);
         y += delta * speed * sin(RATIODEGRAD * angle);
 
-        angle += random() > .5f ? 1 : -1;
+        angle += NumberGenerator.get().randomInt(-4, 4);
     }
 
     @Override
     public void draw(Graphics g, boolean alternate) {
-        if (!alternate) {
-            float alpha = remainingDuration / duration;
-            if (cinder) {
-                g.setColor(new Color(0f, 0f, 0f, 1f - alpha));
-            } else {
-                g.setColor(new Color(COLOR.r, COLOR.g * alpha, COLOR.b * alpha, .75f + alpha / 4f));
-            }
+        g.setColor(color);
 
-            float particleSize = Math.min(SIZE, remainingDuration * 20);
-            g.fillRect(x - particleSize / 2, y - particleSize / 2, particleSize, particleSize);
-        }
+        float particleSize = Math.min(SIZE, remainingDuration * 20);
+        g.fillRect(x - particleSize / 2, y - particleSize / 2, particleSize, particleSize);
     }
+
 }

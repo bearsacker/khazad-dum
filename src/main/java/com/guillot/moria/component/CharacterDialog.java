@@ -195,6 +195,7 @@ public class CharacterDialog extends Window {
     }
 
     private void loadCharacterInfo() {
+        nameText.setText("WHITE@@" + player.getName() + " @@YELLOW_PALE@@(Level " + player.getLevel() + ")");
         characterTextBox.setText(player.toString());
         damagesText.setText(Integer.toString(player.computeDamages()));
         physicalDamagesText.setText(Integer.toString(player.computePhysicalDamages()));

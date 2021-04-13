@@ -116,17 +116,30 @@ public class GUI {
         return null;
     }
 
-    public void switchView(View v) {
+    public void switchView(Transition transition) {
+        try {
+            currentView = transition;
+            currentView.start();
+        } catch (Exception e) {
+            switchView(new ViewException(e));
+        }
+    }
+
+    public void switchView(View view) {
         try {
             if (currentView != null) {
                 currentView.stop(false);
             }
 
-            currentView = v;
+            currentView = view;
             currentView.start();
         } catch (Exception e) {
             switchView(new ViewException(e));
         }
+    }
+
+    public View getCurrentView() {
+        return currentView;
     }
 
     public void paint(Graphics g) {
