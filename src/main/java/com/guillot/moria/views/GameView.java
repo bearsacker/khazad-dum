@@ -193,7 +193,7 @@ public class GameView extends View {
         lifeBar.setValue(getPlayer().getCurrentLife() / (float) getPlayer().getLife());
         xpBar.setValue(getPlayer().getXp() / (float) LEVELING_LEVELS[getPlayer().getLevel() - 1]);
 
-        turnText.setText(game.getTurn() == Turn.PLAYER ? "Your turn" : "WHITE@@GameMaster's turn");
+        turnText.setText(Turn.PLAYER.equals(game.getTurn()) ? "Your turn" : "WHITE@@GameMaster's turn");
         turnText.setX(WIDTH / 2 - turnText.getWidth() / 2);
 
         if (getPlayer().isDead()) {

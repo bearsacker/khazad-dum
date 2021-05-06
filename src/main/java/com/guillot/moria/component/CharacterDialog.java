@@ -181,13 +181,13 @@ public class CharacterDialog extends Window {
             g.setColor(Colors.ITEM_LEGENDARY.getColor());
             g.setLineWidth(2f);
 
-            g.drawRect(increaseStrengthButton.getX(), increaseStrengthButton.getY(), increaseStrengthButton.getWidth(),
+            g.drawRect(increaseStrengthButton.getX(), increaseStrengthButton.getY() - 1, increaseStrengthButton.getWidth(),
                     increaseStrengthButton.getHeight());
-            g.drawRect(increaseAgilityButton.getX(), increaseAgilityButton.getY(), increaseAgilityButton.getWidth(),
+            g.drawRect(increaseAgilityButton.getX(), increaseAgilityButton.getY() - 1, increaseAgilityButton.getWidth(),
                     increaseAgilityButton.getHeight());
-            g.drawRect(increaseSpiritButton.getX(), increaseSpiritButton.getY(), increaseSpiritButton.getWidth(),
+            g.drawRect(increaseSpiritButton.getX(), increaseSpiritButton.getY() - 1, increaseSpiritButton.getWidth(),
                     increaseSpiritButton.getHeight());
-            g.drawRect(increaseDestinyButton.getX(), increaseDestinyButton.getY(), increaseDestinyButton.getWidth(),
+            g.drawRect(increaseDestinyButton.getX(), increaseDestinyButton.getY() - 1, increaseDestinyButton.getWidth(),
                     increaseDestinyButton.getHeight());
         }
 
